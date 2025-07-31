@@ -1,0 +1,46 @@
+{
+  "name": "base-template",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:app chakra:watch",
+    "dev:app": "vite --port 3000",
+    "start": "vite --port 3000",
+    "build": "vite build && tsc",
+    "serve": "vite preview",
+    "test": "vitest run",
+    "chakra:types": "npx @chakra-ui/cli typegen ./src/components/theme/index.ts --outdir ./src/components/theme/types > NUL 2>&1",
+    "chakra:watch": "chokidar \"src/components/theme/**/*.ts\" \"!src/components/theme/**/*.d.ts\" -c \"npm run chakra:types\" > NUL 2>&1",
+    "test:watch": "chokidar \"src/components/theme/**/*.ts\" -c \"npm run test:watch\"",
+    "test:watch-chok": "echo testing"
+  },
+  "dependencies": {
+    "@chakra-ui/cli": "^3.18.0",
+    "@chakra-ui/react": "^3.17.0",
+    "@emotion/react": "^11.14.0",
+    "@tanstack/react-query": "^5.76.0",
+    "@tanstack/react-router": "^1.114.3",
+    "@tanstack/react-router-devtools": "^1.114.3",
+    "@tanstack/router-plugin": "^1.114.3",
+    "framer-motion": "^12.11.3",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "chokidar-cli": "^3.0.0",
+    "jsdom": "^26.0.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.5",
+    "web-vitals": "^4.2.4"
+  }
+}
