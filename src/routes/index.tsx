@@ -1,18 +1,43 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HeaderButton } from '@/components/header/Header'
-import { FaBars } from 'react-icons/fa'
-import { Icon } from '@chakra-ui/react'
+import {
+  Application,
+  extend,
+} from '@pixi/react';
+import {
+  Container,
+  Graphics,
+  Sprite,
+} from 'pixi.js';
+import { GameProvider, useGameContext } from '@/components/Contexts/GameContext';
+import PlayerLayer from '@/components/Game/Layers/PlayerLayer';
+import MainUi from '@/components/ui/mainUI';
+
 
 export const Route = createFileRoute('/')({
   component: App,
 })
 
-function App() {
+// extend tells @pixi/react what Pixi.js components are available
+extend({
+  Container,
+  Graphics,
+  Sprite,
+});
+
+export default function App() {
+
   return (
-    <div className="App">
-      <HeaderButton>
-        <Icon as={FaBars} />
-      </HeaderButton>
-    </div>
-  )
+    <GameProvider>
+      <Game />
+    </GameProvider>
+  );
+}
+
+export function Game() {
+
+  return (
+    <Application eventMode='static'>
+      <PlayerLayer/>
+    </Application>
+  );
 }
