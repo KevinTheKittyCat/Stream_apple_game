@@ -11,6 +11,7 @@ import {
 import { GameProvider, useGameContext } from '@/components/Contexts/GameContext';
 import PlayerLayer from '@/components/Game/Layers/PlayerLayer';
 import MainUi from '@/components/ui/mainUI';
+import { useEffect } from 'react';
 
 
 export const Route = createFileRoute('/')({
@@ -28,6 +29,7 @@ export default function App() {
 
   return (
     <GameProvider>
+      <MainUi />
       <Game />
     </GameProvider>
   );
@@ -36,7 +38,7 @@ export default function App() {
 export function Game() {
 
   return (
-    <Application eventMode='static'>
+    <Application eventMode='static' resizeTo={window}>
       <PlayerLayer/>
     </Application>
   );

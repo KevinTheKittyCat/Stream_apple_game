@@ -1,0 +1,42 @@
+
+
+
+
+export function CheckHit(object: any, target: any, shouldReturnTarget = false) {
+    const bounds1 = object.getBounds();
+    const bounds2 = target.getBounds();
+
+    if (
+        bounds1.x < bounds2.x + bounds2.width &&
+        bounds1.x + bounds1.width > bounds2.x &&
+        bounds1.y < bounds2.y + bounds2.height &&
+        bounds1.y + bounds1.height > bounds2.y
+    ) return shouldReturnTarget ? {
+        hit: true,
+        target: target,
+        object: object,
+    } : true
+
+    return shouldReturnTarget ? {
+        hit: false,
+        target,
+        object
+    } : false; // No hit
+}
+
+export function CheckHitMultiple(
+    objects: any[],
+    target: any,
+    shouldReturnTarget = false,
+    shouldReturnOnFirstHit = true
+) {
+    let hit = [];
+    for (const object of objects) {
+        const hitResult = CheckHit(object, target, shouldReturnTarget);
+        if (shouldReturnTarget ? hitResult.hit : hitResult === true) {
+            hit.push(hitResult);
+            if (shouldReturnOnFirstHit) return [hitResult]
+        }
+    }
+    return hit.length > 0 ? hit : false; // Return all hits or false if no hits
+}

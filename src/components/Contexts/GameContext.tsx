@@ -1,21 +1,37 @@
 import React, { createContext, use, useContext, useRef, useState, useEffect } from 'react';
 
-export const GameContext = createContext(null);
+
+
+type gameStateType = {
+    score: number;
+}
+
+export type GameContextType = {
+    apples: any[];
+    setApples: React.Dispatch<React.SetStateAction<any[] | []>>;
+    gameState: gameStateType;
+    setGameState: React.Dispatch<React.SetStateAction<gameStateType>>;
+    isGameActive: boolean;
+    setIsGameActive: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const GameContext = createContext<GameContextType | null>(null);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-    const [gameState, setGameState] = useState({
+    const [gameState, setGameState] = useState<gameStateType>({
         score: 0
     });
-    const [playerData, setPlayerData] = useState(null);
     const [isGameActive, setIsGameActive] = useState(false);
+    const [apples, setApples] = useState<GameContextType["apples"]>([]);
+    
 
     return (
         <GameContext.Provider
             value={{
+                apples:apples,
+                setApples:setApples,
                 gameState,
                 setGameState,
-                playerData,
-                setPlayerData,
                 isGameActive,
                 setIsGameActive,
             }}>
