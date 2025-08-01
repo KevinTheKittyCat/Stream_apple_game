@@ -1,21 +1,17 @@
 import {
-    Assets,
+    type Sprite as PixiSprite,
     FederatedPointerEvent,
-    Texture,
 } from 'pixi.js';
 import {
-    use,
     useCallback,
-    useContext,
     useEffect,
     useRef,
     useState,
 } from 'react';
 import { useApplication, useTick } from '@pixi/react';
 import { UPDATE_PRIORITY } from 'pixi.js'
-import { GameContext, useGameContext } from '../Contexts/GameContext';
+import { useGameContext } from '../Contexts/GameContext';
 import { Sprite } from '../Canvas/Sprite';
-import { Layer } from '../Canvas/Layer';
 import { Group } from '../Canvas/Group';
 import Tophat from './Tophat';
 import { CheckHitMultiple } from './HitDetection';
@@ -42,7 +38,7 @@ export function Player() {
     }, [setMouseCoords]);
 
     useTick({
-        callback() {
+        callback(this: React.RefObject<PixiSprite | null>) {
             if (!this.current) return;
             checkHit();
             this.current.position.x = mouseCoords.x;

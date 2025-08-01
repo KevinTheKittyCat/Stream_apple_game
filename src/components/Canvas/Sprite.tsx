@@ -6,11 +6,9 @@ import {
 
 import {
     useEffect,
-    useRef,
     useState,
     forwardRef,
 } from 'react';
-import { useTick } from '@pixi/react';
 import type { PixiReactElementProps } from '@pixi/react';
 
 type Props = {

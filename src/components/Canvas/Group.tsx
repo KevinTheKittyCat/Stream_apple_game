@@ -1,6 +1,5 @@
-import { useApplication, type PixiReactElementProps } from '@pixi/react';
-import { Rectangle, Graphics } from 'pixi.js';
-import { useMemo } from 'react';
+import { type PixiReactElementProps } from '@pixi/react';
+
 import React from 'react';
 
 type Props = {

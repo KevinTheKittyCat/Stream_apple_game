@@ -4,10 +4,6 @@ import { Layer } from "@/components/Canvas/Layer";
 import { Apple } from "@/components/Objective/Apple";
 import { useEffect } from "react";
 
-
-
-
-
 export default function PlayerLayer() {
     const { isInitialised, app } = useApplication();
 

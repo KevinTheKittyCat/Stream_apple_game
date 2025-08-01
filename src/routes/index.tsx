@@ -8,10 +8,10 @@ import {
   Graphics,
   Sprite,
 } from 'pixi.js';
-import { GameProvider, useGameContext } from '@/components/Contexts/GameContext';
-import PlayerLayer from '@/components/Game/Layers/PlayerLayer';
+import { GameProvider } from '@/components/Contexts/GameContext';
+import PlayerLayer from '@/components/Canvas/Layers/PlayerLayer';
 import MainUi from '@/components/ui/mainUI';
-import { useEffect } from 'react';
+
 
 
 export const Route = createFileRoute('/')({

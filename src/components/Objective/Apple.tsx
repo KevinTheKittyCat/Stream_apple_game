@@ -1,29 +1,26 @@
 import {
-    Assets,
-    Texture,
-} from 'pixi.js';
-import {
-    use,
     useEffect,
     useRef,
     useState,
 } from 'react';
 import { useTick } from '@pixi/react';
-import { UPDATE_PRIORITY } from 'pixi.js'
+import { type Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js'
 import { Sprite } from '../Canvas/Sprite';
 import { useGameContext } from '../Contexts/GameContext';
+
 
 export function Apple() {
     const { setApples, apples } = useGameContext();
     // The Pixi.js `Sprite`
     const spriteRef = useRef(null)
-    const [settings, setSettings] = useState({
+    const [settings] = useState({
         id: Math.random().toString(36).substring(2, 15),
     });
 
     // Use the `useTick` hook to animate the sprite
     useTick({
-        callback() {
+        callback(this: React.RefObject<PixiSprite | null>) {
+            if (!this.current) return;
             this.current.position.y += 1;
             if (this.current.position.y > window.innerHeight) {
                 this.current.position.y = 0;
