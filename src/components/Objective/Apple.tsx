@@ -2,13 +2,16 @@ import {
     useEffect,
     useRef,
     useState,
+    useCallback,
 } from 'react';
 import { useTick } from '@pixi/react';
 import { type Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js'
 import { Sprite } from '../Canvas/Sprite';
-import { useGameContext } from '../Contexts/GameContext';
 import { useAppleSpawner } from './useAppleSpawner';
 import { checkHit } from '../Player/HitDetection';
+import { useGameStore } from '@/stores/GameState';
+import { useObjectivesStore } from '@/stores/Objectives';
+import { usePlayerStore } from '@/stores/PlayerStore';
 
 type AppleProps = {
     id: string;
@@ -18,11 +21,25 @@ type AppleProps = {
 };
 
 export function Apple({ id, x = 100, y = 100, fallingSpeed = 4 }: AppleProps) {
-    const { apples, player } = useGameContext();
+    const { incrementScore } = useGameStore();
+    const { playerRef } = usePlayerStore()
+    const { apples } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
-    const { setAppleRef } = useAppleSpawner();
+    const { setAppleRef, removeApple } = useAppleSpawner();
     const speedRef = useRef(0); // current speed
     const lastTimeRef = useRef(performance.now());
+
+    const onHit = useCallback((apple: PixiSprite) => {
+        console.log("Apple hit detected!");
+        incrementScore(1)
+        removeApple(id);
+    }, [id, removeApple]);
+
+
+    const checkHitWithPlayer = useCallback((currentApple, playerRef) => {
+        const hit = checkHit(currentApple, playerRef);
+        return hit
+    }, [playerRef]);
 
     // Use the `useTick` hook to animate the sprite
     useTick({
@@ -45,15 +62,9 @@ export function Apple({ id, x = 100, y = 100, fallingSpeed = 4 }: AppleProps) {
 
             if (this.current.position.y < window.innerHeight / 2) return;
 
-            if (player.ref && this.current) {
-                const hit = checkHit(this.current, player.ref);
-                if (hit) {
-                    console.log("Apple hit detected!");
-                    this.current.position.y = 0;
-                    this.current.position.x = Math.random() * window.innerWidth;
-                    speedRef.current = 0; // reset speed on hit
-                }
-            }
+            if (!playerRef && !this.current) return;
+            const isHit = checkHitWithPlayer(playerRef, this.current);
+            if (isHit) onHit(this.current);
         },
         context: spriteRef,
         isEnabled: true,

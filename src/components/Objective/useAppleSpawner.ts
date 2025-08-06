@@ -1,10 +1,9 @@
-import { useGameContext } from "../Contexts/GameContext";
-
+import { useObjectivesStore } from "@/stores/Objectives";
 
 
 
 export function useAppleSpawner() {
-    const { setApples } = useGameContext();
+    const { setApples, addApple, removeApple, apples } = useObjectivesStore();
 
     const spawnApple = () => {
         const id = Math.random().toString(36).substring(2, 15);
@@ -14,13 +13,14 @@ export function useAppleSpawner() {
             x: Math.random() * window.innerWidth,
             y: 100,
         };
-        setApples((prevApples) => [...prevApples, apple]);
+        addApple(apple);
+        //setApples((prevApples) => [...prevApples, apple]);
     }
 
-    const removeApple = (id: string) => {
+    /*const removeApple = (id: string) => {
         //console.log("Removing apple with id:", id);
         setApples((prevApples) => prevApples.filter(apple => apple.id !== id));
-    }
+    }*/
 
     const setAppleRef = (id: string, ref: React.RefObject<any>) => {
         setApples((prevApples) => {

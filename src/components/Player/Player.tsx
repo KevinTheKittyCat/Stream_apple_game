@@ -16,35 +16,34 @@ import { Group } from '../Canvas/Group';
 import Tophat from './Tophat';
 import { checkHitMultipleWithId } from './HitDetection';
 import { useAppleSpawner } from '../Objective/useAppleSpawner';
+import { usePlayerStore } from '@/stores/PlayerStore';
+import { useObjectivesStore } from '@/stores/Objectives';
 
+type MouseCoords = {
+    x: number | null;
+    y: number | null;
+}
 
 
 export function Player() {
-    const { apples, setGameState, player, setPlayer } = useGameContext();
+    const { apples } = useObjectivesStore();
+    const { player, setPlayerRef, playerRef } = usePlayerStore()
     const { removeApple } = useAppleSpawner();
     const spriteRef = useRef(null)
     const { app, isInitialised } = useApplication();
-    const mouseCoordsRef = useRef({ x: 0, y: 0 });
+    const mouseCoordsRef = useRef<MouseCoords>({ x: null, y: null });
 
     const handlePointerMove = useCallback((event: FederatedPointerEvent) => {
         const { x, y } = event.data.global;
         mouseCoordsRef.current = { x, y };
     }, []);
 
-    /*const checkHit = useCallback(() => {
-        if (!spriteRef.current) return;
-        const isHit = checkHitMultipleWithId(apples, spriteRef.current, false, true);
-        if (isHit) console.log("Hit detected!");
-        if (isHit) setGameState((prevState) => ({ ...prevState, score: prevState.score + 1 }));
-        if (isHit) isHit.forEach(a => removeApple(a.id));
-    }, [apples]);*/
-
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (!this.current) return;
-            this.current.position.x = mouseCoordsRef.current.x;
+            this.current.position.x = mouseCoordsRef.current.x !== null ? mouseCoordsRef.current.x : app.canvas.width / 2;
             //checkHit();
-            //this.current.rotation += 0.1
+            this.current.rotation += 0.1
         },
         context: spriteRef,
         isEnabled: true,
@@ -62,17 +61,14 @@ export function Player() {
 
     useEffect(() => {
         if (!spriteRef.current) return;
-        if (player.ref) return
-        setPlayer(old => ({
-            ...old,
-            ref: spriteRef.current,
-        }));
+        if (playerRef) return
+        setPlayerRef(spriteRef);
     }, [apples, spriteRef]);
 
     return (
         <Group
             ref={spriteRef}
-            x={100}
+            x={app.canvas.width / 2}
             y={app.canvas.height - 100}
             eventMode={'dynamic'}
         >

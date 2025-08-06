@@ -1,12 +1,12 @@
 
 import { useEffect } from 'react';
-import { useGameContext } from '../Contexts/GameContext';
 import { useAppleSpawner } from './useAppleSpawner';
+import { useObjectivesStore } from '@/stores/Objectives';
 
 export default function AppleSpawner({
     limit = 10, // Limit the number of apples
 }) {
-    const { apples, setApples } = useGameContext();
+    const { apples, setApples } = useObjectivesStore();
     const { spawnApple, removeApple } = useAppleSpawner();
     const appleCount = apples.length;
 

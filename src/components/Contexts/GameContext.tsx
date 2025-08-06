@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback, useMemo } from 'react';
 
 
 
@@ -21,11 +21,11 @@ export type GameContextType = {
 export const GameContext = createContext<GameContextType | null>(null);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-    const [gameState, setGameState] = useState<gameStateType>({
+    const gameState = useRef<gameStateType>({
         score: 0
     });
     const [isGameActive, setIsGameActive] = useState(false);
-    const [apples, setApples] = useState<GameContextType["apples"]>([]);
+    const apples = useRef<GameContextType["apples"]>([]);
     const [player, setPlayer] = useState<GameContextType["player"]>({
         id: 'player1',
         x: 100,
@@ -33,14 +33,49 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         ref: null, // This will hold the reference to the player sprite
     });
     
+    const setGameState = useCallback((newState: Partial<gameStateType>) => {
+        gameState.current = {
+            ...gameState.current,
+            ...newState,
+        };
+    }, []);
+
+    const setApples = useCallback((newApples: any[] | Function) => {
+        console.log("Setting apples:", newApples, apples.current);
+        if (newApples instanceof Function) {
+            console.log("Updating apples with function");
+            apples.current = newApples(apples.current);
+            return;
+        }
+        apples.current = newApples;
+    }, []);
+
+    const addApple = useCallback((apple: any) => {
+        apples.current.push(apple);
+    }, []);
+
+    const removeApple = useCallback((id: string) => {
+        console.log("Removing apple with id:", id, apples.current);
+        apples.current = apples.current.filter(apple => apple.id !== id);
+    }, []);
+
+    const paginateScore = useCallback((score) => {
+        score.current += score;
+    }, []);
+
+    const applesCurrent = useMemo(() => apples.current, [apples.current]);
 
     return (
         <GameContext.Provider
             value={{
-                apples:apples,
+                apples:applesCurrent,
                 setApples:setApples,
+                addApple,
+                removeApple,
                 gameState,
+                score: gameState.current.score,
                 setGameState,
+                paginateScore,
                 isGameActive,
                 setIsGameActive,
                 player,
