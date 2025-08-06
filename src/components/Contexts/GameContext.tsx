@@ -13,6 +13,9 @@ export type GameContextType = {
     setGameState: React.Dispatch<React.SetStateAction<gameStateType>>;
     isGameActive: boolean;
     setIsGameActive: React.Dispatch<React.SetStateAction<boolean>>;
+    player: any;
+    setPlayer: React.Dispatch<React.SetStateAction<any | null>>;
+    // Add any other game-related state or functions here
 };
 
 export const GameContext = createContext<GameContextType | null>(null);
@@ -23,6 +26,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     });
     const [isGameActive, setIsGameActive] = useState(false);
     const [apples, setApples] = useState<GameContextType["apples"]>([]);
+    const [player, setPlayer] = useState<GameContextType["player"]>({
+        id: 'player1',
+        x: 100,
+        y: 100,
+        ref: null, // This will hold the reference to the player sprite
+    });
     
 
     return (
@@ -34,6 +43,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
                 setGameState,
                 isGameActive,
                 setIsGameActive,
+                player,
+                setPlayer,
             }}>
             {children}
         </GameContext.Provider>

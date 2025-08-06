@@ -1,3 +1,4 @@
+import ApplesCounter from "./Score/ApplesCounter";
 import Score from "./Score/Score";
 
 
@@ -15,6 +16,7 @@ export default function MainUi() {
             pointerEvents: 'none',
         }}>
             <Score />
+            <ApplesCounter />
         </div>
     );
 }

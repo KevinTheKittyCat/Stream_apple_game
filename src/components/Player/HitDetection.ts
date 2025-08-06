@@ -2,7 +2,8 @@
 
 
 
-export function CheckHit(object: any, target: any, shouldReturnTarget = false) {
+export function checkHit(object: any, target: any, shouldReturnTarget = false) {
+    if (!object || !target) return false; // Ensure both objects are defined
     const bounds1 = object.getBounds();
     const bounds2 = target.getBounds();
 
@@ -20,7 +21,7 @@ export function CheckHit(object: any, target: any, shouldReturnTarget = false) {
         : false; // No hit
 }
 
-export function CheckHitMultiple(
+export function checkHitMultiple(
     objects: any[],
     target: any,
     shouldReturnTarget: boolean = false,
@@ -28,11 +29,28 @@ export function CheckHitMultiple(
 ) {
     let hit = [];
     for (const object of objects) {
-        const hitResult = CheckHit(object, target, shouldReturnTarget);
+        const hitResult = checkHit(object, target, shouldReturnTarget);
         if (!hitResult) continue;
-        
+
         hit.push(hitResult);
         if (shouldReturnOnFirstHit) return [hitResult]
+    }
+    return hit.length > 0 ? hit : false; // Return all hits or false if no hits
+}
+
+export function checkHitMultipleWithId(
+    objects: { id: string, ref: React.RefObject<any> }[],
+    target: React.RefObject<any>,
+    shouldReturnTarget: boolean = false,
+    shouldReturnOnFirstHit: boolean = true
+) {
+    let hit = [];
+    for (const object of objects) {
+        const hitResult = checkHit(object.ref, target, shouldReturnTarget);
+        if (!hitResult) continue;
+
+        hit.push(object);
+        if (shouldReturnOnFirstHit) return [object]
     }
     return hit.length > 0 ? hit : false; // Return all hits or false if no hits
 }

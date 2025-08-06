@@ -1,7 +1,7 @@
 import { Sprite } from "../Canvas/Sprite";
 
 export default function Tophat() {
-    const scale = 2.5; // Adjust the scale as needed
+    const scale = 1.5; // Adjust the scale as needed
     return (
         <Sprite
             texture={"/assets/Tophat.png"}
