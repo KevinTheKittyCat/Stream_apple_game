@@ -1,5 +1,7 @@
+import OptionMenu from "./Menu/OptionMenu";
 import ApplesCounter from "./Score/ApplesCounter";
 import Score from "./Score/Score";
+import Timer from "./Score/Timer";
 
 
 
@@ -15,8 +17,10 @@ export default function MainUi() {
             height: '100%',
             pointerEvents: 'none',
         }}>
+            <OptionMenu/>
             <Score />
             <ApplesCounter />
+            <Timer/>
         </div>
     );
 }

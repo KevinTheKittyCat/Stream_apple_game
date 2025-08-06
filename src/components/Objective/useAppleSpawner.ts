@@ -14,13 +14,7 @@ export function useAppleSpawner() {
             y: 100,
         };
         addApple(apple);
-        //setApples((prevApples) => [...prevApples, apple]);
     }
-
-    /*const removeApple = (id: string) => {
-        //console.log("Removing apple with id:", id);
-        setApples((prevApples) => prevApples.filter(apple => apple.id !== id));
-    }*/
 
     const setAppleRef = (id: string, ref: React.RefObject<any>) => {
         setApples((prevApples) => {

@@ -1,7 +1,7 @@
-import { useGameContext } from "@/components/Contexts/GameContext";
+import { useObjectivesStore } from "@/stores/Objectives";
 
 export default function ApplesCounter() {
-    const { apples } = useGameContext();
+    const { apples } = useObjectivesStore()
 
     return (
         <div className="apples-counter">

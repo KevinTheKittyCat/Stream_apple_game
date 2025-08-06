@@ -68,18 +68,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return (
         <GameContext.Provider
             value={{
-                apples:applesCurrent,
-                setApples:setApples,
-                addApple,
-                removeApple,
-                gameState,
-                score: gameState.current.score,
-                setGameState,
-                paginateScore,
-                isGameActive,
-                setIsGameActive,
-                player,
-                setPlayer,
             }}>
             {children}
         </GameContext.Provider>
@@ -94,11 +82,3 @@ export const useGameContext = () => {
 
     return context;
 }
-
-
-
-
-
-
-
-

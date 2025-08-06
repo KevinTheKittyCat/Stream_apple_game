@@ -1,0 +1,22 @@
+.option-menu {
+  margin: auto;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  gap: 1em;
+}
+.option-menu button {
+  width: 80%;
+  height: 4em;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  outline: 1px solid white;
+  pointer-events: all;
+}
+.option-menu button:active {
+  scale: 0.9;
+}/*# sourceMappingURL=option-menu.css.map */
