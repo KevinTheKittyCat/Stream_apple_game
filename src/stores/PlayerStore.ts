@@ -14,13 +14,18 @@ export const usePlayerStore = create((set) => ({
 
 
     // Auto-move
-    movementSpeed: 5,
+    movementSpeed: 2,
     target: null,
     getNewTarget: () => set((state) => {
-        const apples = useObjectivesStore.getState().apples;
+        const { apples, fallingSpeed } = useObjectivesStore.getState();
         if (!apples || apples.length === 0) return { target: null };
         if (!state.playerRef) return { target: null };
-        const closestApple = findClosestReachableApple(apples, state.playerRef);
+        const closestApple = findClosestReachableApple({
+            apples,
+            ref: state.playerRef,
+            refOffset: { x: 0, y: 100 * (fallingSpeed / state.movementSpeed + 1) }, // Adjust for player height
+            appleOffset: { x: 0, y: 0 }
+        });
         return { target: closestApple ? closestApple : null };
     }),
 }))

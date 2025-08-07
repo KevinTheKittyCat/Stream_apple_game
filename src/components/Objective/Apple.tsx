@@ -20,10 +20,10 @@ type AppleProps = {
     fallingSpeed?: number; // Speed at which the apple falls
 };
 
-export function Apple({ id, x = 100, y = 100, fallingSpeed = 4 }: AppleProps) {
+export function Apple({ id, x = 100, y = 100 }: AppleProps) {
     const { incrementScore } = useGameStore();
     const { playerRef, getNewTarget, target } = usePlayerStore()
-    const { apples, setAppleRef } = useObjectivesStore()
+    const { apples, setAppleRef, fallingSpeed } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
     const { removeApple } = useAppleSpawner();
     const speedRef = useRef(0); // current speed

@@ -6,16 +6,12 @@ import {
     useCallback,
     useEffect,
     useRef,
-    useState,
 } from 'react';
 import { useApplication, useTick } from '@pixi/react';
 import { UPDATE_PRIORITY } from 'pixi.js'
-import { useGameContext } from '../Contexts/GameContext';
 import { Sprite } from '../Canvas/Sprite';
 import { Group } from '../Canvas/Group';
 import Tophat from './Tophat';
-import { checkHitMultipleWithId } from './HitDetection';
-import { useAppleSpawner } from '../Objective/useAppleSpawner';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useObjectivesStore } from '@/stores/Objectives';
 import useAutoMove from './useAutoMove';
@@ -27,15 +23,14 @@ type MouseCoords = {
 
 export function Player() {
     const { apples } = useObjectivesStore();
-    const { setPlayerRef, playerRef, target, getNewTarget } = usePlayerStore()
-    const { removeApple } = useAppleSpawner();
+    const { setPlayerRef, playerRef, target, getNewTarget, movementSpeed } = usePlayerStore()
     const spriteRef = useRef(null)
     const { app } = useApplication();
     const mouseCoordsRef = useRef<MouseCoords>({ x: null, y: null });
-    const { ref } = useAutoMove({ 
-        enabled: true/*mouseCoordsRef.current.x === null*/, 
-        maxSpeed: 1, // Adjust this value to control how fast the player moves (pixels per frame)
-        x: target?.ref?.current?.x || window.innerWidth / 2 
+    const { ref } = useAutoMove({
+        enabled: mouseCoordsRef.current.x === null,
+        maxSpeed: movementSpeed,
+        x: target?.ref?.current?.x || window.innerWidth / 2
     });
 
     useEffect(() => {
@@ -57,12 +52,17 @@ export function Player() {
         mouseCoordsRef.current = { x, y };
     }, []);
 
+    const handlePointerLeave = useCallback(() => {
+        mouseCoordsRef.current = { x: null, y: null };
+    }, []);
+
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (!this.current) return;
             //this.current.position.x = mouseCoordsRef.current.x !== null ? mouseCoordsRef.current.x : app.canvas.width / 2;
             //checkHit();
-            this.current.rotation += 0.1
+            //this.current.rotation += 0.1
+            if (mouseCoordsRef.current.x !== null) this.current.position.x = mouseCoordsRef.current.x
         },
         context: spriteRef,
         isEnabled: true,
@@ -71,12 +71,14 @@ export function Player() {
 
     useEffect(() => {
         app.stage.on('pointermove', handlePointerMove);
+        app.stage.on('pointerleave', handlePointerLeave);
 
         return () => {
             console.log('Cleaning up pointer move listener');
             app.stage.off('pointermove', handlePointerMove);
+            app.stage.off('pointerleave', handlePointerLeave);
         };
-    }, [app, handlePointerMove]);
+    }, [app, handlePointerMove, handlePointerLeave]);
 
     useEffect(() => {
         if (!spriteRef.current) return;

@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 
 
@@ -13,6 +13,13 @@ export default function useDelta() {
         lastTimeRef.current = now;
         return delta
     }, [lastTimeRef])
+
+    useEffect(() => {
+        console.log("useDelta initialized");
+        return () => {
+            console.log("useDelta cleanup");
+        }
+    }, []);
 
     return { lastTime: lastTimeRef.current, getDelta }
 }

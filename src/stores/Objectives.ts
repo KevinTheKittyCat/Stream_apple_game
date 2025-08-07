@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 export const useObjectivesStore = create((set) => ({
     apples: [],
+    fallingSpeed: 4,
     setApples: (newApples) => {
         if (newApples instanceof Function) {
             set((state) => ({ apples: newApples(state.apples) }));
