@@ -18,7 +18,7 @@ export function useAppleSpawner() {
 
     const setAppleRef = (id: string, ref: React.RefObject<any>) => {
         setApples((prevApples) => {
-            return prevApples.map(apple => (apple.id === id && ref) ? { ...apple, ref:ref.current } : apple);
+            return prevApples.map(apple => (apple.id === id && ref) ? { ...apple, ref:ref } : apple);
         });
     }
 

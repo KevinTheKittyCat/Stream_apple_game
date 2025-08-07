@@ -1,0 +1,50 @@
+body {
+  background-color: transparent;
+  margin: 0px auto;
+  overflow: hidden;
+}
+
+:root {
+  --color-background-base: transparent;
+}
+
+.chat-room {
+  background: transparent;
+}
+
+* {
+  background: transparent !important;
+}
+
+.chat-input,
+.stream-chat-header,
+.consent-banner,
+.chat-room__content > *:not([aria-label="Chat messages"]) {
+  display: none !important;
+}
+
+.chat-line__message {
+  background: rgba(14, 14, 16, 0.3098039216) !important;
+  border-radius: 10px;
+  margin: 10px;
+  animation: fadeIn 0.3s ease-out 0s 1 normal forwards, fadeOut 0.3s ease-out 5s 1 normal forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}/*# sourceMappingURL=twitchChat.css.map */

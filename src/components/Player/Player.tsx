@@ -18,20 +18,39 @@ import { checkHitMultipleWithId } from './HitDetection';
 import { useAppleSpawner } from '../Objective/useAppleSpawner';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useObjectivesStore } from '@/stores/Objectives';
+import useAutoMove from './useAutoMove';
 
 type MouseCoords = {
     x: number | null;
     y: number | null;
 }
 
-
 export function Player() {
     const { apples } = useObjectivesStore();
-    const { player, setPlayerRef, playerRef } = usePlayerStore()
+    const { setPlayerRef, playerRef, target, getNewTarget } = usePlayerStore()
     const { removeApple } = useAppleSpawner();
     const spriteRef = useRef(null)
-    const { app, isInitialised } = useApplication();
+    const { app } = useApplication();
     const mouseCoordsRef = useRef<MouseCoords>({ x: null, y: null });
+    const { ref } = useAutoMove({ 
+        enabled: true/*mouseCoordsRef.current.x === null*/, 
+        maxSpeed: 1, // Adjust this value to control how fast the player moves (pixels per frame)
+        x: target?.ref?.current?.x || window.innerWidth / 2 
+    });
+
+    useEffect(() => {
+        if (!target || !target.ref.current) getNewTarget();
+        const interval = setInterval(() => {
+            if (!target || !target.ref.current) getNewTarget();
+        }, 1000); // Check every second
+
+        return () => clearInterval(interval);
+    }, [apples, getNewTarget, target]);
+
+
+    useEffect(() => {
+        if (spriteRef) ref.current = spriteRef.current
+    })
 
     const handlePointerMove = useCallback((event: FederatedPointerEvent) => {
         const { x, y } = event.data.global;
@@ -41,7 +60,7 @@ export function Player() {
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (!this.current) return;
-            this.current.position.x = mouseCoordsRef.current.x !== null ? mouseCoordsRef.current.x : app.canvas.width / 2;
+            //this.current.position.x = mouseCoordsRef.current.x !== null ? mouseCoordsRef.current.x : app.canvas.width / 2;
             //checkHit();
             this.current.rotation += 0.1
         },

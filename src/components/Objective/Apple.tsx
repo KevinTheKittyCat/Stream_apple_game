@@ -22,22 +22,23 @@ type AppleProps = {
 
 export function Apple({ id, x = 100, y = 100, fallingSpeed = 4 }: AppleProps) {
     const { incrementScore } = useGameStore();
-    const { playerRef } = usePlayerStore()
-    const { apples } = useObjectivesStore()
+    const { playerRef, getNewTarget, target } = usePlayerStore()
+    const { apples, setAppleRef } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
-    const { setAppleRef, removeApple } = useAppleSpawner();
+    const { removeApple } = useAppleSpawner();
     const speedRef = useRef(0); // current speed
     const lastTimeRef = useRef(performance.now());
 
     const onHit = useCallback((apple: PixiSprite) => {
-        console.log("Apple hit detected!");
+        //console.log("Apple hit detected!");
         incrementScore(1)
         removeApple(id);
-    }, [id, removeApple]);
-
+        //console.log("Apple removed:", target, target?.ref === spriteRef);
+        if (target && target.ref === spriteRef) getNewTarget();
+    }, [id, removeApple, target, apples]);
 
     const checkHitWithPlayer = useCallback((currentApple, playerRef) => {
-        const hit = checkHit(currentApple, playerRef);
+        const hit = checkHit(currentApple, playerRef.current);
         return hit
     }, [playerRef]);
 
@@ -58,12 +59,13 @@ export function Apple({ id, x = 100, y = 100, fallingSpeed = 4 }: AppleProps) {
                 this.current.position.y = 0;
                 this.current.position.x = Math.random() * window.innerWidth;
                 speedRef.current = 0; // reset speed for next fall
+                if (target && target.ref === this) getNewTarget();
             }
 
             if (this.current.position.y < window.innerHeight / 2) return;
 
             if (!playerRef && !this.current) return;
-            const isHit = checkHitWithPlayer(playerRef, this.current);
+            const isHit = checkHitWithPlayer(this.current, playerRef);
             if (isHit) onHit(this.current);
         },
         context: spriteRef,

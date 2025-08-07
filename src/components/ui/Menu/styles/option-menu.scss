@@ -1,12 +1,12 @@
 .option-menu {
-    margin: auto;
+    //margin: auto;
     position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     gap: 1em;
 
     & button {

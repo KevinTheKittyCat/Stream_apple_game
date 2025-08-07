@@ -16,11 +16,21 @@ export default function MainUi() {
             width: '100%',
             height: '100%',
             pointerEvents: 'none',
+            padding: '10px',
         }}>
-            <OptionMenu/>
-            <Score />
-            <ApplesCounter />
-            <Timer/>
+            <div className="main-ui-inner" style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+                <OptionMenu />
+                <Score />
+                <ApplesCounter />
+                <Timer />
+            </div>
+            
         </div>
     );
 }

@@ -13,7 +13,9 @@ export const useObjectivesStore = create((set) => ({
     removeApple: (id) => {
         set((state) => ({ apples: state.apples.filter(apple => apple.id !== id) }));
     },
-    setAppleRef: (id, ref) => set((state) => ({
-        apples: state.apples.map(apple => (apple.id === id && ref) ? { ...apple, ref: ref.current } : apple)
-    })),
+    setAppleRef: (id, ref) => set((state) => {
+        return {
+            apples: state.apples.map(apple => (apple.id === id && ref) ? { ...apple, ref: ref } : apple)
+        };
+    })
 }))

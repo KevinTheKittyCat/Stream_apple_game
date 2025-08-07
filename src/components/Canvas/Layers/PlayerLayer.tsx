@@ -4,6 +4,7 @@ import { Layer } from "@/components/Canvas/Layer";
 import { Apple } from "@/components/Objective/Apple";
 import { useEffect } from "react";
 import AppleSpawner from "@/components/Objective/AppleSpawner";
+import BackgroundLayer from "./BackgroundLayer";
 
 export default function PlayerLayer() {
   const { isInitialised, app } = useApplication();
@@ -18,15 +19,18 @@ export default function PlayerLayer() {
   }, []);
   if (!isInitialised) return null;
   return (
-    <Layer
-      eventMode="static"
-      width={window.innerWidth}
-      height={window.innerHeight}
-    >
-      <Player />
-      {apples.map(apple => (
-        <Apple key={apple.id} id={apple.id} {...apple} />
-      ))}
-    </Layer>
+    <>
+      <BackgroundLayer />
+      <Layer
+        eventMode="static"
+        width={window.innerWidth}
+        height={window.innerHeight}
+      >
+        <Player />
+        {apples.map(apple => (
+          <Apple key={apple.id} id={apple.id} {...apple} />
+        ))}
+      </Layer>
+    </>
   );
 }
