@@ -1,9 +1,10 @@
 import { useObjectivesStore } from "@/stores/Objectives";
+import { getRandomAppleType } from "./AppleUtils";
 
 
 
 export function useAppleSpawner() {
-    const { setApples, addApple, removeApple, apples } = useObjectivesStore();
+    const { setApples, addApple, removeApple, apples, createApple } = useObjectivesStore();
 
     const spawnApple = () => {
         const id = Math.random().toString(36).substring(2, 15);
@@ -12,6 +13,7 @@ export function useAppleSpawner() {
             ref: null, // This will be set when the apple is rendered
             x: Math.random() * window.innerWidth,
             y: 100,
+            ...createApple(),
         };
         addApple(apple);
     }

@@ -6,7 +6,7 @@ import { scale } from "framer-motion";
 
 const treeTops = [
     { src: "/assets/tree/top/tree_object_01.png", trunk: 30, scale: 0.7 },
-    { src: "/assets/tree/top/tree_object_02.png", trunk: 100, scale: 0.7 },
+    // { src: "/assets/tree/top/tree_object_02.png", trunk: 100, scale: 0.7 },
     { src: "/assets/tree/top/tree_object_03.png", trunk: 70, scale: 0.7 },
     { src: "/assets/tree/top/tree_object_04.png", trunk: 60, scale: 0.7 },
 ];

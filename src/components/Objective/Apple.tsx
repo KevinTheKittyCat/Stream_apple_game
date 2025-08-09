@@ -20,7 +20,7 @@ type AppleProps = {
     fallingSpeed?: number; // Speed at which the apple falls
 };
 
-export function Apple({ id, x = 100, y = 100 }: AppleProps) {
+export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
     const { incrementScore } = useGameStore();
     const { playerRef, getNewTarget, target } = usePlayerStore()
     const { apples, setAppleRef, fallingSpeed } = useObjectivesStore()
@@ -31,7 +31,8 @@ export function Apple({ id, x = 100, y = 100 }: AppleProps) {
 
     const onHit = useCallback((apple: PixiSprite) => {
         //console.log("Apple hit detected!");
-        incrementScore(1)
+        incrementScore(type.value)
+        type?.onHit?.(apple);
         removeApple(id);
         //console.log("Apple removed:", target, target?.ref === spriteRef);
         if (target && target.ref === spriteRef) getNewTarget();
@@ -85,7 +86,7 @@ export function Apple({ id, x = 100, y = 100 }: AppleProps) {
             ref={spriteRef}
             anchor={0.5}
             eventMode={'static'}
-            texture={"/assets/Apple.png"}
+            texture={type.image}
             x={x}
             y={y}
         />

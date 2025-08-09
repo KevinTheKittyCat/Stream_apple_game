@@ -89,8 +89,8 @@ export function Player() {
     return (
         <Group
             ref={spriteRef}
-            x={app.canvas.width / 2}
-            y={app.canvas.height - 100}
+            //x={app.canvas.width / 2}
+            y={app.canvas.height * 0.98 - spriteRef.current?.height || 0}
             eventMode={'dynamic'}
         >
             <Sprite

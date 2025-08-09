@@ -23,7 +23,7 @@ export const usePlayerStore = create((set) => ({
         const closestApple = findClosestReachableApple({
             apples,
             ref: state.playerRef,
-            refOffset: { x: 0, y: 100 * (fallingSpeed / state.movementSpeed + 1) }, // Adjust for player height
+            refOffset: { x: 0, y: (window.innerHeight / 10)  * (fallingSpeed / state.movementSpeed + 1) }, // Adjust for player height
             appleOffset: { x: 0, y: 0 }
         });
         return { target: closestApple ? closestApple : null };
