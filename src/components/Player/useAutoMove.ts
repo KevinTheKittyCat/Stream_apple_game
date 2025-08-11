@@ -3,63 +3,69 @@ import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY, Sprite as PixiSprite } from "pixi.js";
 import { useRef } from "react";
 
-export default function useAutoMove({ enabled = true, x = 0, maxSpeed = 1 }) {
+type UseAutoMoveProps = {
+    enabled?: boolean;
+    targetPos: { x?: number | (() => number); y?: number | (() => number) };
+    
+    maxVelocity?: number; // Maximum speed of the sprite
+    normalizationFactor?: number; // Factor to normalize distance for smoother movement
+    easingFactor?: number; // Easing factor for smoother movement
+};
+
+export default function useAutoMove({
+    enabled = true,
+    targetPos,
+
+    maxVelocity = 2,
+    normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
+    easingFactor = 0.1,
+}: UseAutoMoveProps) {
     const contextRef = useRef(null)
     const { getDelta } = useDelta()
-    const velocityRef = useRef(0); // Current velocity (can be negative or positive)
-    const xRef = useRef(x);
+    const velocityXRef = useRef(0); // Current velocity (can be negative or positive)
+    const velocityYRef = useRef(0); // Current velocity for Y movement (if needed)
+    const xRef = useRef(targetPos.x);
+    const yRef = useRef(targetPos.y);
 
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
-            if (!this.current || !enabled) return;
-            
-            const currentX = this.current.position.x;
-            const targetX = x;
-            const distance = targetX - currentX;
+            if (!enabled) return;
+            if (!this.current) return console.warn("useAutoMove: No sprite reference found");
+            const { x, y } = targetPos;
+            const targetX = typeof x === "function" ? x() : x;
+            const targetY = typeof y === "function" ? y() : y;
 
             // Update target reference
+            // Don't recalculate velocity immediately - let it naturally adjust
             if (xRef.current !== targetX) {
                 xRef.current = targetX;
-                // Don't recalculate velocity immediately - let it naturally adjust
-            }
 
-            // If we're close enough to the target, gradually slow down
-            if (Math.abs(distance) < 0.5) {
-                velocityRef.current *= 0.99; // Gradually slow down when close
-                if (Math.abs(velocityRef.current) < 0.1) {
-                    velocityRef.current = 0;
-                    return;
-                }
-            } else {
-                // Calculate desired velocity more smoothly
-                const maxVelocity = maxSpeed * 2; // Reduced multiplier for smoother movement
-                
-                // Use a gentler approach to velocity calculation
-                const normalizedDistance = Math.tanh(distance * 0.01); // Smooth sigmoid-like function
-                const desiredVelocity = normalizedDistance * maxVelocity;
-                
-                // Very gentle easing towards desired velocity
-                const easingFactor = 0.08; // Reduced easing for smoother transitions
-                velocityRef.current += (desiredVelocity - velocityRef.current) * easingFactor;
+            }
+            if (yRef.current !== targetY) {
+                yRef.current = targetY;
             }
 
             if (!this.current) return;
-            this.current.position.x += velocityRef.current * getDelta() * 60; // 60 = base frame rate
-            /*
-            // Calculate target speed based on direction and maxSpeed
-            const targetSpeed = maxSpeed * direction;
+            const delta = getDelta();
 
-            // Apply easing to the speed using delta time
-            const easingFactor = 0.1;
-            const deltaTime = getDelta();
-
-            // Smoothly interpolate current speed towards target speed
-            console.log(speedRef.current, (targetSpeed - speedRef.current) * easingFactor * deltaTime * 60)
-            speedRef.current += (targetSpeed - speedRef.current) * easingFactor * deltaTime * 60;
-
-            // Apply movement using delta time for frame-rate independent movement
-            this.current.position.x += speedRef.current;
-            */
+            if (isNumber(targetX)) this.current.position.x += calculateMovement({
+                current: this.current.position.x,
+                target: targetX,
+                maxVelocity: maxVelocity,
+                velocityRef: velocityXRef,
+                delta: delta,
+                normalizationFactor: normalizationFactor,
+                easingFactor: easingFactor
+            });
+            if (isNumber(targetY)) this.current.position.y += calculateMovement({
+                current: this.current.position.y,
+                target: targetY,
+                maxVelocity: maxVelocity,
+                velocityRef: velocityYRef,
+                delta: delta,
+                normalizationFactor: normalizationFactor,
+                easingFactor: easingFactor
+            });
         },
         context: contextRef,
         isEnabled: enabled,
@@ -67,4 +73,38 @@ export default function useAutoMove({ enabled = true, x = 0, maxSpeed = 1 }) {
     })
 
     return { ref: contextRef }
+}
+
+
+
+const isNumber = (value) => {
+    return typeof value === "number" && !isNaN(value) && typeof value !== "undefined";
+}
+
+const calculateMovement = ({
+    current,
+    target,
+    maxVelocity = 2, // Default max speed
+    delta,
+    velocityRef,
+    normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
+    easingFactor = 0.1, // Easing factor for smoother movement
+}) => {
+    const distance = target - current;
+    //let velocity = 0;
+
+    // If we're close enough to the target, gradually slow down
+
+    // Calculate desired velocity more smoothly
+    //const maxVelocity = maxSpeed * 2; // Reduced multiplier for smoother movement
+
+    // Use a gentler approach to velocity calculation
+    const normalizedDistance = Math.tanh(distance * normalizationFactor); // Smooth sigmoid-like function
+    const desiredVelocity = normalizedDistance * maxVelocity;
+
+    // Very gentle easing towards desired velocity
+    velocityRef.current += (desiredVelocity - velocityRef.current) * easingFactor;
+
+
+    return velocityRef.current * delta * 60; // 60 = base frame rate
 }

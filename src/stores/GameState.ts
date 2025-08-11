@@ -24,4 +24,9 @@ export const useGameStore = create((set) => ({
             totalTime: final > 0 ? state.totalTime - number : state.totalTime
         }
     }),
+
+
+    modifiers: {
+        red_apple: { add: 1, multiply: 1, spawnRate: 1, onHit: () => {} },
+    }
 }))

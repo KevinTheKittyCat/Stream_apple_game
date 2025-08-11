@@ -27,10 +27,37 @@ export function Player() {
     const spriteRef = useRef(null)
     const { app } = useApplication();
     const mouseCoordsRef = useRef<MouseCoords>({ x: null, y: null });
+
+    //console.log(target?.ref?.current?.x, target?.ref?.current?.y, target?.ref?.current);
+    const getTargetPositionX = useCallback(() => {
+        if (mouseCoordsRef.current.x !== null) {
+            return mouseCoordsRef.current.x;
+        }
+        if (target && target.ref.current) {
+            return target.ref.current.x;
+        }
+        return window.innerWidth / 2;
+    }, [target]);
+
+    const getTargetPositionY = useCallback(() => {
+        if (mouseCoordsRef.current.y !== null) {
+            return mouseCoordsRef.current.y;
+        }
+        if (target && target.ref.current) {
+            return target.ref.current.y;
+        }
+        return window.innerHeight / 2;
+    }, [target]);
+
     const { ref } = useAutoMove({
-        enabled: mouseCoordsRef.current.x === null,
-        maxSpeed: movementSpeed,
-        x: target?.ref?.current?.x || window.innerWidth / 2
+        enabled: true,
+        maxVelocity: movementSpeed * 2,
+        targetPos: {
+            x: target?.ref?.current?.x ? getTargetPositionX : window.innerWidth / 2,
+            y: target?.ref?.current?.y ? getTargetPositionY : window.innerHeight / 2
+        },
+        normalizationFactor: 0.01,
+        easingFactor: 0.1,
     });
 
     useEffect(() => {
@@ -56,19 +83,6 @@ export function Player() {
         mouseCoordsRef.current = { x: null, y: null };
     }, []);
 
-    useTick({
-        callback(this: React.RefObject<PixiSprite | null>) {
-            if (!this.current) return;
-            //this.current.position.x = mouseCoordsRef.current.x !== null ? mouseCoordsRef.current.x : app.canvas.width / 2;
-            //checkHit();
-            //this.current.rotation += 0.1
-            if (mouseCoordsRef.current.x !== null) this.current.position.x = mouseCoordsRef.current.x
-        },
-        context: spriteRef,
-        isEnabled: true,
-        priority: UPDATE_PRIORITY.LOW,
-    })
-
     useEffect(() => {
         app.stage.on('pointermove', handlePointerMove);
         app.stage.on('pointerleave', handlePointerLeave);
@@ -90,7 +104,7 @@ export function Player() {
         <Group
             ref={spriteRef}
             //x={app.canvas.width / 2}
-            y={app.canvas.height * 0.98 - spriteRef.current?.height || 0}
+            //y={app.canvas.height * 0.98 - spriteRef.current?.height || 0}
             eventMode={'dynamic'}
         >
             <Sprite

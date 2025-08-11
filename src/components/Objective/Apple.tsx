@@ -63,8 +63,6 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
                 if (target && target.ref === this) getNewTarget();
             }
 
-            if (this.current.position.y < window.innerHeight / 2) return;
-
             if (!playerRef && !this.current) return;
             const isHit = checkHitWithPlayer(this.current, playerRef);
             if (isHit) onHit(this.current);
