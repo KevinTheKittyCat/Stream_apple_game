@@ -23,8 +23,10 @@ class RopeParticle {
     update(_deltaTime: number) {
         if (this.pinned) return;
 
-        const velocityX = (this.x - this.oldX) * 0.99; // Air resistance
-        const velocityY = (this.y - this.oldY) * 0.99;
+        // Verlet integration with damping
+        const damping = 0.995; // Air resistance
+        const velocityX = (this.x - this.oldX) * damping;
+        const velocityY = (this.y - this.oldY) * damping;
 
         this.oldX = this.x;
         this.oldY = this.y;
@@ -36,9 +38,11 @@ class RopeParticle {
     applyForce(forceX: number, forceY: number, deltaTime: number) {
         if (this.pinned) return;
 
+        // Apply force as acceleration (F = ma, so a = F/m)
         const accelerationX = forceX / this.mass;
         const accelerationY = forceY / this.mass;
 
+        // Integrate acceleration into position using Verlet integration
         this.x += accelerationX * deltaTime * deltaTime;
         this.y += accelerationY * deltaTime * deltaTime;
     }
@@ -86,18 +90,25 @@ class RopeConstraint {
         if (distance === 0) return;
 
         const difference = this.restLength - distance;
-        const percent = (difference / distance) * this.stiffness;
-        const offsetX = dx * percent * 0.5;
-        const offsetY = dy * percent * 0.5;
+        // Apply stiffness more gradually - this allows for more natural rope behavior
+        const percent = (difference / distance) * this.stiffness * 0.25; // Reduced from 0.5 for less aggressive correction
+        const offsetX = dx * percent;
+        const offsetY = dy * percent;
 
+        // Distribute correction based on mass (if we had different masses)
+        // For now, split equally between particles
+        const correctionA = 0.5;
+        const correctionB = 0.5;
+
+        // Only move particles that aren't pinned
         if (!this.particleA.pinned) {
-            this.particleA.x -= offsetX;
-            this.particleA.y -= offsetY;
+            this.particleA.x -= offsetX * correctionA;
+            this.particleA.y -= offsetY * correctionA;
         }
 
         if (!this.particleB.pinned) {
-            this.particleB.x += offsetX;
-            this.particleB.y += offsetY;
+            this.particleB.x += offsetX * correctionB;
+            this.particleB.y += offsetY * correctionB;
         }
     }
 }
@@ -180,7 +191,7 @@ export function RopeMesh({ points }: { points: Point[] }) {
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);
             graphics.stroke({
-                color: 0x8B4513,
+                color: "white",
                 width: 4,
                 cap: 'round'
             });
@@ -225,11 +236,31 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
         constraints.current = [];
         points.current = [];
 
-        // Create particles
+        // Calculate actual segment length if we have both endpoints
+        const actualSegmentLength = to ? 
+            Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2)) / (segments - 1) : 
+            segmentLength;
+
+        // Create particles with initial sag for more natural behavior
         for (let i = 0; i < segments; i++) {
             const progress = i / (segments - 1);
-            const x = from.x + (to ? (to.x - from.x) * progress : 0);
-            const y = from.y + (to ? (to.y - from.y) * progress : 0);
+            let x, y;
+            
+            if (to) {
+                // If we have an end point, interpolate between start and end
+                x = from.x + (to.x - from.x) * progress;
+                y = from.y + (to.y - from.y) * progress;
+                
+                // Add initial sag to create a more natural catenary-like curve
+                // Maximum sag in the middle, tapering off towards the ends
+                const sagAmount = actualSegmentLength * 0.5; // Adjust this for more/less initial sag
+                const sagFactor = Math.sin(progress * Math.PI); // Sine curve for natural sag
+                y += sagFactor * sagAmount;
+            } else {
+                // If no end point, create a hanging rope
+                x = from.x;
+                y = from.y + i * actualSegmentLength;
+            }
             
             const isFirstParticle = i === 0;
             const isLastParticle = i === segments - 1;
@@ -239,11 +270,10 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
             points.current.push(new Point(x, y));
         }
 
-        // Create constraints
+        // Create constraints with proper rest length
         for (let i = 0; i < segments - 1; i++) {
-            const constraintStiffness = stiffness;
             constraints.current.push(
-                new RopeConstraint(particles.current[i], particles.current[i + 1], constraintStiffness)
+                new RopeConstraint(particles.current[i], particles.current[i + 1], stiffness)
             );
         }
     }, [segments, segmentLength, from, to, stiffness, pinFrom, pinTo]);
@@ -255,9 +285,20 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
             const deltaTime = Math.min((currentTime - lastTime.current) / 1000, 0.016); // Cap at 60fps
             lastTime.current = currentTime;
 
-            // Apply gravity to all particles
+            // Update anchor positions FIRST (before physics)
+            if (pinFrom && particles.current[0]) {
+                particles.current[0].setPosition(from.x, from.y);
+            }
+            
+            if (pinTo && to && particles.current[segments - 1]) {
+                particles.current[segments - 1].setPosition(to.x, to.y);
+            }
+
+            // Apply gravity to all particles AFTER setting anchor positions
             particles.current.forEach(particle => {
-                particle.applyForce(0, gravity * particle.mass, deltaTime);
+                if (!particle.pinned) {
+                    particle.applyForce(0, gravity * particle.mass, deltaTime);
+                }
             });
 
             // Update particle positions (Verlet integration)
@@ -270,15 +311,18 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
                 constraints.current.forEach(constraint => {
                     constraint.satisfy();
                 });
-            }
-
-            // Update anchor positions if they changed
-            if (pinFrom && particles.current[0]) {
-                particles.current[0].setPosition(from.x, from.y);
-            }
-            
-            if (pinTo && to && particles.current[segments - 1]) {
-                particles.current[segments - 1].setPosition(to.x, to.y);
+                
+                // Re-enforce anchor positions after each constraint iteration
+                // This ensures anchors stay in place while allowing natural sag
+                if (pinFrom && particles.current[0]) {
+                    particles.current[0].x = from.x;
+                    particles.current[0].y = from.y;
+                }
+                
+                if (pinTo && to && particles.current[segments - 1]) {
+                    particles.current[segments - 1].x = to.x;
+                    particles.current[segments - 1].y = to.y;
+                }
             }
 
             // Update render points

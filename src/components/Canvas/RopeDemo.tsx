@@ -65,10 +65,22 @@ export default function RopeDemo() {
             {/* Example with a hanging rope */}
             <MyRope
                 segments={20}
-                gravity={800}
-                stiffness={0.9}
+                gravity={0}
+                stiffness={0.1}
                 constraintIterations={3}
                 from={{ x: 500, y: 50 }}
+                to={toPosition}
+                pinFrom={true}
+                pinTo={false}
+            />
+            
+            {/* A simple hanging rope to show pure gravity effect */}
+            <MyRope
+                segments={12}
+                gravity={1200}
+                stiffness={2}
+                constraintIterations={2}
+                from={{ x: 700, y: 100 }}
                 pinFrom={true}
                 pinTo={false}
             />
