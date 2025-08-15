@@ -11,6 +11,7 @@ import {
 import { GameProvider } from '@/components/Contexts/GameContext';
 import PlayerLayer from '@/components/Canvas/Layers/PlayerLayer';
 import MainUi from '@/components/ui/mainUI';
+import TalentTree from '@/components/Canvas/Layers/TalentTree';
 
 
 
@@ -39,7 +40,8 @@ export function Game() {
 
   return (
     <Application eventMode='static' resizeTo={window}>
-      <PlayerLayer/>
+      <PlayerLayer />
+      <TalentTree />
     </Application>
   );
 }

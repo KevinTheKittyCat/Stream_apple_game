@@ -1,11 +1,8 @@
 import OptionMenu from "./Menu/OptionMenu";
 import ApplesCounter from "./Score/ApplesCounter";
+import CurrentStatsMenu from "./Score/CurrentStatsMenu";
 import Score from "./Score/Score";
 import Timer from "./Score/Timer";
-
-
-
-
 
 export default function MainUi() {
     return (
@@ -25,10 +22,8 @@ export default function MainUi() {
                 display: 'flex',
                 flexDirection: 'column',
             }}>
-                <OptionMenu />
-                <Score />
-                <ApplesCounter />
-                <Timer />
+                {/*<OptionMenu />*/}
+                <CurrentStatsMenu />
             </div>
             
         </div>

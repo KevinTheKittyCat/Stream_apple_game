@@ -12,6 +12,7 @@ export const findClosestReachableApple = ({
     let closestApple = null;
     for (const apple of apples) {
         if (!apple.ref || !apple.ref.current) continue; // Ensure apple has a valid ref
+        if (apple.type.value < 0) continue; // Skip if apple is not reachable
         const pos = apple.ref.current.position
         const distance = Math.sqrt((pos.x - x + refOffset.x) ** 2 + (pos.y - y + refOffset.y) ** 2);
 

@@ -15,6 +15,7 @@
         backdrop-filter: blur(4px);
         outline: 1px solid white;
         pointer-events: all;
+        transition: all 0.2s ease-in-out;
 
         &:active {
             scale: 0.9;

@@ -1,4 +1,5 @@
 import { useGameStore } from "@/stores/GameState";
+import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 
 export default function Timer() {
@@ -17,9 +18,10 @@ export default function Timer() {
     }, [minusTimer, timer]);
 
     return (
-        <div className="score">
-            <h1>Time: {timer.toFixed(2)}</h1>
-        </div>
+        <Flex gap={2} align={"center"} className="score" style={{ fontSize: "1rem" }}>
+            <img src="/assets/Clock.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />
+            <h1>{timer.toFixed(2)}</h1>
+        </Flex>
     );
 }
 

@@ -31,7 +31,7 @@ export default function GameBackground() {
     }), []);
 
     const { ref: cloudsRef } = useParallax({
-        speed: 0.01,
+        speed: 0.05,
         min: -window.innerWidth * 0.1,
         max: 0,
         offset: -window.innerWidth * 0.02,

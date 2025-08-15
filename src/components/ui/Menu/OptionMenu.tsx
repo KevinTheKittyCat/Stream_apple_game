@@ -6,7 +6,7 @@ import TotalTime from "./TotalTime";
 
 export default function OptionMenu() {
     const { timer, updateTimer, resetTimer } = useGameStore()
-    return
+
     if (timer !== 0) return
     return (
         <div className="option-menu">
