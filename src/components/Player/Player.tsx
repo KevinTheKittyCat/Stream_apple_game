@@ -15,6 +15,7 @@ import Tophat from './Tophat';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useObjectivesStore } from '@/stores/Objectives';
 import useAutoMove from './useAutoMove';
+import Basket from './Basket';
 
 type MouseCoords = {
     x: number | null;
@@ -111,7 +112,7 @@ export function Player() {
                 anchor={0.5}
                 texture={"https://pixijs.com/assets/bunny.png"}
             />
-            <Tophat />
+            <Basket />
         </Group>
     );
 }

@@ -87,6 +87,8 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
             texture={type.image}
             x={x}
             y={y}
+            width={50}
+            height={50}
         />
     );
 }

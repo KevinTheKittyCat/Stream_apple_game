@@ -3,7 +3,7 @@
 
 
 export const appleTypes: Record<string, { value: number; image: string; weight: number }> = {
-    APPLE: { value: 1, image: "/assets/apple/Apple.png", weight: 100 },
+    APPLE: { value: 1, image: "/assets/fruits/Apple.png", weight: 100 },
     GOLDEN_APPLE: { value: 2, image: "/assets/apple/GoldenApple.png", weight: 10 },
     CANDY_APPLE: { value: 3, image: "/assets/apple/CandyApple.png", weight: 3 },
     WORM_APPLE: { value: -1, image: "/assets/apple/WormApple.png", weight: 10 },
