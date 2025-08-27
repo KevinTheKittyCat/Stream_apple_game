@@ -1,6 +1,7 @@
-import { useExtend } from "@pixi/react";
+import { useExtend, useTick } from "@pixi/react";
 import { Point, Container, Graphics } from "pixi.js";
 import { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import { handlePositionIfRef } from "../UtilFunctions/RefHandling";
 
 // Physics particle for rope simulation
 class RopeParticle {
@@ -76,7 +77,7 @@ class RopeConstraint {
         this.particleA = particleA;
         this.particleB = particleB;
         this.restLength = Math.sqrt(
-            Math.pow(particleA.x - particleB.x, 2) + 
+            Math.pow(particleA.x - particleB.x, 2) +
             Math.pow(particleA.y - particleB.y, 2)
         );
         this.stiffness = stiffness;
@@ -138,10 +139,11 @@ type RopeRef = {
     getParticlePosition: (index: number) => { x: number; y: number } | null;
 };
 
-export function RopeMesh({ points }: { points: Point[] }) {
+export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } }) {
+
     // Extend PIXI React with required components
     useExtend({ Container, Graphics });
-    
+
     const containerRef = useRef<Container | null>(null);
     const graphicsRef = useRef<Graphics | null>(null);
 
@@ -160,19 +162,20 @@ export function RopeMesh({ points }: { points: Point[] }) {
     }, []);
 
     // Draw rope each frame based on points
-    useEffect(() => {
+    useTick(() => {
+        const points = ropePoints.current;
         if (!graphicsRef.current || points.length < 2) return;
 
         const graphics = graphicsRef.current;
         graphics.clear();
-        
+
         // Draw rope as connected line segments
         graphics.moveTo(points[0].x, points[0].y);
-        
+
         for (let i = 1; i < points.length; i++) {
             graphics.lineTo(points[i].x, points[i].y);
         }
-        
+
         // Style the rope
         graphics.stroke({
             color: 0x8B4513, // Brown color
@@ -180,13 +183,13 @@ export function RopeMesh({ points }: { points: Point[] }) {
             cap: 'round',
             join: 'round'
         });
-        
+
         // Add some rope segments for visual effect
         graphics.clear();
         for (let i = 0; i < points.length - 1; i++) {
             const start = points[i];
             const end = points[i + 1];
-            
+
             // Draw segment
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);
@@ -195,32 +198,34 @@ export function RopeMesh({ points }: { points: Point[] }) {
                 width: 4,
                 cap: 'round'
             });
-            
+
             // Draw knots at connection points
             graphics.circle(start.x, start.y, 3);
             graphics.fill({ color: 0x654321 });
         }
-        
+
         // Final knot
         if (points.length > 0) {
             const lastPoint = points[points.length - 1];
             graphics.circle(lastPoint.x, lastPoint.y, 3);
             graphics.fill({ color: 0x654321 });
         }
-        
-    }, [points]);
+
+    });
 
     return <pixiContainer ref={containerRef} />;
 }
 
-export default forwardRef<RopeRef, RopeProps>(function MyRope({ 
-    segments = 10, 
-    segmentLength = 50, 
+export default forwardRef<RopeRef, RopeProps>(function MyRope({
+    segments = 10,
+    segmentLength = 50,
     gravity = 980, // pixels per second squared
     stiffness = 1,
     constraintIterations = 3,
-    from, 
+    from,
     to,
+    fromOffset,
+    toOffset,
     pinFrom = true,
     pinTo = false
 }, ref) {
@@ -235,22 +240,31 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
         particles.current = [];
         constraints.current = [];
         points.current = [];
+        let handledTo = handlePositionIfRef(to);
+        let handledFrom = handlePositionIfRef(from);
+
+        console.log("Initializing rope from", handledFrom, "to", handledTo);
+
+        handledTo.x += toOffset?.x || 0;
+        handledTo.y += toOffset?.y || 0;
+        handledFrom.x += fromOffset?.x || 0;
+        handledFrom.y += fromOffset?.y || 0;
 
         // Calculate actual segment length if we have both endpoints
-        const actualSegmentLength = to ? 
-            Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2)) / (segments - 1) : 
+        const actualSegmentLength = handledTo ?
+            Math.sqrt(Math.pow(handledTo.x - handledFrom.x, 2) + Math.pow(handledTo.y - handledFrom.y, 2)) / (segments - 1) :
             segmentLength;
 
         // Create particles with initial sag for more natural behavior
         for (let i = 0; i < segments; i++) {
             const progress = i / (segments - 1);
             let x, y;
-            
-            if (to) {
+
+            if (handledTo) {
                 // If we have an end point, interpolate between start and end
-                x = from.x + (to.x - from.x) * progress;
-                y = from.y + (to.y - from.y) * progress;
-                
+                x = handledFrom.x + (handledTo.x - handledFrom.x) * progress;
+                y = handledFrom.y + (handledTo.y - handledFrom.y) * progress;
+
                 // Add initial sag to create a more natural catenary-like curve
                 // Maximum sag in the middle, tapering off towards the ends
                 const sagAmount = actualSegmentLength * 0.5; // Adjust this for more/less initial sag
@@ -258,14 +272,14 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
                 y += sagFactor * sagAmount;
             } else {
                 // If no end point, create a hanging rope
-                x = from.x;
-                y = from.y + i * actualSegmentLength;
+                x = handledFrom.x;
+                y = handledFrom.y + i * actualSegmentLength;
             }
-            
+
             const isFirstParticle = i === 0;
             const isLastParticle = i === segments - 1;
             const shouldPin = (isFirstParticle && pinFrom) || (isLastParticle && pinTo);
-            
+
             particles.current.push(new RopeParticle(x, y, shouldPin));
             points.current.push(new Point(x, y));
         }
@@ -276,65 +290,76 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
                 new RopeConstraint(particles.current[i], particles.current[i + 1], stiffness)
             );
         }
+        //console.log("Rope initialized with particles:", particles.current);
     }, [segments, segmentLength, from, to, stiffness, pinFrom, pinTo]);
+
+    const simulate = () => {
+        let handledTo = handlePositionIfRef(to);
+        let handledFrom = handlePositionIfRef(from);
+        //console.log("rope from", handledFrom, "to", handledTo);
+
+        handledTo.x += toOffset?.x || 0;
+        handledTo.y += toOffset?.y || 0;
+        handledFrom.x += fromOffset?.x || 0;
+        handledFrom.y += fromOffset?.y || 0;
+
+        const currentTime = performance.now();
+        const deltaTime = Math.min((currentTime - lastTime.current) / 1000, 0.016); // Cap at 60fps
+        lastTime.current = currentTime;
+
+        // Update anchor positions FIRST (before physics)
+        if (pinFrom && particles.current[0]) {
+            particles.current[0].setPosition(handledFrom.x, handledFrom.y);
+        }
+
+        if (pinTo && handledTo && particles.current[segments - 1]) {
+            particles.current[segments - 1].setPosition(handledTo.x, handledTo.y);
+        }
+
+        // Apply gravity to all particles AFTER setting anchor positions
+        particles.current.forEach(particle => {
+            if (!particle.pinned) {
+                particle.applyForce(0, gravity * particle.mass, deltaTime);
+            }
+        });
+
+        // Update particle positions (Verlet integration)
+        particles.current.forEach(particle => {
+            particle.update(deltaTime);
+        });
+
+        // Satisfy constraints multiple times for stability
+        for (let iteration = 0; iteration < constraintIterations; iteration++) {
+            constraints.current.forEach(constraint => {
+                constraint.satisfy();
+            });
+
+            // Re-enforce anchor positions after each constraint iteration
+            // This ensures anchors stay in place while allowing natural sag
+            if (pinFrom && particles.current[0]) {
+                particles.current[0].x = handledFrom.x;
+                particles.current[0].y = handledFrom.y;
+            }
+
+            if (pinTo && to && particles.current[segments - 1]) {
+                particles.current[segments - 1].x = handledTo.x;
+                particles.current[segments - 1].y = handledTo.y;
+            }
+        }
+
+        // Update render points
+        particles.current.forEach((particle, index) => {
+            if (points.current[index]) {
+                points.current[index].x = particle.x;
+                points.current[index].y = particle.y;
+            }
+        });
+
+        animationFrame.current = requestAnimationFrame(simulate);
+    };
 
     // Physics simulation loop
     useEffect(() => {
-        const simulate = () => {
-            const currentTime = performance.now();
-            const deltaTime = Math.min((currentTime - lastTime.current) / 1000, 0.016); // Cap at 60fps
-            lastTime.current = currentTime;
-
-            // Update anchor positions FIRST (before physics)
-            if (pinFrom && particles.current[0]) {
-                particles.current[0].setPosition(from.x, from.y);
-            }
-            
-            if (pinTo && to && particles.current[segments - 1]) {
-                particles.current[segments - 1].setPosition(to.x, to.y);
-            }
-
-            // Apply gravity to all particles AFTER setting anchor positions
-            particles.current.forEach(particle => {
-                if (!particle.pinned) {
-                    particle.applyForce(0, gravity * particle.mass, deltaTime);
-                }
-            });
-
-            // Update particle positions (Verlet integration)
-            particles.current.forEach(particle => {
-                particle.update(deltaTime);
-            });
-
-            // Satisfy constraints multiple times for stability
-            for (let iteration = 0; iteration < constraintIterations; iteration++) {
-                constraints.current.forEach(constraint => {
-                    constraint.satisfy();
-                });
-                
-                // Re-enforce anchor positions after each constraint iteration
-                // This ensures anchors stay in place while allowing natural sag
-                if (pinFrom && particles.current[0]) {
-                    particles.current[0].x = from.x;
-                    particles.current[0].y = from.y;
-                }
-                
-                if (pinTo && to && particles.current[segments - 1]) {
-                    particles.current[segments - 1].x = to.x;
-                    particles.current[segments - 1].y = to.y;
-                }
-            }
-
-            // Update render points
-            particles.current.forEach((particle, index) => {
-                if (points.current[index]) {
-                    points.current[index].x = particle.x;
-                    points.current[index].y = particle.y;
-                }
-            });
-
-            animationFrame.current = requestAnimationFrame(simulate);
-        };
 
         animationFrame.current = requestAnimationFrame(simulate);
 
@@ -404,5 +429,5 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
         }
     }), []);
 
-    return <RopeMesh points={points.current} />;
+    return <RopeMesh points={points} />;
 });

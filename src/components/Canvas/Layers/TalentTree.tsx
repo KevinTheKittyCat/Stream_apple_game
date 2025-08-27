@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Layer } from "@/components/Canvas/Layer";
 import { useApplication } from "@pixi/react";
-import Talent from "@/components/Game/TalentTree/Talent";
+
 import { createTalentTree, techs } from "@/components/Game/TalentTree/TalentData";
 import Line from "../Line";
 import NewTalentTree from "@/components/Game/TalentTree/NewTalentTree";

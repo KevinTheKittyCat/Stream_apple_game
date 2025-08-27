@@ -5,7 +5,7 @@ import React from 'react';
 
 type Props = {
     children: React.ReactNode;
-    background: {
+    background?: {
         backgroundColor?: string;
         alpha?: number;
     }

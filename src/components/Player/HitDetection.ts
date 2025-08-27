@@ -40,13 +40,14 @@ export function checkHitMultiple(
 
 export function checkHitMultipleWithId(
     objects: { id: string, ref: React.RefObject<any> }[],
-    target: React.RefObject<any>,
+    target: React.RefObject<any> | null,
     shouldReturnTarget: boolean = false,
     shouldReturnOnFirstHit: boolean = true
 ) {
     let hit = [];
+    if (!target) return false;
     for (const object of objects) {
-        const hitResult = checkHit(object.ref, target, shouldReturnTarget);
+        const hitResult = checkHit(object.ref?.current || object.ref, target, shouldReturnTarget);
         if (!hitResult) continue;
 
         hit.push(object);
