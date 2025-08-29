@@ -1,6 +1,6 @@
 import { useExtend, useTick } from "@pixi/react";
 import { Point, Container, Graphics } from "pixi.js";
-import { useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import { useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
 import { handlePositionIfRef } from "../UtilFunctions/RefHandling";
 
 // Physics particle for rope simulation
@@ -178,7 +178,7 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
 
         // Style the rope
         graphics.stroke({
-            color: 0x8B4513, // Brown color
+            color: "white", // Brown color
             width: 4,
             cap: 'round',
             join: 'round'
@@ -200,15 +200,15 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
             });
 
             // Draw knots at connection points
-            graphics.circle(start.x, start.y, 3);
-            graphics.fill({ color: 0x654321 });
+            graphics.circle(start.x, start.y, 2);
+            graphics.fill({ color: "white" });
         }
 
         // Final knot
         if (points.length > 0) {
             const lastPoint = points[points.length - 1];
-            graphics.circle(lastPoint.x, lastPoint.y, 3);
-            graphics.fill({ color: 0x654321 });
+            graphics.circle(lastPoint.x, lastPoint.y, 2);
+            graphics.fill({ color: "white" });
         }
 
     });
@@ -293,7 +293,7 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
         //console.log("Rope initialized with particles:", particles.current);
     }, [segments, segmentLength, from, to, stiffness, pinFrom, pinTo]);
 
-    const simulate = () => {
+    const simulate = useCallback(() => {
         let handledTo = handlePositionIfRef(to);
         let handledFrom = handlePositionIfRef(from);
         //console.log("rope from", handledFrom, "to", handledTo);
@@ -356,7 +356,7 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
         });
 
         animationFrame.current = requestAnimationFrame(simulate);
-    };
+    }, []);
 
     // Physics simulation loop
     useEffect(() => {
@@ -365,6 +365,7 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
 
         return () => {
             if (animationFrame.current) {
+                console.log("Cancelling animation frame:", animationFrame.current);
                 cancelAnimationFrame(animationFrame.current);
             }
         };

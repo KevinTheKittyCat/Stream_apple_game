@@ -25,8 +25,8 @@ const PreReqRope = ({ req, talent }) => {
     return (
         <MyRope
             key={`${talent.id}-${req.id}`}
-            segments={6}
-            gravity={1200}
+            segments={16}
+            gravity={-1200}
             segmentLength={100}
             stiffness={0.8}
             constraintIterations={4}

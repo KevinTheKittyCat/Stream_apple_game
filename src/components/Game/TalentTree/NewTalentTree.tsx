@@ -17,7 +17,7 @@ export default function NewTalentTree() {
         });
 
         const interval = setInterval(() => {
-            //if (talents.length >= 2) return;
+            if (talents.length >= 4) return;
             const newTalent = {
                 ...JSONTALENTS.secondTalent,
                 settled: 0,
@@ -32,15 +32,14 @@ export default function NewTalentTree() {
     return (
         <>
             <Layer>
+                <RopeTree />
+            </Layer>
+            <Layer>
                 {
                     talents.map(talent => (
                         <Talent key={talent.id} {...talent} />
                     ))
                 }
-
-            </Layer>
-            <Layer>
-                <RopeTree />
             </Layer>
         </>
     )

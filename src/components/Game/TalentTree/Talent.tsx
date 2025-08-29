@@ -7,7 +7,7 @@ import { useTalentTreeStore, type TalentType } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY } from "pixi.js";
 import { checkHitMultiple, checkHitMultipleWithId } from "@/components/Player/HitDetection";
-export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 50 };
+export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
 export function Talent({ id, position, settled, prerequisites }: TalentType) {
     const groupRef = useRef(null);
@@ -35,23 +35,41 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
         //console.log("obj hit", obj, objHits);
         //console.log("Hit detected:", obj, objHits);
 
-        objHits.forEach((hitObject, index) => {
-            //if (index > 0) return; // Only apply to the first hit object for now
+        // Physics-based repulsion: push obj away from all hit objects
+        objHits.forEach((hitObject) => {
             const { ref } = hitObject;
             const { current: hitObjectCurrent } = ref;
+            if (!hitObjectCurrent || !hitObjectCurrent.position || !obj.position) return;
 
-            //console.log("Hit object current:", hitObjectCurrent);
+            // Calculate direction vector from hitObject to obj
+            let dx = obj.position.x - hitObjectCurrent.position.x;
+            let dy = obj.position.y - hitObjectCurrent.position.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+             // Prevent division by zero
 
-            const shouldMoveUp = hitObjectCurrent.position.y <= obj.position.y;
-            const shouldMoveLeft = hitObjectCurrent.position.x <= obj.position.x;
-            const shouldMoveRight = hitObjectCurrent.position.x > obj.position.x;
-            const shouldMoveDown = hitObjectCurrent.position.y > obj.position.y;
+            // If distance is zero, nudge in a random direction
+            if (distance === 0) {
+                // Random angle
+                const angle = Math.random() * 2 * Math.PI;
+                dx = Math.cos(angle);
+                dy = Math.sin(angle);
+                //distance = 0.01; // Small value to avoid division by zero
+                distance = Math.max(distance, 1);
+            }
 
-            if (shouldMoveUp) obj.position.y -= Number(Math.random()).toFixed(2) * 1 + 0.5 + 1;
-            if (shouldMoveLeft) obj.position.x += Number(Math.random()).toFixed(2) * 1 + 0.5 + 1;
-            if (shouldMoveRight) obj.position.x -= Number(Math.random()).toFixed(2) * 1 + 0.5 + 1;
-            if (shouldMoveDown) obj.position.y += Number(Math.random()).toFixed(2) * 1 + 0.5 + 1;
-        })
+            // Repulsion force (gentle movement, clamped)
+            let force = 0.05 / distance; // Much smaller, tweak as needed
+            // Clamp force to max 2px per tick
+            //console.log(force)
+            force = Math.max(1, Math.min(force, 2));
+            // Normalize direction
+            const nx = dx / (distance || 0.01);
+            const ny = dy / (distance || 0.01);
+            // Apply force
+            obj.position.x += nx * force;
+            obj.position.y += ny * force;
+        });
 
         // Apply knockback or any other effect
         /*otherTalents.forEach(talent => {
