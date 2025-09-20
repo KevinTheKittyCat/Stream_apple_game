@@ -7,6 +7,7 @@ import { useTalentTreeStore, type TalentType } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY } from "pixi.js";
 import { checkHitMultiple, checkHitMultipleWithId } from "@/components/Player/HitDetection";
+import { Sprite } from "@/components/Canvas/Sprite";
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
 export function Talent({ id, position, settled, prerequisites }: TalentType) {
@@ -114,21 +115,26 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
                 x={position.x}
                 y={position.y}
             >
-                <Graphic
+                <Graphic // Background Rectangle
                     size={{ width: outer, height: outer }}
-                    color={"green"}
+                    rounded={5}
+                    color={"grey"}
                     x={overlap / 2 - outer / 2}
                     y={overlap / 2 - outer / 2}
                 />
-                <Graphic
-                    size={{ width: inner, height: inner }}
-                    color={"blue"}
+                <Sprite
+                    // TODO - Make images centered to the outer rectangle
+                    //size={{ width: overlap, height: overlap }}
+                    height={inner}
+                    texture={"/assets/fruits/Apple.png"}
+                    //size={{ width: inner, height: inner }}
+                    //color={"blue"}
                     x={overlap / 2 - inner / 2}
                     y={overlap / 2 - inner / 2}
                 />
                 <Graphic
                     size={{ width: overlap, height: overlap }}
-                    color={"rgba(255,0,0,0.1)"}
+                    //color={"rgba(255,0,0,0.1)"} // DEBUG
                     x={0}
                     y={0}
                 />

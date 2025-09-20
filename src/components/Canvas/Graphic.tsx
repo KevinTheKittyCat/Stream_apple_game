@@ -4,18 +4,29 @@ import { Rectangle, Graphics } from 'pixi.js';
 
 
 
-export default function Graphic({ size, color, stroke, alpha, ...props }: {
+export default function Graphic({ size, color, stroke, alpha, rounded, ...props }: {
     size?: { width: number; height: number };
     color?: string;
     stroke?: { color: string; width: number };
     alpha?: number;
+    rounded?: number | { tl: number; tr: number; br: number; bl: number };
 }) {
     const { app } = useApplication();
     const draw = useMemo(() => (g: Graphics) => {
         g.clear();
-        g.rect(0, 0, size?.width || 0, size?.height || 0);
+        if (rounded) {
+            if (typeof rounded === 'number') {
+                g.roundRect(0, 0, size?.width || 0, size?.height || 0, rounded);
+            } else {
+                g.roundRect(0, 0, size?.width || 0, size?.height || 0, rounded);
+                // TODO - implement different radius for each corner
+            }
+        } else {
+            g.rect(0, 0, size?.width || 0, size?.height || 0);
+        }
         //g.stroke({ color: stroke?.color, alpha: alpha || 1, width: stroke?.width || 1 });
-        g.fill({ color: color, alpha: alpha || 1 });
+        g.fill({ color: color ?? "transparent", alpha: alpha || 1 });
+        // image fill
     }, [app, size, color, stroke, alpha]);
 
     return (

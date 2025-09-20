@@ -12,9 +12,9 @@ export default function BackgroundLayer() {
             eventMode="static"
             width={window.innerWidth}
             height={window.innerHeight}
-            background={{
+            /*background={{
                 backgroundColor: "#87CEEB", // Sky blue color
-            }}
+            }}*/
         >
             <Graphic
                 size={{ width: window.innerWidth, height: window.innerHeight / 1.5 }}

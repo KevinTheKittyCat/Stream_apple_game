@@ -3,6 +3,7 @@ import { create } from 'zustand'
 
 export const useObjectivesStore = create((set) => ({
     apples: [],
+    limit: 10,
     fallingSpeed: 4,
     setApples: (newApples) => {
         if (newApples instanceof Function) {
@@ -12,7 +13,8 @@ export const useObjectivesStore = create((set) => ({
         set({ apples: newApples });
     },
     addApple: (apple) => set((state) => ({ apples: [...state.apples, apple] })),
-    createApple: () => {
+    createApple: () => set((state) => {
+        if (state.apples.length >= state.limit) return {}; // Limit reached
         const id = Math.random().toString(36).substring(2, 15);
         const apple = {
             id,
@@ -23,8 +25,8 @@ export const useObjectivesStore = create((set) => ({
             ref: null,
             type: getRandomAppleType(),
         };
-        return apple;
-    },
+        return { apples: [...state.apples, apple] };
+    }),
     removeApple: (id) => {
         set((state) => ({ apples: state.apples.filter(apple => apple.id !== id) }));
     },

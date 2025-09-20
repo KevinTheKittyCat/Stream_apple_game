@@ -8,10 +8,12 @@ import {
   Graphics,
   Sprite,
 } from 'pixi.js';
-import { GameProvider } from '@/components/Contexts/GameContext';
 import PlayerLayer from '@/components/Canvas/Layers/PlayerLayer';
 import MainUi from '@/components/ui/mainUI';
 import TalentTree from '@/components/Canvas/Layers/TalentTree';
+import { useWindowStore } from '@/stores/WindowState';
+import { useEffect, useRef } from 'react';
+import { useGameStore } from '@/stores/GameState';
 
 
 
@@ -29,19 +31,30 @@ extend({
 export default function App() {
 
   return (
-    <GameProvider>
+    <>
       <MainUi />
       <Game />
-    </GameProvider>
+    </>
   );
 }
 
 export function Game() {
+  const { calculateScale } = useWindowStore();
+  const { currentPage } = useGameStore();
+  const gameContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
 
   return (
-    <Application eventMode='static' resizeTo={window}>
-      <PlayerLayer />
-      <TalentTree />
-    </Application>
+    <div id={"game-container"} ref={gameContainerRef}>
+      <Application eventMode='static' resizeTo={gameContainerRef}>
+        {currentPage === 'game' && <PlayerLayer />}
+        {currentPage === 'talentTree' && <TalentTree />}
+      </Application>
+    </div>
   );
 }

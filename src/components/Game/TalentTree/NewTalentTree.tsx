@@ -31,9 +31,10 @@ export default function NewTalentTree() {
 
     return (
         <>
-            <Layer>
-                <RopeTree />
-            </Layer>
+            {/*<Layer>*/}
+                {/* ROPES INBETWEEN TALENTS */}
+                 <RopeTree />
+            {/*</Layer>*/}
             <Layer>
                 {
                     talents.map(talent => (

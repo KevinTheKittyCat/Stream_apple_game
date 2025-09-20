@@ -3,7 +3,7 @@ import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunc
 import { create } from 'zustand'
 
 export const useTalentTreeStore = create((set) => ({
-    talents: /*getStorageItem("talents") ||*/[],
+    talents: getStorageItem("talents") || [],
     addTalent: (talent) => { set((state) => ({ talents: [...state.talents, talent] })) },
     createTalent: (talent) => {
         set((state) => {
@@ -37,6 +37,7 @@ export const JSONTALENTS = {
         id: "upgrade_scale",
         levels: 5,
         currentLevel: 1,
+        title: "Scale",
         description: "Increases the scale of the apple.",
         effects: [
             { type: "scale", multiply: 1.2 }
@@ -44,12 +45,13 @@ export const JSONTALENTS = {
         prerequisites: [],
         spawnOn: { x: 500, y: 500 },
         settled: 2,
-        image: "path/to/image.png"
+        image: "/assets/fruits/Apple.png"
     },
     secondTalent: {
         id: "upgrade_fall_speed",
         levels: 5,
         currentLevel: 1,
+        title: "Fall Speed",
         description: "Increases the fall speed of the apple.",
         effects: [
             { type: "fallSpeed", multiply: 1.2 }
@@ -57,6 +59,20 @@ export const JSONTALENTS = {
         prerequisites: [{ id: "upgrade_scale", level: 1 }],
         spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
         settled: 0,
-        image: "path/to/image.png"
+        image: "/assets/fruits/Orange.png"
+    },
+    thirdTalent: {
+        id: "upgrade_player_speed",
+        levels: 5,
+        currentLevel: 1,
+        title: "Player Speed",
+        description: "Increases the speed of the player.",
+        effects: [
+            { type: "playerSpeed", multiply: 1.2 }
+        ],
+        prerequisites: [{ id: "upgrade_scale", level: 1 }],
+        spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
+        settled: 0,
+        image: "/assets/fruits/Banana.png"
     }
 };

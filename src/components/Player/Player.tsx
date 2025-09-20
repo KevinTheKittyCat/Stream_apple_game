@@ -16,6 +16,8 @@ import { usePlayerStore } from '@/stores/PlayerStore';
 import { useObjectivesStore } from '@/stores/Objectives';
 import useAutoMove from './useAutoMove';
 import Basket from './Basket';
+import { useWindowStore } from '@/stores/WindowState';
+import { useGameStore } from '@/stores/GameState';
 
 type MouseCoords = {
     x: number | null;
@@ -23,6 +25,8 @@ type MouseCoords = {
 }
 
 export function Player() {
+    const { scale } = useWindowStore();
+    const { state } = useGameStore();
     const { apples } = useObjectivesStore();
     const { setPlayerRef, playerRef, target, getNewTarget, movementSpeed } = usePlayerStore()
     const spriteRef = useRef(null)
@@ -51,7 +55,7 @@ export function Player() {
     }, [target]);
 
     const { ref } = useAutoMove({
-        enabled: true,
+        enabled: state === 'playing',
         maxVelocity: movementSpeed * 2,
         targetPos: {
             x: target?.ref?.current?.x ? getTargetPositionX : window.innerWidth / 2,
@@ -60,6 +64,8 @@ export function Player() {
         normalizationFactor: 0.01,
         easingFactor: 0.1,
     });
+
+
 
     useEffect(() => {
         if (!target || !target.ref.current) getNewTarget();
@@ -101,9 +107,17 @@ export function Player() {
         setPlayerRef(spriteRef);
     }, [apples, spriteRef]);
 
+    useEffect(() => {
+        // Move to middle of screen on first render
+        if (!spriteRef.current) return;
+        spriteRef.current.x = app.renderer.width / 2;
+        spriteRef.current.y = app.renderer.height * 0.90;
+    }, [spriteRef]);
+
     return (
         <Group
             ref={spriteRef}
+            scale={scale}
             //x={app.canvas.width / 2}
             //y={app.canvas.height * 0.98 - spriteRef.current?.height || 0}
             eventMode={'dynamic'}

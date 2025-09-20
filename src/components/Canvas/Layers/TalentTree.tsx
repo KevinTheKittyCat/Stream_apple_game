@@ -33,12 +33,14 @@ export default function TalentTree() {
     }, []);
 
     if (!isInitialised) return null;
-    console.log("Talent Tree Data:", talentTreeData);
     return (
         <>
             <Layer
                 eventMode="static"
-                background={{ backgroundColor: "transparent", alpha: 0 }}
+                background={{
+                    backgroundColor: "purple",
+                    alpha: 1
+                }}
             >
                 {/*talentTreeData.nodes.map((talent) => (
                     <Talent

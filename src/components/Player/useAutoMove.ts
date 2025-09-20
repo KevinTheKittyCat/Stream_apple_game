@@ -29,7 +29,6 @@ export default function useAutoMove({
 
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
-            if (!enabled) return;
             if (!this.current) return console.warn("useAutoMove: No sprite reference found");
             const { x, y } = targetPos;
             const targetX = typeof x === "function" ? x() : x;

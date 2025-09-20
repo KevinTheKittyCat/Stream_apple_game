@@ -1,26 +1,20 @@
 
 import { useEffect } from 'react';
-import { useAppleSpawner } from './useAppleSpawner';
 import { useObjectivesStore } from '@/stores/Objectives';
 
-export default function AppleSpawner({
-    limit = 10, // Limit the number of apples
-}) {
-    const { apples, setApples } = useObjectivesStore();
-    const { spawnApple, removeApple } = useAppleSpawner();
-    const appleCount = apples.length;
+export default function AppleSpawner() {
+    const { createApple, setApples, apples } = useObjectivesStore();
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (appleCount >= limit && limit !== 0) return; // Limit to 10 apples
-            spawnApple();
-        }, 200);
+        console.log("Starting apple spawn interval");
+        const interval = setInterval(createApple, 200);
         return () => clearInterval(interval);
-    }, [spawnApple]);
+    }, [createApple]);
 
     useEffect(() => {
         // Clean up apples when the component unmounts
         return () => {
+            console.log("Clearing apples on unmount");
             setApples([]); // Clear apples on unmount
         };
     }, []);

@@ -1,9 +1,11 @@
 
 
 
-const setStorageItem = (storageId, item) => {
+
+export const setStorageItem = (storageId: string, item: any) => {
     localStorage.setItem(storageId, JSON.stringify(item));
 };
+
 
 /**
  * 
@@ -16,7 +18,8 @@ export const setItemRemoveRefStringify = (storageId, talents) => {
     localStorage.setItem(storageId, JSON.stringify(talents.map(({ ref, ...rest }) => rest)));
 };
 
-export const getStorageItem = (storageId) => {
+
+export const getStorageItem = (storageId: string) => {
     const talents = JSON.parse(localStorage.getItem(storageId)) || undefined;
     return talents;
 };
