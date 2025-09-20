@@ -46,10 +46,10 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
 
 
     useTick({
-        callback(this: React.RefObject<PixiSprite | null>) {
-            const now = performance.now();
-            const delta = (now - lastTimeRef.current) / 1000; // seconds
-            lastTimeRef.current = now;
+        callback(this: React.RefObject<PixiSprite | null>, { deltaTime }) {
+            //const now = performance.now();
+            const delta = deltaTime / 60 //(now - lastTimeRef.current) / 1000; // seconds
+
 
             // Ease speed towards fallingSpeed
             speedRef.current += (fallingSpeed - speedRef.current) * 0.1; // 0.1 = easing factor

@@ -3,15 +3,15 @@ import { create } from 'zustand'
 
 export const useObjectivesStore = create((set) => ({
     apples: [],
-    limit: 10,
+    limit: 10, // Maximum number of apples allowed on screen
     fallingSpeed: 4,
     setApples: (newApples) => {
         if (newApples instanceof Function) {
-            set((state) => ({ apples: newApples(state.apples) }));
-            return;
+            return set((state) => ({ apples: newApples(state.apples) }));
         }
         set({ apples: newApples });
     },
+    resetObjectives: () => set({ apples: [] }),
     addApple: (apple) => set((state) => ({ apples: [...state.apples, apple] })),
     createApple: () => set((state) => {
         if (state.apples.length >= state.limit) return {}; // Limit reached

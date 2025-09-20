@@ -11,8 +11,13 @@ export const usePlayerStore = create((set) => ({
         playerRef: ref
     })),
 
-
-
+    resetPlayer: () => set((state) => {
+        console.log("playerRef", state.playerRef);
+        if (!state.playerRef.current) return {};
+        console.log(state.playerRef.current.position);
+        state.playerRef.current.x = window.innerWidth / 2;
+        state.playerRef.current.y = window.innerHeight * 0.9;
+    }),
     // Auto-move
     movementSpeed: 2,
     target: null,

@@ -1,8 +1,7 @@
 import { useGameStore } from "@/stores/GameState";
-import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function TotalTime() {
-    const { time, timer, totalTime } = useGameStore()
+    const { totalTime } = useGameStore()
     //const [timer, setTimer] = useState(5);
     //const timeSpent = useMemo(() => (new Date() - time) / 1000, [time])
 

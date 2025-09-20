@@ -1,5 +1,7 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
+import { useObjectivesStore } from './Objectives';
+import { usePlayerStore } from './PlayerStore';
 
 type pages = 'game' | 'talentTree' | 'settings' | 'leaderboard';
 
@@ -28,11 +30,15 @@ export const useGameStore = create((set) => ({
 
     time: new Date(),
     extraTime: 0,
-    timer: 5,
-    startTime: 5,
+    timer: 10,
+    startTime: 10,
     totalTime: 0,
     restartGame: () => set((state) => {
+        const { resetObjectives } = useObjectivesStore.getState();
         state.resetTimer();
+        resetObjectives();
+
+
         return {
             state: 'playing',
             score: 0,
@@ -44,6 +50,7 @@ export const useGameStore = create((set) => ({
     resetTimer: () => set((state) => ({ timer: state.startTime, time: new Date(), totalTime: 0 })),
     updateTimer: (number) => set((state) => {
         const final = state.timer + number;
+        if (state.state !== 'playing') return {};
         if (final <= 0) {
             // If the timer reaches 0, trigger any necessary game over logic
             state.incrementCurrency(state.score);

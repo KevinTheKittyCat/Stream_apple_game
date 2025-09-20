@@ -6,7 +6,7 @@ import { useRef } from "react";
 type UseAutoMoveProps = {
     enabled?: boolean;
     targetPos: { x?: number | (() => number); y?: number | (() => number) };
-    
+
     maxVelocity?: number; // Maximum speed of the sprite
     normalizationFactor?: number; // Factor to normalize distance for smoother movement
     easingFactor?: number; // Easing factor for smoother movement
@@ -27,8 +27,9 @@ export default function useAutoMove({
     const xRef = useRef(targetPos.x);
     const yRef = useRef(targetPos.y);
 
+
     useTick({
-        callback(this: React.RefObject<PixiSprite | null>) {
+        callback(this: React.RefObject<PixiSprite | null>, { deltaTime }) {
             if (!this.current) return console.warn("useAutoMove: No sprite reference found");
             const { x, y } = targetPos;
             const targetX = typeof x === "function" ? x() : x;
@@ -45,7 +46,7 @@ export default function useAutoMove({
             }
 
             if (!this.current) return;
-            const delta = getDelta();
+            const delta = deltaTime / 60;
 
             if (isNumber(targetX)) this.current.position.x += calculateMovement({
                 current: this.current.position.x,

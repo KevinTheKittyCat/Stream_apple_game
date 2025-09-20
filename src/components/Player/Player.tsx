@@ -107,12 +107,20 @@ export function Player() {
         setPlayerRef(spriteRef);
     }, [apples, spriteRef]);
 
+    const resetPosition = useCallback(() => {
+        spriteRef.current.x = app.renderer.width / 2;
+        spriteRef.current.y = app.renderer.height * 0.90;
+    }, [app, spriteRef]);
+
     useEffect(() => {
         // Move to middle of screen on first render
         if (!spriteRef.current) return;
-        spriteRef.current.x = app.renderer.width / 2;
-        spriteRef.current.y = app.renderer.height * 0.90;
+        resetPosition();
     }, [spriteRef]);
+    
+    useEffect(() => {
+        if (state === 'gameOver') resetPosition();
+    }, [state, resetPosition]);
 
     return (
         <Group

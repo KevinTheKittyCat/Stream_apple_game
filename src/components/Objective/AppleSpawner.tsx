@@ -10,13 +10,6 @@ export default function AppleSpawner() {
         const interval = setInterval(createApple, 200);
         return () => clearInterval(interval);
     }, [createApple]);
-
-    useEffect(() => {
-        // Clean up apples when the component unmounts
-        return () => {
-            console.log("Clearing apples on unmount");
-            setApples([]); // Clear apples on unmount
-        };
-    }, []);
+    
     return { apples, setApples }; // This component does not render anything
 }

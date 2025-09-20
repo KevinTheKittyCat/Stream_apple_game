@@ -5,9 +5,10 @@ import CurrentStatsMenu from "./Score/CurrentStatsMenu";
 import Score from "./Score/Score";
 import Timer from "./Score/Timer";
 import TechtreeUI from "./TechTreeUI/TechtreeUI";
+import PauseMenu from "./Menu/PauseMenu";
 
 export default function MainUi() {
-    const { currentPage, timer } = useGameStore();
+    const { currentPage, timer, state } = useGameStore();
     return (
         <div className="main-ui" style={{
             position: 'absolute',
@@ -16,7 +17,7 @@ export default function MainUi() {
             width: '100%',
             height: '100%',
             pointerEvents: 'none',
-            padding: '10px',
+            padding: '0.5em',
         }}>
             <div className="main-ui-inner" style={{
                 position: 'relative',
@@ -25,8 +26,9 @@ export default function MainUi() {
                 display: 'flex',
                 flexDirection: 'column',
             }}>
+                <PauseMenu />
                 {currentPage === 'talentTree' && <TechtreeUI />}
-                {currentPage === 'game' && timer <= 0 && <OptionMenu />}
+                {currentPage === 'game' && timer <= 0 && state === 'gameOver' && <OptionMenu />}
                 {currentPage === 'game' && <CurrentStatsMenu />}
             </div>
             
