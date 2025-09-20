@@ -8,34 +8,47 @@ import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY } from "pixi.js";
 import { checkHitMultiple, checkHitMultipleWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
+import { useWindowStore } from "@/stores/WindowState";
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
 export function Talent({ id, position, settled, prerequisites }: TalentType) {
     const groupRef = useRef(null);
-    const { setTalentRef, talents } = useTalentTreeStore();
+    const { scale } = useWindowStore();
+    const { setTalentRef, talents, updateTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
 
+    const onSettle = useCallback(() => {
+        setShouldSettle(2);
+        console.log("Settling talent", id, groupRef.current?.x, groupRef.current?.y);
+        updateTalent(id, {
+            settled: 2, position: {
+                x: groupRef.current?.x || 0,
+                y: groupRef.current?.y || 0
+            }
+        });
+    }, []);
 
     useEffect(() => {
         if (!groupRef.current) return;
         setTalentRef(id, groupRef);
     }, [groupRef]);
 
+    const shouldSettleFunc = () => {
+        console.log("Should settle func", shouldSettle);
+        if (shouldSettle) {
+            onSettle();
+        }
+    };
+
     useEffect(() => {
         if (shouldSettle === 2) return;
-        const timeout = setTimeout(() => {
-            if (!shouldSettle) {
-                setShouldSettle(2);
-            }
-        }, 1000);
-        return () => clearTimeout(timeout);
+        console.log("Should settle changed to", shouldSettle);
+        const timeout = setInterval(shouldSettleFunc, 5000);
+        return () => clearInterval(timeout);
     }, [shouldSettle]);
 
     const onHit = useCallback((obj, objHits) => {
         // Move away from other talents
-        //console.log("obj hit", obj, objHits);
-        //console.log("Hit detected:", obj, objHits);
-
         // Physics-based repulsion: push obj away from all hit objects
         objHits.forEach((hitObject) => {
             const { ref } = hitObject;
@@ -46,8 +59,8 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
             let dx = obj.position.x - hitObjectCurrent.position.x;
             let dy = obj.position.y - hitObjectCurrent.position.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            
-             // Prevent division by zero
+
+            // Prevent division by zero
 
             // If distance is zero, nudge in a random direction
             if (distance === 0) {
@@ -101,12 +114,6 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
         priority: UPDATE_PRIORITY.LOW,
     })
 
-    /*const preReqs = useMemo(() => {
-        return talents.filter((talent) =>
-            prerequisites.some(prereq => prereq.id === talent.id
-            /*&& prereq.level <= talent.currentLevel)
-        );
-    }, [talents, id]);*/
 
     return (
         <>
@@ -114,6 +121,7 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
                 ref={groupRef}
                 x={position.x}
                 y={position.y}
+                scale={{ x: scale, y: scale }}
             >
                 <Graphic // Background Rectangle
                     size={{ width: outer, height: outer }}

@@ -12,6 +12,12 @@ export const useTalentTreeStore = create((set) => ({
             return { talents: newTalents }
         });
     },
+    updateTalent: (id, updatedFields) => set((state) => {
+        console.log("Updating talent", id, updatedFields);
+        const newTalents = state.talents.map(talent => talent.id === id ? { ...talent, ...updatedFields } : talent);
+        setItemRemoveRefStringify("talents", newTalents);
+        return { talents: newTalents };
+    }),
     setTalentRef: (id, ref) => set((state) => {
         //console.log(id, ref);
         return {
@@ -22,6 +28,7 @@ export const useTalentTreeStore = create((set) => ({
 
 export type TalentType = {
     id: string;
+    position?: { x: number; y: number } | null;
     levels: number;
     currentLevel: number;
     description: string;

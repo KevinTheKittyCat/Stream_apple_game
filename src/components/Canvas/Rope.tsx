@@ -1,7 +1,8 @@
 import { useExtend, useTick } from "@pixi/react";
-import { Point, Container, Graphics } from "pixi.js";
+import { Point, Container, Graphics, UPDATE_PRIORITY } from "pixi.js";
 import { useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
 import { handlePositionIfRef } from "../UtilFunctions/RefHandling";
+import { useWindowStore } from "@/stores/WindowState";
 
 // Physics particle for rope simulation
 class RopeParticle {
@@ -140,30 +141,16 @@ type RopeRef = {
 };
 
 export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } }) {
-
+    const { scale } = useWindowStore();
     // Extend PIXI React with required components
     useExtend({ Container, Graphics });
 
     const containerRef = useRef<Container | null>(null);
     const graphicsRef = useRef<Graphics | null>(null);
-
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        graphicsRef.current = new Graphics();
-        containerRef.current.addChild(graphicsRef.current);
-
-        return () => {
-            if (containerRef.current && graphicsRef.current) {
-                containerRef.current.removeChild(graphicsRef.current);
-                graphicsRef.current.destroy();
-            }
-        };
-    }, []);
-
-    // Draw rope each frame based on points
+    
     useTick(() => {
         const points = ropePoints.current;
+        //console.log("Rope points in useTick:", points.length);
         if (!graphicsRef.current || points.length < 2) return;
 
         const graphics = graphicsRef.current;
@@ -183,7 +170,10 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
             cap: 'round',
             join: 'round'
         });
-
+        // WHY IS THIS CAUSING MEMORY LEAKS????
+        // WHY IS IT STILL DRAWING FINE?=????
+        
+        /*
         // Add some rope segments for visual effect
         graphics.clear();
         for (let i = 0; i < points.length - 1; i++) {
@@ -203,6 +193,7 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
             graphics.circle(start.x, start.y, 2);
             graphics.fill({ color: "white" });
         }
+        */
 
         // Final knot
         if (points.length > 0) {
@@ -213,7 +204,10 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
 
     });
 
-    return <pixiContainer ref={containerRef} />;
+
+    return <pixiContainer ref={containerRef}>
+        <pixiGraphics ref={graphicsRef} draw={() => {}} />
+    </pixiContainer>;
 }
 
 export default forwardRef<RopeRef, RopeProps>(function MyRope({
@@ -232,18 +226,14 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
     const particles = useRef<RopeParticle[]>([]);
     const constraints = useRef<RopeConstraint[]>([]);
     const points = useRef<Point[]>([]);
-    const animationFrame = useRef<number | null>(null);
-    const lastTime = useRef<number>(performance.now());
 
-    // Initialize physics system
+    // Initialize physics system only once
     useEffect(() => {
         particles.current = [];
         constraints.current = [];
         points.current = [];
         let handledTo = handlePositionIfRef(to);
         let handledFrom = handlePositionIfRef(from);
-
-        console.log("Initializing rope from", handledFrom, "to", handledTo);
 
         handledTo.x += toOffset?.x || 0;
         handledTo.y += toOffset?.y || 0;
@@ -290,145 +280,74 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
                 new RopeConstraint(particles.current[i], particles.current[i + 1], stiffness)
             );
         }
-        //console.log("Rope initialized with particles:", particles.current);
-    }, [segments, segmentLength, from, to, stiffness, pinFrom, pinTo]);
+    }, [segments, segmentLength, from, to, stiffness, pinFrom, pinTo, fromOffset, toOffset]);
 
-    const simulate = useCallback(() => {
-        let handledTo = handlePositionIfRef(to);
-        let handledFrom = handlePositionIfRef(from);
-        //console.log("rope from", handledFrom, "to", handledTo);
+    // Use useTick for physics simulation instead of requestAnimationFrame
+    useTick({
+        isEnabled: true,
+        priority: UPDATE_PRIORITY.LOW,
+        callback(this: React.RefObject<PixiSprite | null>, { deltaTime: delta }) {
+            let handledTo = handlePositionIfRef(to);
+            let handledFrom = handlePositionIfRef(from);
+            //console.log("rope from", handledFrom, "to", handledTo);
 
-        handledTo.x += toOffset?.x || 0;
-        handledTo.y += toOffset?.y || 0;
-        handledFrom.x += fromOffset?.x || 0;
-        handledFrom.y += fromOffset?.y || 0;
+            handledTo.x += toOffset?.x || 0;
+            handledTo.y += toOffset?.y || 0;
+            handledFrom.x += fromOffset?.x || 0;
+            handledFrom.y += fromOffset?.y || 0;
 
-        const currentTime = performance.now();
-        const deltaTime = Math.min((currentTime - lastTime.current) / 1000, 0.016); // Cap at 60fps
-        lastTime.current = currentTime;
+            const deltaTime = delta / 100; // Cap at 60fps
 
-        // Update anchor positions FIRST (before physics)
-        if (pinFrom && particles.current[0]) {
-            particles.current[0].setPosition(handledFrom.x, handledFrom.y);
-        }
 
-        if (pinTo && handledTo && particles.current[segments - 1]) {
-            particles.current[segments - 1].setPosition(handledTo.x, handledTo.y);
-        }
-
-        // Apply gravity to all particles AFTER setting anchor positions
-        particles.current.forEach(particle => {
-            if (!particle.pinned) {
-                particle.applyForce(0, gravity * particle.mass, deltaTime);
+            // Update anchor positions FIRST (before physics)
+            if (pinFrom && particles.current[0]) {
+                particles.current[0].setPosition(handledFrom.x, handledFrom.y);
             }
-        });
 
-        // Update particle positions (Verlet integration)
-        particles.current.forEach(particle => {
-            particle.update(deltaTime);
-        });
+            if (pinTo && handledTo && particles.current[segments - 1]) {
+                particles.current[segments - 1].setPosition(handledTo.x, handledTo.y);
+            }
 
-        // Satisfy constraints multiple times for stability
-        for (let iteration = 0; iteration < constraintIterations; iteration++) {
-            constraints.current.forEach(constraint => {
-                constraint.satisfy();
+            // Apply gravity to all particles AFTER setting anchor positions
+            particles.current.forEach(particle => {
+                if (!particle.pinned) {
+                    particle.applyForce(0, gravity * particle.mass, deltaTime);
+                }
             });
 
-            // Re-enforce anchor positions after each constraint iteration
-            // This ensures anchors stay in place while allowing natural sag
-            if (pinFrom && particles.current[0]) {
-                particles.current[0].x = handledFrom.x;
-                particles.current[0].y = handledFrom.y;
+            // Update particle positions (Verlet integration)
+            particles.current.forEach(particle => {
+                particle.update(deltaTime);
+            });
+
+            // Satisfy constraints multiple times for stability
+            for (let iteration = 0; iteration < constraintIterations; iteration++) {
+                constraints.current.forEach(constraint => {
+                    constraint.satisfy();
+                });
+
+                // Re-enforce anchor positions after each constraint iteration
+                // This ensures anchors stay in place while allowing natural sag
+                if (pinFrom && particles.current[0]) {
+                    particles.current[0].x = handledFrom.x;
+                    particles.current[0].y = handledFrom.y;
+                }
+
+                if (pinTo && to && particles.current[segments - 1]) {
+                    particles.current[segments - 1].x = handledTo.x;
+                    particles.current[segments - 1].y = handledTo.y;
+                }
             }
 
-            if (pinTo && to && particles.current[segments - 1]) {
-                particles.current[segments - 1].x = handledTo.x;
-                particles.current[segments - 1].y = handledTo.y;
-            }
+            // Update render points
+            particles.current.forEach((particle, index) => {
+                if (points.current[index]) {
+                    points.current[index].x = particle.x;
+                    points.current[index].y = particle.y;
+                }
+            });
         }
-
-        // Update render points
-        particles.current.forEach((particle, index) => {
-            if (points.current[index]) {
-                points.current[index].x = particle.x;
-                points.current[index].y = particle.y;
-            }
-        });
-
-        animationFrame.current = requestAnimationFrame(simulate);
-    }, []);
-
-    // Physics simulation loop
-    useEffect(() => {
-
-        animationFrame.current = requestAnimationFrame(simulate);
-
-        return () => {
-            if (animationFrame.current) {
-                console.log("Cancelling animation frame:", animationFrame.current);
-                cancelAnimationFrame(animationFrame.current);
-            }
-        };
-    }, [gravity, constraintIterations, segments, from, to, pinFrom, pinTo]);
-
-    // Expose methods via ref
-    useImperativeHandle(ref, () => ({
-        applyForceToStart: (forceX: number, forceY: number) => {
-            if (particles.current[0]) {
-                particles.current[0].applyForce(forceX, forceY, 0.016);
-            }
-        },
-        applyForceToEnd: (forceX: number, forceY: number) => {
-            const lastIndex = particles.current.length - 1;
-            if (particles.current[lastIndex]) {
-                particles.current[lastIndex].applyForce(forceX, forceY, 0.016);
-            }
-        },
-        applyForceToSegment: (segmentIndex: number, forceX: number, forceY: number) => {
-            if (particles.current[segmentIndex]) {
-                particles.current[segmentIndex].applyForce(forceX, forceY, 0.016);
-            }
-        },
-        pinStart: () => {
-            if (particles.current[0]) {
-                particles.current[0].pin();
-            }
-        },
-        unpinStart: () => {
-            if (particles.current[0]) {
-                particles.current[0].unpin();
-            }
-        },
-        pinEnd: () => {
-            const lastIndex = particles.current.length - 1;
-            if (particles.current[lastIndex]) {
-                particles.current[lastIndex].pin();
-            }
-        },
-        unpinEnd: () => {
-            const lastIndex = particles.current.length - 1;
-            if (particles.current[lastIndex]) {
-                particles.current[lastIndex].unpin();
-            }
-        },
-        setStartPosition: (x: number, y: number) => {
-            if (particles.current[0]) {
-                particles.current[0].setPosition(x, y);
-            }
-        },
-        setEndPosition: (x: number, y: number) => {
-            const lastIndex = particles.current.length - 1;
-            if (particles.current[lastIndex]) {
-                particles.current[lastIndex].setPosition(x, y);
-            }
-        },
-        getParticlePosition: (index: number) => {
-            if (particles.current[index]) {
-                return { x: particles.current[index].x, y: particles.current[index].y };
-            }
-            return null;
-        }
-    }), []);
+    });
 
     return <RopeMesh points={points} />;
 });

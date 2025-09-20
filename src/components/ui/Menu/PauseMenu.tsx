@@ -16,13 +16,14 @@ export default function PauseMenu() {
 }
 
 export function PauseMenuItems() {
-    const { state, unpauseGame } = useGameStore();
+    const { state, unpauseGame, setCurrentPage } = useGameStore();
 
     if (state !== "paused") return null;
     return (
         <Flex direction={"column"} className="pause-menu-items">
             <h1>Game Paused</h1>
             <p>The game is currently paused. Press the resume button to continue playing.</p>
+            <Button onClick={() => setCurrentPage('talentTree')}>Upgrades / Store</Button>
             <Button onClick={() => {
                 unpauseGame();
                 // Logic to resume the game

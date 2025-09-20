@@ -9,7 +9,7 @@ import RopeTree from './RopeTree';
 
 export default function NewTalentTree() {
     const { talents, createTalent } = useTalentTreeStore();
-
+    
     useEffect(() => {
         if (!talents.length) createTalent({
             ...JSONTALENTS.firstTalent,
@@ -31,10 +31,10 @@ export default function NewTalentTree() {
 
     return (
         <>
-            {/*<Layer>*/}
+            <Layer>
                 {/* ROPES INBETWEEN TALENTS */}
                  <RopeTree />
-            {/*</Layer>*/}
+            </Layer>
             <Layer>
                 {
                     talents.map(talent => (

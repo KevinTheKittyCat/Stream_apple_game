@@ -6,9 +6,9 @@ import AppleSpawner from "@/components/Objective/AppleSpawner";
 import BackgroundLayer from "./BackgroundLayer";
 
 export default function PlayerLayer() {
-  const { isInitialised } = useApplication();
+  const { isInitialised, app } = useApplication();
   const { apples } = AppleSpawner({ limit: 10 }); // Limit the number of apples to 10
-
+  console.log(app.renderer.width, app.renderer);
 
   if (!isInitialised) return null;
   return (
@@ -16,8 +16,8 @@ export default function PlayerLayer() {
       <BackgroundLayer />
       <Layer
         eventMode="static"
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width={app.renderer.width}
+        height={app.renderer.height}
       >
         <Player />
         {apples.map(apple => (

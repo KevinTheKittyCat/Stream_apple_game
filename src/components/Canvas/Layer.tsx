@@ -30,8 +30,8 @@ export const Layer = ({ children, background, ...props }: Props) => {
     return (
         <pixiContainer
             eventMode="static"
-            width={app.canvas.width}
-            height={app.canvas.height}
+            width={app.renderer.width}
+            height={app.renderer.height}
             hitArea={hitArea}
             position={{ x: 0, y: 0 }}
             {...props}

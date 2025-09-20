@@ -4,22 +4,22 @@ import GameBackground from "@/components/Background/GameBackground";
 import Graphic from "../Graphic";
 
 export default function BackgroundLayer() {
-    const { isInitialised } = useApplication();
+    const { isInitialised, app } = useApplication();
 
     if (!isInitialised) return null;
     return (
         <Layer
             eventMode="static"
-            width={window.innerWidth}
-            height={window.innerHeight}
+            width={app.renderer.width}
+            height={app.renderer.height}
             /*background={{
                 backgroundColor: "#87CEEB", // Sky blue color
             }}*/
         >
             <Graphic
-                size={{ width: window.innerWidth, height: window.innerHeight / 1.5 }}
+                size={{ width: app.renderer.width, height: app.renderer.height * 1.5 }}
                 color={"green"}
-                y={window.innerHeight / 3}
+                y={app.renderer.height / 3}
             />
             <GameBackground />
         </Layer>
