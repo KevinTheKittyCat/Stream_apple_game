@@ -4,6 +4,16 @@ export const useWindowStore = create((set) => ({
     scale: 1,
     scaleX: 1,
     scaleY: 1,
+    width: window.innerWidth,
+    height: window.innerHeight,
+
+    calculateDimensions: () => set((state) => {
+        return {
+            width: window.innerWidth,
+            height: window.innerHeight,
+        };
+    }),
+
     calculateScale: () => set((state) => {
         const width = window.innerWidth;
         const height = window.innerHeight;

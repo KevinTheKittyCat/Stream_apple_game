@@ -18,7 +18,6 @@ export const useParallax = ({
     direction?: "horizontal" | "vertical";
     offset?: number;
 }) => {
-    const { app } = useApplication();
     const parallaxRef = useRef<Sprite | null>(null);
     const backOrFourth = useRef(true);
 

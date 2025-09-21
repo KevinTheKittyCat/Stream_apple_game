@@ -15,39 +15,28 @@ import { useWindowStore } from '@/stores/WindowState';
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '@/stores/GameState';
 
-
-
-export const Route = createFileRoute('/')({
-  component: App,
-})
-
-// extend tells @pixi/react what Pixi.js components are available
 extend({
   Container,
   Graphics,
   Sprite,
 });
 
-export default function App() {
+export const Route = createFileRoute('/talentTree')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  const gameContainerRef = useRef<HTMLDivElement>(null);
+
 
   return (
     <>
       <MainUi />
-      <Game />
+      <div id={"game-container"} ref={gameContainerRef}>
+        <Application eventMode='static' resizeTo={gameContainerRef} antialias={true}>
+          <TalentTree />
+        </Application>
+      </div>
     </>
-  );
-}
-
-export function Game() {
-  const { currentPage } = useGameStore();
-  const gameContainerRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div id={"game-container"} ref={gameContainerRef}>
-      <Application eventMode='static' resizeTo={window} antialias={true}>
-        {currentPage === 'game' && <PlayerLayer />}
-        {currentPage === 'talentTree' && <TalentTree />}
-      </Application>
-    </div>
   );
 }

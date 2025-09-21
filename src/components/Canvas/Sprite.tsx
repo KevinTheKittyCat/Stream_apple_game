@@ -8,40 +8,56 @@ import {
     useEffect,
     useState,
     forwardRef,
+    use,
+    useCallback,
+    useRef,
+    useImperativeHandle,
+    useMemo,
 } from 'react';
 import type { PixiReactElementProps } from '@pixi/react';
 
 type Props = {
     texture?: string | Texture;
     size?: { width: number; height: number };
+    width?: number;
+    height?: number;
+    id?: string;
 } & Omit<PixiReactElementProps<typeof PixiSprite>, 'texture'>
 
-export const Sprite = forwardRef<any, Props>(function Sprite(
-    { texture, size, ...props },
+export const Sprite = forwardRef<PixiSprite, Props>(function Sprite(
+    {
+        texture,
+        size,
+        width,
+        height,
+        id,
+        ...props
+    }: Props,
     ref
 ) {
-    const [currentTexture, setCurrentTexture] = useState<Texture>(Texture.EMPTY);
-    const [spriteSize, setSpriteSize] = useState<{ width: number; height: number } | null>(null);
+    const [currentTexture, setCurrentTexture] = useState<Texture>(typeof texture === 'string' ? Texture.EMPTY : texture as Texture);
 
-    const scaleHeightOrWidth = (size: { width?: number; height?: number }, texture: Texture) => {
-        if (!texture) return;
+    const spriteSize = useMemo<{ width: number; height: number } | null>(() => {
         // TODO - SET UP MAX-WIDTH AND MAX-HEIGHT
-        setSpriteSize(() => {
-            if (size.width && !size.height) {
-                const aspectRatio = texture.width / texture.height;
-                const calculatedHeight = size.width / aspectRatio;
-                return { width: size.width, height: calculatedHeight };
-            }
-            else if (!size.width && size.height) {
-                const aspectRatio = texture.width / texture.height;
-                const calculatedWidth = size.height * aspectRatio;
-                return { width: calculatedWidth, height: size.height };
-            }
-            else if (size.width && size.height) {
-                return { width: size.width, height: size.height };
-            }
-        });
-    }
+        // TODO - SET UP MIN-WIDTH AND MIN-HEIGHT
+        if (!currentTexture || currentTexture === Texture.EMPTY) return null;
+        const texture = currentTexture;
+        const { width: w, height: h } = size || { width: width ?? 0, height: height ?? 0 };
+        const aspectRatio = texture.width / texture.height;
+
+        if (w && !h) {
+            const calculatedHeight = w / aspectRatio;
+            return { width: w, height: calculatedHeight };
+        }
+        else if (!w && h) {
+            const calculatedWidth = h * aspectRatio;
+            return { width: calculatedWidth, height: h };
+        }
+        else if (w && h) {
+            return { width: w, height: h };
+        }
+        return { width: texture.width, height: texture.height };
+    }, [currentTexture, size, width, height]);
 
     // Preload the sprite if it hasn't been loaded yet
     useEffect(() => {
@@ -51,37 +67,25 @@ export const Sprite = forwardRef<any, Props>(function Sprite(
                 .load(texture)
                 .then((result) => {
                     setCurrentTexture(result);
-                    scaleHeightOrWidth({
-                        ...size,
-                        width: props?.width || size?.width,
-                        height: props?.height || size?.height
-                    }, result);
                 });
         } else if (texture instanceof Texture) {
             setCurrentTexture(texture);
-            scaleHeightOrWidth({
-                ...size,
-                width: props?.width || size?.width,
-                height: props?.height || size?.height
-            }, texture);
         }
 
-    }, [texture, currentTexture]);
+    }, [texture, currentTexture, size, width, height]);
 
     if (
         !currentTexture
         || currentTexture === Texture.EMPTY
-        || (size && !spriteSize)
+        || !spriteSize
     ) return null;
+
     return (
         <pixiSprite
             ref={ref}
             {...props}
             {...spriteSize}
             texture={currentTexture}
-
-        //width={size?.width ?? props.width}
-        //height={size?.height ?? props.height}
         />
     );
 });

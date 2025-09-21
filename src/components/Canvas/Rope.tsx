@@ -147,7 +147,7 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
 
     const containerRef = useRef<Container | null>(null);
     const graphicsRef = useRef<Graphics | null>(null);
-    
+
     useTick(() => {
         const points = ropePoints.current;
         //console.log("Rope points in useTick:", points.length);
@@ -172,7 +172,7 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
         });
         // WHY IS THIS CAUSING MEMORY LEAKS????
         // WHY IS IT STILL DRAWING FINE?=????
-        
+
         /*
         // Add some rope segments for visual effect
         graphics.clear();
@@ -205,9 +205,11 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
     });
 
 
-    return <pixiContainer ref={containerRef}>
-        <pixiGraphics ref={graphicsRef} draw={() => {}} />
-    </pixiContainer>;
+    return (
+        <pixiContainer ref={containerRef}>
+            <pixiGraphics ref={graphicsRef} draw={() => { }} />
+        </pixiContainer>
+    );
 }
 
 export default forwardRef<RopeRef, RopeProps>(function MyRope({

@@ -21,7 +21,6 @@ export default function useAutoMove({
     easingFactor = 0.1,
 }: UseAutoMoveProps) {
     const contextRef = useRef(null)
-    const { getDelta } = useDelta()
     const velocityXRef = useRef(0); // Current velocity (can be negative or positive)
     const velocityYRef = useRef(0); // Current velocity for Y movement (if needed)
     const xRef = useRef(targetPos.x);

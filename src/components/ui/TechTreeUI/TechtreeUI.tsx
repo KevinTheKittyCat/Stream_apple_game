@@ -1,12 +1,21 @@
 import { useGameStore } from "@/stores/GameState";
 import { Button } from "@chakra-ui/react";
 import Info from "./Info";
-
+import { useNavigate } from "@tanstack/react-router";
 
 
 
 export default function TechtreeUI() {
     const { setCurrentPage, restartGame } = useGameStore();
+    const navigate = useNavigate()
+
+    const backToGame = () => {
+        restartGame();
+        setCurrentPage('game')
+        navigate({
+            to: '/',
+        })
+    }
 
     return (
         <div className="techtree-ui" style={{
@@ -35,10 +44,7 @@ export default function TechtreeUI() {
                     bottom: 20,
                     right: 20,
                 }}
-                    onClick={() => {
-                        restartGame();
-                        setCurrentPage('game');
-                    }}>Back to Game</Button>
+                    onClick={backToGame}>Back to Game</Button>
                 {/* Render your tech tree UI components here */}
             </div>
         </div>

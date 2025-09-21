@@ -10,8 +10,8 @@ export default function BackgroundLayer() {
     return (
         <Layer
             eventMode="static"
-            width={app.renderer.width}
-            height={app.renderer.height}
+            //width={app.renderer.width}
+            //height={app.renderer.height}
             /*background={{
                 backgroundColor: "#87CEEB", // Sky blue color
             }}*/
