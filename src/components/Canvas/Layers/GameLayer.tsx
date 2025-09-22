@@ -7,7 +7,7 @@ import BackgroundLayer from "./BackgroundLayer";
 import { useWindowStore } from "@/stores/WindowState";
 
 export default function GameLayer() {
-  const { isInitialised, app } = useApplication();
+  const { isInitialised } = useApplication();
   const { width, height } = useWindowStore();
   const { apples } = AppleSpawner(); // Limit the number of apples to 10
 

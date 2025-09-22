@@ -1,12 +1,12 @@
 import useDelta from "@/hooks/useDelta";
 import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY, Sprite as PixiSprite } from "pixi.js";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type UseAutoMoveProps = {
     enabled?: boolean;
     targetPos: { x?: number | (() => number); y?: number | (() => number) };
-
+    id?: string;
     maxVelocity?: number; // Maximum speed of the sprite
     normalizationFactor?: number; // Factor to normalize distance for smoother movement
     easingFactor?: number; // Easing factor for smoother movement
@@ -15,7 +15,7 @@ type UseAutoMoveProps = {
 export default function useAutoMove({
     enabled = true,
     targetPos,
-
+    id,
     maxVelocity = 2,
     normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
     easingFactor = 0.1,
@@ -70,6 +70,12 @@ export default function useAutoMove({
         isEnabled: enabled,
         priority: UPDATE_PRIORITY.LOW,
     })
+
+    useEffect(() => {
+        // Debugging
+        if (!id) return;
+        console.log("AutoMove enabled for", id, enabled);
+    }, [id, enabled]);
 
     return { ref: contextRef }
 }

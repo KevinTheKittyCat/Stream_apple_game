@@ -55,6 +55,7 @@ export function Player() {
     }, [target]);
 
     const { ref } = useAutoMove({
+        id: "player",
         enabled: state === 'playing',
         maxVelocity: movementSpeed * 2,
         targetPos: {
@@ -96,6 +97,7 @@ export function Player() {
 
         return () => {
             console.log('Cleaning up pointer move listener');
+            if (!app || !app.stage) return;
             app.stage.off('pointermove', handlePointerMove);
             app.stage.off('pointerleave', handlePointerLeave);
         };
@@ -105,9 +107,14 @@ export function Player() {
         if (!spriteRef.current) return;
         if (playerRef) return
         setPlayerRef(spriteRef);
-    }, [apples, spriteRef]);
+
+        return () => {
+            setPlayerRef(null);
+        };
+    }, [spriteRef]);
 
     const resetPosition = useCallback(() => {
+        if (!app || !spriteRef.current) return;
         spriteRef.current.x = app.renderer.width / 2;
         spriteRef.current.y = app.renderer.height * 0.90;
     }, [app, spriteRef]);
@@ -117,7 +124,7 @@ export function Player() {
         if (!spriteRef.current) return;
         resetPosition();
     }, [spriteRef]);
-    
+
     useEffect(() => {
         if (state === 'gameOver') resetPosition();
     }, [state, resetPosition]);

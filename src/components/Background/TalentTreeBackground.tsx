@@ -2,6 +2,10 @@ import { useMemo } from "react";
 import { Layer } from "../Canvas/Layer";
 import Star from "./TalentTree/Star";
 import { useWindowStore } from "@/stores/WindowState";
+import * as PIXI from 'pixi.js';
+import { BlurFilter, NoiseFilter } from "pixi.js";
+import Galaxy from "./TalentTree/Galaxy";
+import Test from "../Canvas/Shaders/Test";
 
 
 
@@ -44,17 +48,60 @@ export default function TalentTreeBackground() {
         return tempStars;
     }, [width, height]);
 
+    const filter = useMemo(() => new BlurFilter({
+        strength: 8,      // Overall blur strength
+        quality: 4,       // Blur quality (higher = better but slower)
+        kernelSize: 5     // Size of blur kernel matrix
+    }), []);
+
+    const noisefilter = useMemo(() => new NoiseFilter({
+        noise: 0.05,      // Slightly increased noise intensity
+        seed: Math.random(),
+        resolution: 0.3   // Lower resolution = bigger chunks (try 0.1-0.5)
+    }), []);
+
+
+
+
     return (
         <Layer
+            filters={[
+                //filter,
+            ]}
             eventMode="static"
             background={{
-                backgroundColor: "purple",
+                gradient: {
+                    colorStops: [{
+                        color: "#855988",
+                        offset: 0
+                    }, {
+                        color: "#6B4984",
+                        offset: 0.3
+                    }, {
+                        color: "#483475",
+                        offset: 0.5
+                    }, {
+                        color: "#2B2F77",
+                        offset: 0.52
+                    }, {
+                        color: "#141852",
+                        offset: 0.54
+                    }, {
+                        color: "#070B34",
+                        offset: 0.7
+                    }
+                    ],
+                    rotation: 45
+                },
                 alpha: 1
             }}
         >
             {stars.map((pos, index) => (
                 <Star key={index} position={pos} size={STAR_RADIUS} />
             ))}
+            <Galaxy />
+            <Galaxy />
+            <Galaxy />
             {/* Test Stars */}
             {/*
             <Star position={{ x: 100, y: 100 }} />

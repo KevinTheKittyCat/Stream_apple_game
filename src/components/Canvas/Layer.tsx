@@ -1,6 +1,6 @@
 import { useWindowStore } from '@/stores/WindowState';
 import { useApplication, type PixiReactElementProps } from '@pixi/react';
-import { Rectangle, Graphics } from 'pixi.js';
+import { Rectangle, Graphics, FillGradient, type GradientOptions } from 'pixi.js';
 import { useMemo } from 'react';
 import React from 'react';
 
@@ -9,12 +9,14 @@ type Props = {
     background?: {
         backgroundColor?: string;
         alpha?: number;
+        gradient?: GradientOptions;
     }
 } & Omit<PixiReactElementProps, 'children'>
 
+
 export const Layer = ({ children, background, ...props }: Props) => {
     const { width, height } = useWindowStore();
-    
+
     const hitArea = useMemo(() => {
         return new Rectangle(0, 0, width, height);
     }, [width, height]);
@@ -26,7 +28,19 @@ export const Layer = ({ children, background, ...props }: Props) => {
         g.clear();
         g.rect(0, 0, width, height);
         //g.stroke({ color: backgroundColor, alpha: alpha || 1, width: 2 });
-        g.fill({ color: backgroundColor, alpha: alpha || 1 });
+        if (background.gradient) {
+            // Create a fill gradient
+            const start = { x: 0, y: 0 };
+            const end = { x: 1, y: 1 };
+            const gradientFill = new FillGradient({ 
+                start,
+                end,
+                ...background.gradient
+            });
+            g.fill({ fill: gradientFill, alpha: alpha || 1 });
+        } else {
+            g.fill({ color: backgroundColor, alpha: alpha || 1 });
+        }
     }, [background, width, height]);
 
     return (

@@ -27,8 +27,6 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
     const { apples, setAppleRef, fallingSpeed, removeApple } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
     const speedRef = useRef(0); // current speed
-    const lastTimeRef = useRef(performance.now());
-
 
     const onHit = useCallback((apple: PixiSprite) => {
         //console.log("Apple hit detected!");
@@ -40,6 +38,7 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
     }, [id, removeApple, target, apples]);
 
     const checkHitWithPlayer = useCallback((currentApple, playerRef) => {
+        if (!playerRef || !playerRef.current) return false;
         const hit = checkHit(currentApple, playerRef.current);
         return hit
     }, [playerRef]);
@@ -77,7 +76,10 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
         if (!spriteRef.current) return;
         if (apples.some(apple => apple.id === id && apple.ref)) return //console.warn("Apple ref already set for this id:", id);
         setAppleRef(id, spriteRef);
-    }, [apples, spriteRef]);
+        return () => {
+            setAppleRef(id, null);
+        };
+    }, [spriteRef, id, apples]);
 
 
     return (

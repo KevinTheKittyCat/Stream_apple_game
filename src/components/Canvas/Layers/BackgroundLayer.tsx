@@ -2,9 +2,11 @@ import { useApplication } from "@pixi/react";
 import { Layer } from "@/components/Canvas/Layer";
 import GameBackground from "@/components/Background/GameBackground";
 import Graphic from "../Graphic";
+import { useWindowStore } from "@/stores/WindowState";
 
 export default function BackgroundLayer() {
-    const { isInitialised, app } = useApplication();
+    const { width, height } = useWindowStore();
+    const { isInitialised } = useApplication();
 
     if (!isInitialised) return null;
     return (
@@ -17,9 +19,9 @@ export default function BackgroundLayer() {
             }}*/
         >
             <Graphic
-                size={{ width: app.renderer.width, height: app.renderer.height * 1.5 }}
-                color={"green"}
-                y={app.renderer.height / 3}
+                size={{ width, height: height * 1.5 }}
+                //color={"green"}
+                y={height / 3}
             />
             <GameBackground />
         </Layer>
