@@ -100,8 +100,9 @@ export default function TalentTreeBackground() {
                 <Star key={index} position={pos} size={STAR_RADIUS} />
             ))}
             <Galaxy />
+            {/*<Galaxy />
             <Galaxy />
-            <Galaxy />
+            */}
             {/* Test Stars */}
             {/*
             <Star position={{ x: 100, y: 100 }} />

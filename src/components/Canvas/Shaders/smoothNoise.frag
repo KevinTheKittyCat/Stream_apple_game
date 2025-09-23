@@ -5,8 +5,9 @@ uniform sampler2D noise;
 uniform vec3 galaxyColor;
 uniform float galaxyAlpha;
 
-void main() {
+void main()
+{
     float color = texture2D(noise, vUvs).r;
-    color = step(limit, color);
-    gl_FragColor = vec4(0.05, 0.03, 0.03, color * galaxyAlpha);
+    float mask = smoothstep(limit - 0.1, limit + 0.1, color);
+    gl_FragColor = vec4(0.05, 0.03, 0.03, mask * galaxyAlpha);
 }
