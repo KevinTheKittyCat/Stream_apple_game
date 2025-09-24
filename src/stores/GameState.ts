@@ -1,14 +1,49 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
 import { useObjectivesStore } from './Objectives';
-import { usePlayerStore } from './PlayerStore';
 
-type pages = 'game' | 'talentTree' | 'settings' | 'leaderboard';
+interface GameState {
+    state: 'playing' | 'paused' | 'gameOver';
+    score: number;
+    lastScore: number;
 
-export const useGameStore = create((set) => ({
-    state: 'playing' as 'playing' | 'paused' | 'gameOver',
-    currentPage: 'game' as pages,
-    setCurrentPage: (page) => set({ currentPage: page }),
+    currency: number;
+
+    time: Date;
+    extraTime: number;
+    timer: number;
+    startTime: number;
+    totalTime: number;
+}
+
+interface GameActions {
+    restartGame: () => void;
+    gameOver: () => void;
+    pauseGame: () => void;
+    unpauseGame: () => void;
+
+    setScore: (newScore: number) => void;
+    setLastScore: (newLastScore: number) => void;
+    incrementScore: (increment: number) => void;
+    resetScore: () => void;
+
+    setCurrency: (newCurrency: number) => void;
+    incrementCurrency: (increment: number) => void;
+    resetCurrency: () => void;
+    resetTimer: () => void;
+    updateTimer: (number: number) => void;
+}
+
+interface Modifiers {
+    // NOT DEVELOPED YET
+    // CURRENTLY DOUBLED WITH TALENTTREESTATE
+}
+
+type GameStoreProps = GameState & GameActions;
+
+
+export const useGameStore = create<GameStoreProps>((set) => ({
+    state: 'playing',
     score: 0,
     lastScore: 0,
     setScore: (newScore) => set({ score: newScore }),
@@ -68,4 +103,4 @@ export const useGameStore = create((set) => ({
     modifiers: {
         red_apple: { add: 1, multiply: 1, spawnRate: 1, onHit: () => { } },
     }
-}))
+}) as GameState & GameActions);

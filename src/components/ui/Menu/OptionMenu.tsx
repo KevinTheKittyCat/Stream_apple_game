@@ -5,11 +5,10 @@ import LastScore from "./LastScore";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function OptionMenu() {
-    const { restartGame, setCurrentPage } = useGameStore()
+    const { restartGame } = useGameStore()
     const navigate = useNavigate()
 
     const goToStore = () => {
-        setCurrentPage('talentTree')
         navigate({
             to: '/talentTree',
         })

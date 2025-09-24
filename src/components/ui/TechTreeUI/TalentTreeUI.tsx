@@ -6,12 +6,11 @@ import { useNavigate } from "@tanstack/react-router";
 
 
 export default function TalentTreeUI() {
-    const { setCurrentPage, restartGame, unpauseGame } = useGameStore();
+    const { restartGame, unpauseGame } = useGameStore();
     const navigate = useNavigate()
 
     const backToGame = () => {
         restartGame();
-        setCurrentPage('game')
         unpauseGame();
         navigate({
             to: '/',

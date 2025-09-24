@@ -1,8 +1,20 @@
-import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
 
-export const useTalentTreeStore = create((set) => ({
+interface TalentTreeState {
+    talents: TalentType[];
+}
+
+interface TalentTreeActions {
+    addTalent: (talent: TalentType) => void;
+    createTalent: (talent: TalentType) => void;
+    updateTalent: (id: string, updatedFields: Partial<TalentType>) => void;
+    setTalentRef: (id: string, ref: React.RefObject<HTMLDivElement> | null) => void;
+}
+
+type TalentTreeStoreProps = TalentTreeState & TalentTreeActions;
+
+export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
     talents: getStorageItem("talents") || [],
     addTalent: (talent) => { set((state) => ({ talents: [...state.talents, talent] })) },
     createTalent: (talent) => {

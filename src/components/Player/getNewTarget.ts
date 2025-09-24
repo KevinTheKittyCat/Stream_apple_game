@@ -1,33 +1,40 @@
-export const findClosestReachableApple = ({
-    apples, 
+import type { Objective } from "@/stores/Objectives";
+
+type findClosestProps = {
+    objectives: Objective[],
+    ref: React.RefObject<any> | null,
+    refOffset: { x: number, y: number },
+    objectiveOffset: { x: number, y: number }
+}
+
+export const findClosestReachableObjective = ({
+    objectives,
     ref,
     refOffset = { x: 0, y: 0 },
-    appleOffset = { x: 0, y: 0 }
-}: {
-    apples: { id: string, ref: React.RefObject<any> }[],
-}) => {
+    objectiveOffset = { x: 0, y: 0 }
+}: findClosestProps) => {
     if (!ref || !ref.current) return null; // Ensure ref is valid
     const { x, y } = ref.current.position
 
-    let closestApple = null;
-    for (const apple of apples) {
-        if (!apple.ref || !apple.ref.current) continue; // Ensure apple has a valid ref
-        if (apple.type.value < 0) continue; // Skip if apple is not reachable
-        const pos = apple.ref.current.position
-        const distance = Math.sqrt((pos.x - x + refOffset.x) ** 2 + (pos.y - y + refOffset.y) ** 2);
-
-        const appleObject = {
+    const closestObjective = objectives.reduce((acc, objective) => {
+        if (!objective.ref || !objective.ref.current || !objective.ref.current.position) return acc; // Ensure objective has a valid ref
+        if (objective.type.value < 0) return acc; // Skip if objective is not reachable
+        const pos = objective.ref.current.position
+        const distance = Math.sqrt(
+            // TODO ADD OBJECTIVE OFFSET
+            (pos.x - x + refOffset.x) ** 2 +
+            (pos.y - y + refOffset.y) ** 2
+        );
+        const objectiveObject = {
             distance,
-            ...apple,
-            ref: apple.ref,
+            ...objective,
+            ref: objective.ref,
         }
-
-        if (!closestApple) closestApple = appleObject;
-        else if (appleObject.distance < closestApple.distance) {
-            closestApple = appleObject;
-        }
-
-    }
-    return closestApple;
+        if (!acc || !acc.distance) return objectiveObject;
+        if (objectiveObject.distance < acc.distance) return objectiveObject;
+        return acc;
+    }, null as Objective & { distance: number } | null);
+    
+    return closestObjective;
 }
 

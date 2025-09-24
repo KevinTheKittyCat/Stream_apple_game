@@ -17,17 +17,10 @@ export default function PauseMenu() {
 }
 
 export function PauseMenuItems() {
-    const { state, unpauseGame, setCurrentPage } = useGameStore();
+    const { state, unpauseGame} = useGameStore();
     const navigate = useNavigate();
 
-    const onGoToUpgradesOld = useCallback(() => {
-        unpauseGame();
-        setCurrentPage('talentTree');
-
-    }, [setCurrentPage]);
-
     const onGoToUpgrades = () => {
-        setCurrentPage('talentTree')
         unpauseGame();
         navigate({
             to: '/talentTree',
