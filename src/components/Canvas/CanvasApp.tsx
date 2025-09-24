@@ -3,7 +3,7 @@ import { Container, Graphics, Sprite } from 'pixi.js';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import GameLayer from './Layers/GameLayer';
 import TalentTree from './Layers/TalentTree';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import MouseCordsListener from './MouseCordsListener';
 import TransitionLayer from './Layers/TransitionLayer';
 import { eventEmitter } from '@/utils/Eventemitter';
@@ -39,7 +39,7 @@ export default function CanvasApp() {
                 reject(new Error('Transition timed out'));
             }, 5000);
         });
-        
+
         waitForReady.then(() => {
             navigate({ to: route, search: data });
         }).catch((error) => {
@@ -48,18 +48,6 @@ export default function CanvasApp() {
             eventEmitter.emit('transition', { dir: 'out' });
         });
     });
-
-    /*useEffect(() => {
-        eventEmitter.emit('transition', { dir: 'in' });
-        const timer = setTimeout(() => {
-            eventEmitter.emit('transition', { dir: 'out' });
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, [currentRoute]);*/
-
-    useEffect(() => {
-        console.log('Current route:', currentRoute);
-    }, []);
 
     return (
         <div id="game-container" ref={gameContainerRef}>

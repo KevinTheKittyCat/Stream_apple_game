@@ -74,7 +74,6 @@ export function Player() {
 
     useEffect(() => {
         if (!spriteRef?.current) return;
-        if (playerRef) return;
         setPlayerRef(spriteRef as React.RefObject<PixiSprite>);
 
         return () => {
