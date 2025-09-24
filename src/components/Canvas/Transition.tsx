@@ -7,6 +7,8 @@ import smoothNoiseFragment from '@/components/Canvas/Shaders/smoothNoise.frag?ra
 import { extend, useTick } from '@pixi/react';
 import { useWindowStore } from '@/stores/WindowState';
 import createPerlinNoiseTexture from '@/utils/PerlinNoiseGenerator';
+import { eventEmitter } from '@/utils/Eventemitter';
+import { useEventEmitter } from '@/hooks/useEventEmitter';
 
 extend({
     Container,
@@ -29,12 +31,13 @@ type GalaxyProps = {
     minLimit?: number;
     maxLimit?: number;
     smooth?: boolean;
+    animate?: boolean;
 };
 
 // TODO - ADD X-Y-Placement & Size options + Rename
 // TODO - Animate color & alpha?
 
-export default function Galaxy({
+export default function Transition({
     debug = false,
 
     // Texture
@@ -49,17 +52,16 @@ export default function Galaxy({
     alpha = 1,
 
     // Animation
-    speed = 0.0003,
+    speed = 0.01,
     limit = 0.5, // Initial limit value
-    minLimit = 0.4,
-    maxLimit = 0.6,
+    minLimit = 0,
+    maxLimit = 1,
     // Careful with smooth. It is more expensive performance-wise.
     smooth = false,
     ...props
 }: GalaxyProps) {
     const [perlinTexture, setPerlinTexture] = useState<Texture | null>(texture instanceof Texture ? texture : null);
-    const limitValue = useRef(limit); // Should probably be a usememo or something. Oh well.
-    const [direction, setDirection] = useState(1);
+    const currentLimitValue = useRef(0); // Should probably be a usememo or something. Oh well.
     const { width, height } = useWindowStore();
 
     // Galaxy color and alpha settings (using 255-based RGBA)
@@ -95,7 +97,7 @@ export default function Galaxy({
             },
             resources: {
                 noiseUniforms: {
-                    limit: { type: 'f32', value: limitValue.current },
+                    limit: { type: 'f32', value: currentLimitValue.current },
                     customColor: { type: 'vec3<f32>', value: shaderColor }, //[0.05, 0.03, 0.03]
                     alpha: { type: 'f32', value: alpha },
                 },
@@ -105,7 +107,7 @@ export default function Galaxy({
     }, [perlinTexture, shaderColor, vertex, smooth, noiseFragment, smoothNoiseFragment, alpha]);
 
     const loadTexture = useCallback(async (textureToApply: string | Texture) => {
-        let texture = null; 
+        let texture = null;
         if (textureToApply instanceof Texture) texture = textureToApply
         if (typeof textureToApply === "string") texture = await Assets.load(textureToApply);
         setPerlinTexture(texture);
@@ -120,20 +122,37 @@ export default function Galaxy({
         setPerlinTexture(tx);
     }, [texture, loadTexture]);
 
+    const animationState = useRef<'waiting' | 'entering' | 'exiting'>('exiting');
+
+    useEventEmitter("transition", (data) => {
+        if (data?.dir === "in") animationState.current = "entering";
+        if (data?.dir === "out") animationState.current = "exiting";
+    });
+
     useTick(({ deltaTime }) => {
         if (!noiseShader) return
+        if (animationState.current === "waiting") return;
+        
+        if (currentLimitValue.current < maxLimit && animationState.current === "exiting") {
+            currentLimitValue.current += (speed * deltaTime);
+            if (currentLimitValue.current > 0.4) noiseShader.resources.noiseUniforms.uniforms.alpha -= (0.02 * deltaTime)
+        }
+        if (currentLimitValue.current >= maxLimit && animationState.current === "exiting") {
+            currentLimitValue.current = maxLimit;
+            animationState.current = "waiting";
+        }
 
-        limitValue.current += (direction * speed * deltaTime);
-        if (limitValue.current >= maxLimit) {
-            limitValue.current = maxLimit;
-            setDirection(-1);
-        } else if (limitValue.current <= minLimit) {
-            limitValue.current = minLimit;
-            setDirection(1);
+        if (currentLimitValue.current > minLimit && animationState.current === "entering") {
+            currentLimitValue.current -= (speed * deltaTime);
+            noiseShader.resources.noiseUniforms.uniforms.alpha = 1
+        }
+        if (currentLimitValue.current <= minLimit && animationState.current === "entering") {
+            currentLimitValue.current = minLimit;
+            animationState.current = "waiting";
+            eventEmitter.emit('transition', { ready: true });
         }
         // Update the shader uniform - animate the noise - based on light and dark values of the noise image
-        noiseShader.resources.noiseUniforms.uniforms.limit = limitValue.current;
-        // noiseShader.resources.noiseUniforms.uniforms.alpha += (direction * 0.001 * deltaTime)
+        noiseShader.resources.noiseUniforms.uniforms.limit = currentLimitValue.current;
     });
 
     if (!perlinTexture || !noiseShader) return null;

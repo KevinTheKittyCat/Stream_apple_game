@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { LuSettings } from "react-icons/lu";
 import { IoCloseOutline } from "react-icons/io5";
 import "./styles/pause-menu.css"
-import { useNavigate } from "@tanstack/react-router";
+import { eventEmitter } from "@/utils/Eventemitter";
 
 export default function PauseMenu() {
 
@@ -18,13 +18,11 @@ export default function PauseMenu() {
 
 export function PauseMenuItems() {
     const { state, unpauseGame} = useGameStore();
-    const navigate = useNavigate();
+
 
     const onGoToUpgrades = () => {
         unpauseGame();
-        navigate({
-            to: '/talentTree',
-        })
+        eventEmitter.emit('changeRoute', { route: '/talentTree' });
     }
 
     if (state !== "paused") return null;

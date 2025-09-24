@@ -1,20 +1,17 @@
 import { useGameStore } from "@/stores/GameState";
 import { Button } from "@chakra-ui/react";
 import Info from "./Info";
-import { useNavigate } from "@tanstack/react-router";
+import { eventEmitter } from "@/utils/Eventemitter";
 
 
 
 export default function TalentTreeUI() {
     const { restartGame, unpauseGame } = useGameStore();
-    const navigate = useNavigate()
 
     const backToGame = () => {
         restartGame();
         unpauseGame();
-        navigate({
-            to: '/',
-        })
+        eventEmitter.emit('changeRoute', { route: '/' });
     }
 
     return (

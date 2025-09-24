@@ -2,16 +2,13 @@ import { useGameStore } from "@/stores/GameState";
 import "./styles/option-menu.css"
 import TotalTime from "./TotalTime";
 import LastScore from "./LastScore";
-import { useNavigate } from "@tanstack/react-router";
+import { eventEmitter } from "@/utils/Eventemitter";
 
 export default function OptionMenu() {
     const { restartGame } = useGameStore()
-    const navigate = useNavigate()
 
     const goToStore = () => {
-        navigate({
-            to: '/talentTree',
-        })
+        eventEmitter.emit('changeRoute', { route: '/talentTree' });
     }
 
     return (
