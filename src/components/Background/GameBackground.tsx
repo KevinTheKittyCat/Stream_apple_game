@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
 import { useParallax } from "./useParallax";
@@ -51,8 +51,6 @@ export default function GameBackground() {
     });
 
 
-
-
     return (
         <>
             <Group>
@@ -61,18 +59,6 @@ export default function GameBackground() {
                 <Sprite ref={grassRef} texture="/assets/background/bg_parallaxFar.png" {...backgroundSettings} />
                 <Sprite ref={forestRef} texture="/assets/background/bg_parallaxNear.png" {...backgroundSettings} />
             </Group>
-            {/*<Group>
-                {trees.map(tree => (
-                    <TreeSprite
-                        key={tree.id}
-                        x={tree.position.x}
-                        y={tree.position.y}
-                        scale={groupScale}
-                    />
-                ))}
-            </Group>
-            */ }
-
         </>
     )
 }

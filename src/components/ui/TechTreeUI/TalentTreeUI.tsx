@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 
 
-export default function TechtreeUI() {
+export default function TalentTreeUI() {
     const { setCurrentPage, restartGame, unpauseGame } = useGameStore();
     const navigate = useNavigate()
 
