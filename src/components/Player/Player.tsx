@@ -1,14 +1,9 @@
 import {
-    type Sprite as PixiSprite,
-    FederatedPointerEvent,
-} from 'pixi.js';
-import {
     useCallback,
     useEffect,
     useRef,
 } from 'react';
-import { useApplication, useTick } from '@pixi/react';
-import { UPDATE_PRIORITY } from 'pixi.js'
+import { useApplication } from '@pixi/react';
 import { Sprite } from '../Canvas/Sprite';
 import { Group } from '../Canvas/Group';
 import Tophat from './Tophat';
@@ -18,37 +13,35 @@ import useAutoMove from './useAutoMove';
 import Basket from './Basket';
 import { useWindowStore } from '@/stores/WindowState';
 import { useGameStore } from '@/stores/GameState';
-
-type MouseCoords = {
-    x: number | null;
-    y: number | null;
-}
+import { useCanvasStore } from '@/stores/CanvasState';
+import type { Sprite as PixiSprite } from 'pixi.js';
 
 export function Player() {
     const { scale } = useWindowStore();
     const { state } = useGameStore();
     const { apples } = useObjectivesStore();
-    const { setPlayerRef, playerRef, target, getNewTarget, movementSpeed } = usePlayerStore()
-    const spriteRef = useRef(null)
+    const { setPlayerRef, playerRef, target, getNewTarget, movementSpeed, resetPlayer } = usePlayerStore()
+    const spriteRef = useRef<PixiSprite>(null);
     const { app } = useApplication();
-    const mouseCoordsRef = useRef<MouseCoords>({ x: null, y: null });
+    const { mouseCoordsRef } = useCanvasStore();
+
 
     //console.log(target?.ref?.current?.x, target?.ref?.current?.y, target?.ref?.current);
     const getTargetPositionX = useCallback(() => {
-        if (mouseCoordsRef.current.x !== null) {
+        if (mouseCoordsRef?.current?.x) {
             return mouseCoordsRef.current.x;
         }
-        if (target && target.ref.current) {
+        if (target && target.ref && target.ref.current) {
             return target.ref.current.x;
         }
         return window.innerWidth / 2;
     }, [target]);
 
     const getTargetPositionY = useCallback(() => {
-        if (mouseCoordsRef.current.y !== null) {
+        if (mouseCoordsRef?.current?.y) {
             return mouseCoordsRef.current.y;
         }
-        if (target && target.ref.current) {
+        if (target && target.ref && target.ref.current) {
             return target.ref.current.y;
         }
         return window.innerHeight / 2;
@@ -66,57 +59,34 @@ export function Player() {
         easingFactor: 0.1,
     });
 
-
-
     useEffect(() => {
-        if (!target || !target.ref.current) getNewTarget();
+        if (!target || !target.ref || !target.ref.current) getNewTarget();
         const interval = setInterval(() => {
-            if (!target || !target.ref.current) getNewTarget();
+            if (!target || !target.ref || !target.ref.current) getNewTarget();
         }, 1000); // Check every second
 
         return () => clearInterval(interval);
     }, [apples, getNewTarget, target]);
 
-
     useEffect(() => {
-        if (spriteRef) ref.current = spriteRef.current
-    })
-
-    const handlePointerMove = useCallback((event: FederatedPointerEvent) => {
-        const { x, y } = event.data.global;
-        mouseCoordsRef.current = { x, y };
-    }, []);
-
-    const handlePointerLeave = useCallback(() => {
-        mouseCoordsRef.current = { x: null, y: null };
-    }, []);
-
-    useEffect(() => {
-        app.stage.on('pointermove', handlePointerMove);
-        app.stage.on('pointerleave', handlePointerLeave);
-
-        return () => {
-            console.log('Cleaning up pointer move listener');
-            if (!app || !app.stage) return;
-            app.stage.off('pointermove', handlePointerMove);
-            app.stage.off('pointerleave', handlePointerLeave);
-        };
-    }, [app, handlePointerMove, handlePointerLeave]);
-
-    useEffect(() => {
-        if (!spriteRef.current) return;
-        if (playerRef) return
-        setPlayerRef(spriteRef);
-
-        return () => {
-            setPlayerRef(null);
-        };
+        if (spriteRef?.current) ref.current = spriteRef.current
     }, [spriteRef]);
+
+    useEffect(() => {
+        if (!spriteRef?.current) return;
+        if (playerRef) return;
+        setPlayerRef(spriteRef as React.RefObject<PixiSprite>);
+
+        return () => {
+            if (playerRef === spriteRef) setPlayerRef(null);
+        };
+    }, [spriteRef, playerRef, setPlayerRef]);
 
     const resetPosition = useCallback(() => {
         if (!app || !spriteRef.current) return;
-        spriteRef.current.x = app.renderer.width / 2;
-        spriteRef.current.y = app.renderer.height * 0.90;
+        resetPlayer();
+        //spriteRef.current.x = app.renderer.width / 2;
+        //spriteRef.current.y = app.renderer.height * 0.90;
     }, [app, spriteRef]);
 
     useEffect(() => {

@@ -4,6 +4,7 @@ import { useLocation } from '@tanstack/react-router';
 import GameLayer from './Layers/GameLayer';
 import TalentTree from './Layers/TalentTree';
 import { useRef } from 'react';
+import MouseCordsListener from './MouseCordsListener';
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
@@ -20,6 +21,7 @@ export default function CanvasApp() {
   return (
     <div id="game-container" ref={gameContainerRef}>
       <Application eventMode="static" resizeTo={window} antialias={true}>
+        <MouseCordsListener />
         {currentRoute === '/' && <GameLayer />}
         {currentRoute === '/talentTree' && <TalentTree />}
       </Application>

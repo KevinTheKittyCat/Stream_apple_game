@@ -1,5 +1,6 @@
 import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { create } from 'zustand'
+import { type Sprite as PixiSprite } from 'pixi.js';
 
 type AppleType = {
     value: number;
@@ -12,15 +13,15 @@ export type Objective = {
     y: number;
     size: number;
     speed: number;
-    ref: React.RefObject<HTMLDivElement> | null;
+    ref: React.RefObject<PixiSprite> | null;
     type: AppleType;
-}
+};
 
 interface ObjectiveStore {
     apples: Objective[];
     limit: number; // Maximum number of apples allowed on screen
     fallingSpeed: number;
-}
+};
 
 interface ObjectiveActions {
     setApples: (newApples: Objective[] | ((currentApples: Objective[]) => Objective[])) => void;
@@ -28,8 +29,8 @@ interface ObjectiveActions {
     addApple: (apple: Objective) => void;
     createApple: () => void;
     removeApple: (id: string) => void;
-    setAppleRef: (id: string, ref: React.RefObject<HTMLDivElement> | null) => void;
-}
+    setAppleRef: (id: string, ref: React.RefObject<PixiSprite> | null) => void;
+};
 
 type ObjectiveStoreProps = ObjectiveStore & ObjectiveActions;
 
@@ -67,4 +68,4 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
             apples: state.apples.map(apple => (apple.id === id && ref) ? { ...apple, ref: ref } : apple)
         };
     })
-}) as ObjectiveStoreProps);
+}));

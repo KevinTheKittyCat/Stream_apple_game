@@ -20,7 +20,7 @@ export default function useAutoMove({
     normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
     easingFactor = 0.1,
 }: UseAutoMoveProps) {
-    const contextRef = useRef(null)
+    const contextRef = useRef<PixiSprite | null>(null)
     const velocityXRef = useRef(0); // Current velocity (can be negative or positive)
     const velocityYRef = useRef(0); // Current velocity for Y movement (if needed)
     const xRef = useRef(targetPos.x);
@@ -82,7 +82,7 @@ export default function useAutoMove({
 
 
 
-const isNumber = (value) => {
+const isNumber = (value: any) => {
     return typeof value === "number" && !isNaN(value) && typeof value !== "undefined";
 }
 

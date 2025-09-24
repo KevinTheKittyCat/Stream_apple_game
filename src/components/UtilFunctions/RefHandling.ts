@@ -16,3 +16,11 @@ export const handlePositionIfRef = (item: any) => {
     const resolvedItem = handleIfRef(item);
     return  Object.assign({}, { x: resolvedItem.x, y: resolvedItem.y });
 }
+
+export const checkIfRefExists = (item: React.RefObject<any> | null) => {
+    return item?.current !== undefined;
+}
+
+export const checkRefValueExists = (item: React.RefObject<any> | null, key: string) => {
+    return item?.current?.[key] !== undefined;
+}

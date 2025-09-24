@@ -16,6 +16,7 @@ interface WindowActions {
     setOffset: (newOffset: { x: number; y: number }) => void;
 }
 
+
 type WindowStoreProps = WindowState & WindowActions;
 
 export const useWindowStore = create<WindowStoreProps>((set) => ({
@@ -24,6 +25,7 @@ export const useWindowStore = create<WindowStoreProps>((set) => ({
     scaleY: 1,
     width: window.innerWidth,
     height: window.innerHeight,
+    offset: { x: 0, y: 0 },
 
     calculateDimensions: () => set(() => {
         return {
@@ -41,6 +43,5 @@ export const useWindowStore = create<WindowStoreProps>((set) => ({
         return { scale: newScale, scaleX, scaleY };
     }),
     setScale: (newScale) => set({ scale: newScale }),
-    offset: { x: 0, y: 0 },
     setOffset: (newOffset) => set({ offset: newOffset }),
 }))
