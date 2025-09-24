@@ -1,16 +1,8 @@
 import { useMemo, useRef } from "react";
-import TreeSprite from "./Tree";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
-import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY } from "node_modules/pixi.js/lib/ticker/const";
 import { useParallax } from "./useParallax";
 import { useWindowStore } from "@/stores/WindowState";
-
-
-
-
-
 
 export default function GameBackground() {
     const { width, height } = useWindowStore();

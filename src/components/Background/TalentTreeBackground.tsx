@@ -99,7 +99,8 @@ export default function TalentTreeBackground() {
             {stars.map((pos, index) => (
                 <Star key={index} position={pos} size={STAR_RADIUS} />
             ))}
-            <Galaxy />
+            <Galaxy alpha={0.1} />
+            <Galaxy alpha={0.1} />
             {/*<Galaxy />
             <Galaxy />
             */}

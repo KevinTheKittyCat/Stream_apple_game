@@ -1,11 +1,9 @@
 
-import { Application, Assets, BlurFilter, colorToUniform, Container, Geometry, Mesh, RenderTexture, Shader, Color } from 'pixi.js';
-import { useEffect, useMemo, useState } from 'react';
-import combineFragment from '@/components/Canvas/Shaders/combine.frag?raw';
+import { Assets, BlurFilter, Container, Geometry, Mesh, Shader, Color, type BlurFilterOptions, Texture } from 'pixi.js';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import vertex from '@/components/Canvas/Shaders/multipassMesh.vert?raw';
 import noiseFragment from '@/components/Canvas/Shaders/noise.frag?raw';
-import rippleFragment from '@/components/Canvas/Shaders/ripple.frag?raw';
-import waveFragment from '@/components/Canvas/Shaders/wave.frag?raw';
+import smoothNoiseFragment from '@/components/Canvas/Shaders/smoothNoise.frag?raw';
 import { extend, useTick } from '@pixi/react';
 import { useWindowStore } from '@/stores/WindowState';
 import createPerlinNoiseTexture from '@/utils/PerlinNoiseGenerator';
@@ -15,39 +13,69 @@ extend({
     Mesh,
 });
 
-// Helper function to convert RGBA (0-255) to normalized values (0-1)
-const rgbaToNormalized = (r: number, g: number, b: number, a: number = 255) => ({
-    rgb: [
-        Number((r / 255).toFixed(2)),
-        Number((g / 255).toFixed(2)),
-        Number((b / 255).toFixed(2))
-    ] as [number, number, number],
-    alpha: Number((a / 255).toFixed(2)) // Fix: normalize alpha too
-});
+type GalaxyProps = {
+    debug?: boolean;
 
-export default function Galaxy() {
-    const [perlinTexture, setPerlinTexture] = useState<PIXI.Texture | null>(null);
-    const [limitValue, setLimitValue] = useState(0.5);
+    // Texture
+    texture?: string | Texture; // Noise texture //TODO: ADD TEXTURE OPTION - TO DIRECTLY APPLY A TEXTURE
+    createTextureOptions?: { width: number; height: number }; // Options for creating a perlin noise texture if no texture is provided
+    blurOptions?: BlurFilterOptions | false;
+    color?: Color | { r: number; g: number; b: number } | string; // Galaxy color
+    alpha?: number;
+
+    // Animation
+    speed?: number;
+    limit?: number; // Initial limit value
+    minLimit?: number;
+    maxLimit?: number;
+    smooth?: boolean;
+};
+
+// TODO - ADD X-Y-Placement & Size options + Rename
+// TODO - Animate color & alpha?
+
+export default function Galaxy({
+    debug = false,
+
+    // Texture
+    texture, // Perlin Noise image
+    createTextureOptions = { width: 256, height: 256 }, // Options for creating a perlin noise texture if no texture is provided
+    blurOptions = {
+        strength: 2,      // Overall blur strength
+        quality: 4,       // Blur quality (higher = better but slower)
+        kernelSize: 5,     // Size of blur kernel matrix
+    },
+    color = { r: 178, g: 76, b: 255 }, // Galaxy color
+    alpha = 1,
+
+    // Animation
+    speed = 0.0003,
+    limit = 0.5, // Initial limit value
+    minLimit = 0.4,
+    maxLimit = 0.6,
+    // Careful with smooth. It is more expensive performance-wise.
+    smooth = false,
+    ...props
+}: GalaxyProps) {
+    const [perlinTexture, setPerlinTexture] = useState<Texture | null>(texture instanceof Texture ? texture : null);
+    const limitValue = useRef(limit); // Should probably be a usememo or something. Oh well.
     const [direction, setDirection] = useState(1);
     const { width, height } = useWindowStore();
 
-    // Define your min and max values
-    const minLimit = 0.4;
-    const maxLimit = 0.6;
-    const speed = 0.0003;
-
     // Galaxy color and alpha settings (using 255-based RGBA)
-    const galaxyRGBA = useMemo(() => {
-        //rgbaToNormalized(178, 76, 255, 10)
-        const color = new Color({ r: 178, g: 76, b: 255, a: 0 });
-        //colorToUniform(178, 76, 255, 10)
-        return color.toArray();
-    }, []); // Purple with low alpha (60/255 ≈ 0.23)
-    //console.log(galaxyRGBA );
+    const shaderColor = useMemo(() => {
+        const col = color instanceof Color ? color : new Color(color);
+        // Normalize the values to 0.0-1.0
+        return col.toRgbArray().map(c => c / 255);
+    }, []);
 
-    //color * galaxyColor, color * galaxyAlpha
+    const blurFilter = useMemo(() => {
+        if (!blurOptions) return null;
+        return new BlurFilter(blurOptions);
+    }, [blurOptions]);
+    const filters = useMemo(() => (blurFilter ? [blurFilter] : []), [blurFilter]);
 
-    const geometry = new Geometry({
+    const geometry = useMemo<Geometry>(() => new Geometry({
         attributes: {
             aPosition: [
                 0,
@@ -62,89 +90,57 @@ export default function Galaxy() {
             aUV: [0, 0, 1, 0, 1, 1, 0, 1],
         },
         indexBuffer: [0, 1, 2, 0, 2, 3],
-    });
-
-    useEffect(() => {
-        const tx = createPerlinNoiseTexture({
-            width: 256,
-            height: 256,
-        });
-        setPerlinTexture(tx);
-        /*
-        const loadTexture = async () => {
-            const texture = await Assets.load('https://pixijs.com/assets/perlin.jpg');
-            setPerlinTexture(texture);
-        };
-        loadTexture();*/
-    }, []);
-
+    }), [width, height]);
 
     const noiseShader = useMemo(() => {
         if (!perlinTexture) return null;
         return Shader.from({
             gl: {
                 vertex,
-                // Second effect. Generates a filtered noise.
-                fragment: noiseFragment,
-
+                fragment: smooth ? smoothNoiseFragment : noiseFragment,
             },
             resources: {
                 noiseUniforms: {
-                    limit: { type: 'f32', value: 0.01 },
-                    //color: { type: 'f32', value: galaxyRGBA },
-                    galaxyColor: { type: 'vec3<f32>', value: galaxyRGBA },
-                    galaxyAlpha: { type: 'f32', value: 0.5 },
+                    limit: { type: 'f32', value: limitValue.current },
+                    customColor: { type: 'vec3<f32>', value: shaderColor }, //[0.05, 0.03, 0.03]
+                    alpha: { type: 'f32', value: alpha },
                 },
                 noise: perlinTexture.source,
             },
-        })
-    }, [perlinTexture, galaxyRGBA]);
+        });
+    }, [perlinTexture, shaderColor]);
 
-    useTick((ticker) => {
-        if (noiseShader) {
-            const { deltaTime } = ticker;
+    const loadTexture = useCallback(async (textureToApply: string | Texture) => {
+        const texture = textureToApply instanceof Texture ? textureToApply : await Assets.load(textureToApply);
+        setPerlinTexture(texture);
+    }, []);
 
-            // ORIGINAL:
-            //noiseShader.resources.noiseUniforms.uniforms.limit = Math.sin(lastTime * 0.001) * 0.35 + 0.5;
+    useEffect(() => {
+        if (texture) return loadTexture(texture);
+        const tx = createPerlinNoiseTexture(createTextureOptions);
+        setPerlinTexture(tx);
+    }, [texture]);
 
-            // Update the limit value based on direction
-            setLimitValue(prevValue => {
-                const newSpeed = speed; // Add some randomness to speed
-                let newValue = prevValue + (direction * newSpeed * deltaTime);
+    useTick(({ deltaTime }) => {
+        if (!noiseShader) return
 
-                // Check if we've hit the boundaries and need to reverse direction
-                if (newValue >= maxLimit) {
-                    newValue = maxLimit;
-                    setDirection(-1);
-                } else if (newValue <= minLimit) {
-                    newValue = minLimit;
-                    setDirection(1);
-                }
-
-
-                // Update the shader uniform
-                noiseShader.resources.noiseUniforms.uniforms.limit = newValue;
-
-                return newValue;
-            });
+        limitValue.current += (direction * speed * deltaTime);
+        if (limitValue.current >= maxLimit) {
+            limitValue.current = maxLimit;
+            setDirection(-1);
+        } else if (limitValue.current <= minLimit) {
+            limitValue.current = minLimit;
+            setDirection(1);
         }
+        // Update the shader uniform - animate the noise - based on light and dark values of the noise image
+        noiseShader.resources.noiseUniforms.uniforms.limit = limitValue.current;
     });
 
-    const filter = useMemo(() => new BlurFilter({
-        strength: 2,      // Overall blur strength
-        quality: 4,       // Blur quality (higher = better but slower)
-        kernelSize: 5     // Size of blur kernel matrix
-    }), []);
-    //const noiseQuad = new Mesh({ geometry: geometry, shader: noiseShader });
-    //noiseQuad.shader.resources.noiseUniforms.uniforms.limit = Math.sin(time * 0.5) * 0.35 + 0.5;
     if (!perlinTexture || !noiseShader) return null;
     return (
         <>
-            <pixiSprite texture={perlinTexture} x={0} y={0} width={256} height={256} />
-            {/*
-            <pixiMesh geometry={geometry} shader={noiseShader as any} />
-            */}
-            <pixiMesh geometry={geometry} shader={noiseShader as any} filters={[filter]} />
+            {debug && <pixiSprite texture={perlinTexture} x={0} y={0} width={256} height={256} />}
+            <pixiMesh geometry={geometry} shader={noiseShader} filters={filters} {...props} />
         </>
     )
 }
