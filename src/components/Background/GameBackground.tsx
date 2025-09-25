@@ -6,18 +6,7 @@ import { useWindowStore } from "@/stores/WindowState";
 
 export default function GameBackground() {
     const { width, height } = useWindowStore();
-    const groupScale = useMemo(() => {
-        return height / 1500; // Adjust scale based on window height
-    }, [height]);
-    const treePerPixel = useMemo(() => 200 * groupScale, [groupScale]); // Pixels per tree
-    const treeLength = width / treePerPixel; // Number of trees to render
-    const trees = useMemo(() => Array.from({ length: treeLength }, (_, i) => ({
-        id: i,
-        position: {
-            x: Math.random() * treePerPixel + i * treePerPixel - treePerPixel,
-            y: Math.random() * (100 * groupScale),
-        },
-    })), []);
+ 
 
     const backgroundSettings = useMemo(() => {
         return {

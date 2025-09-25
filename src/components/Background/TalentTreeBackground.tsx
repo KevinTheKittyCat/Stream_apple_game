@@ -16,7 +16,7 @@ export default function TalentTreeBackground() {
     const { width, height } = useWindowStore();
 
     const stars = useMemo(() => {
-        const normalAmount = 30 / 1.7; // 1.7 is 1920/1080 ratio
+        const normalAmount = 80 / 1.7; // 1.7 is 1920/1080 ratio
         const starAmount = Math.floor((width / height) * (normalAmount))
         const tempStars = [] as { x: number; y: number; id: string }[];
 
@@ -55,7 +55,7 @@ export default function TalentTreeBackground() {
     }), []);
 
     const noisefilter = useMemo(() => new NoiseFilter({
-        noise: 0.05,      // Slightly increased noise intensity
+        noise: 0.01,      // Slightly increased noise intensity
         seed: Math.random(),
         resolution: 0.3   // Lower resolution = bigger chunks (try 0.1-0.5)
     }), []);
@@ -66,11 +66,12 @@ export default function TalentTreeBackground() {
     return (
         <Layer
             filters={[
-                //filter,
+                filter,
+                noisefilter
             ]}
             eventMode="static"
             background={{
-                gradient: {
+                /*gradient: {
                     colorStops: [{
                         color: "#855988",
                         offset: 0
@@ -92,15 +93,16 @@ export default function TalentTreeBackground() {
                     }
                     ],
                     rotation: 45
-                },
+                },*/
+                backgroundColor: "#070B34",
                 alpha: 1
             }}
         >
             {stars.map((pos, index) => (
-                <Star key={index} position={pos} size={STAR_RADIUS} />
+                <Star key={index} position={pos} size={STAR_RADIUS * Math.random()} />
             ))}
-            <Galaxy alpha={0.1} />
-            <Galaxy alpha={0.1} />
+            <Galaxy alpha={0.01} color={"#855988"} smooth />
+            <Galaxy alpha={0.1} color={"#070B34"} smooth />
             {/*<Galaxy />
             <Galaxy />
             */}

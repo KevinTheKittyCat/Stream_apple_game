@@ -65,8 +65,7 @@ export default function Galaxy({
     // Galaxy color and alpha settings (using 255-based RGBA)
     const shaderColor = useMemo(() => {
         const col = color instanceof Color ? color : new Color(color);
-        // Normalize the values to 0.0-1.0
-        return col.toRgbArray().map(c => c / 255);
+        return col.toRgbArray()//.map(c => c / 255);
     }, []);
 
     const blurFilter = useMemo(() => {

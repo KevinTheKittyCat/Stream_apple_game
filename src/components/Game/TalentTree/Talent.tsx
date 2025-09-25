@@ -126,7 +126,8 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
                 <Graphic // Background Rectangle
                     size={{ width: outer, height: outer }}
                     rounded={5}
-                    color={"grey"}
+                    color={"#D6BBC0"} // NEED MORE TEXTURE VARIATION
+                    stroke={{ color: "#EFBF04", width: 2 }}
                     x={overlap / 2 - outer / 2}
                     y={overlap / 2 - outer / 2}
                 />
@@ -137,6 +138,7 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
                     texture={"/assets/fruits/Apple.png"}
                     //size={{ width: inner, height: inner }}
                     //color={"blue"}
+                    anchor={{ x: -0.07, y: 0.07 }}
                     x={overlap / 2 - inner / 2}
                     y={overlap / 2 - inner / 2}
                 />

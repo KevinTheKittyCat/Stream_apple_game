@@ -2,12 +2,17 @@ precision mediump float;
 varying vec2 vUvs;
 uniform float limit;
 uniform sampler2D noise;
-uniform vec3 galaxyColor;
-uniform float galaxyAlpha;
+uniform vec3 customColor;
+uniform float alpha;
 
-void main()
-{
+void main() {
     float color = texture2D(noise, vUvs).r;
     float mask = smoothstep(limit - 0.1, limit + 0.1, color);
-    gl_FragColor = vec4(0.05, 0.03, 0.03, mask * galaxyAlpha);
+    
+    // Discard fragments where mask is 0 (non-black areas)
+    if (mask < 0.5) {
+        discard;
+    }
+    // Only output color where mask is 1.0 (black areas)
+    gl_FragColor = vec4(customColor, alpha * mask);
 }

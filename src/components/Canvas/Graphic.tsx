@@ -29,7 +29,7 @@ export default function Graphic({ size, color, stroke, alpha, rounded, drawFunct
             g.rect(0, 0, size?.width || 0, size?.height || 0);
         }
 
-        //g.stroke({ color: stroke?.color, alpha: alpha || 1, width: stroke?.width || 1 });
+        if (stroke) g.stroke({ color: stroke?.color, alpha: alpha || 1, width: stroke?.width || 1 });
         g.fill({ color: color ?? "transparent", alpha: alpha || 1 });
         // image fill
     }, [app, size, color, stroke, alpha]);
