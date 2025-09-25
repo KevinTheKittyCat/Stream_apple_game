@@ -4,7 +4,7 @@ import GameBackground from "@/components/Background/GameBackground";
 import Graphic from "../Graphic";
 import { useWindowStore } from "@/stores/WindowState";
 
-export default function BackgroundLayer() {
+export default function BackgroundLayer({visible = true}: {visible?: boolean}) {
     const { width, height } = useWindowStore();
     const { isInitialised } = useApplication();
 
@@ -12,6 +12,7 @@ export default function BackgroundLayer() {
     return (
         <Layer
             eventMode="static"
+            visible={visible}
             //width={app.renderer.width}
             //height={app.renderer.height}
             /*background={{

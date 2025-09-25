@@ -67,7 +67,7 @@ export default function TalentTreeBackground() {
         <Layer
             filters={[
                 filter,
-                noisefilter
+                //noisefilter
             ]}
             eventMode="static"
             background={{
@@ -101,8 +101,8 @@ export default function TalentTreeBackground() {
             {stars.map((pos, index) => (
                 <Star key={index} position={pos} size={STAR_RADIUS * Math.random()} />
             ))}
-            <Galaxy alpha={0.01} color={"#855988"} smooth />
-            <Galaxy alpha={0.1} color={"#070B34"} smooth />
+            <Galaxy alpha={0.1} color={"#855988"} />
+            <Galaxy alpha={0.1} color={"#070B34"} />
             {/*<Galaxy />
             <Galaxy />
             */}

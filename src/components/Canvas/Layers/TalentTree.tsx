@@ -22,7 +22,7 @@ interface TalentTreeData {
     links: TalentLink[];
 }
 
-export default function TalentTree() {
+export default function TalentTree( {visible = true}: {visible?: boolean} ) {
     const { isInitialised } = useApplication();
     const [talentTreeData, setTalentTreeData] = useState<TalentTreeData>({ nodes: [], links: [] });
 
@@ -35,6 +35,7 @@ export default function TalentTree() {
     return (
         <>
             <Layer
+                visible={visible}
                 eventMode="static"
             >
                 <TalentTreeBackground />

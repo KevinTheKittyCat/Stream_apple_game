@@ -6,7 +6,7 @@ import AppleSpawner from "@/components/Objective/AppleSpawner";
 import BackgroundLayer from "./BackgroundLayer";
 import { useWindowStore } from "@/stores/WindowState";
 
-export default function GameLayer() {
+export default function GameLayer({visible = true}: {visible?: boolean}) {
   const { isInitialised } = useApplication();
   const { width, height } = useWindowStore();
   const { apples } = AppleSpawner(); // Limit the number of apples to 10
@@ -14,8 +14,9 @@ export default function GameLayer() {
   if (!isInitialised) return null;
   return (
     <>
-      <BackgroundLayer />
+      <BackgroundLayer visible={visible} />
       <Layer
+        visible={visible}
         eventMode="static"
         width={width}
         height={height}

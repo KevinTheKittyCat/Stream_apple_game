@@ -41,7 +41,7 @@ export default function Galaxy({
     texture, // Perlin Noise image
     createTextureOptions = { width: 256, height: 256 }, // Options for creating a perlin noise texture if no texture is provided
     blurOptions = {
-        strength: 2,      // Overall blur strength
+        strength: 100,      // Overall blur strength
         quality: 4,       // Blur quality (higher = better but slower)
         kernelSize: 5,     // Size of blur kernel matrix
     },
@@ -54,7 +54,7 @@ export default function Galaxy({
     minLimit = 0.4,
     maxLimit = 0.6,
     // Careful with smooth. It is more expensive performance-wise.
-    smooth = false,
+    smooth = false, // Enable smooth by default to prevent jumping
     ...props
 }: GalaxyProps) {
     const [perlinTexture, setPerlinTexture] = useState<Texture | null>(texture instanceof Texture ? texture : null);

@@ -41,10 +41,10 @@ export default function CanvasApp() {
         });
 
         waitForReady.then(() => {
-            navigate({ to: route, search: data });
         }).catch((error) => {
             console.error(error);
         }).finally(() => {
+            navigate({ to: route, search: data });
             eventEmitter.emit('transition', { dir: 'out' });
         });
     });
@@ -53,8 +53,8 @@ export default function CanvasApp() {
         <div id="game-container" ref={gameContainerRef}>
             <Application eventMode="static" resizeTo={window} antialias={true}>
                 <MouseCordsListener />
-                {currentRoute === '/' && <GameLayer />}
-                {currentRoute === '/talentTree' && <TalentTree />}
+                <GameLayer visible={currentRoute === '/'} />
+                <TalentTree visible={currentRoute === '/talentTree'} />
                 <TransitionLayer />
             </Application>
         </div>
