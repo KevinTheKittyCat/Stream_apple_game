@@ -1,5 +1,5 @@
 import { Application, extend } from '@pixi/react';
-import { Container, Graphics, Sprite } from 'pixi.js';
+import { Container, Graphics, Sprite, Text, HTMLText } from 'pixi.js';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import GameLayer from './Layers/GameLayer';
 import TalentTree from './Layers/TalentTree';
@@ -8,12 +8,16 @@ import MouseCordsListener from './MouseCordsListener';
 import TransitionLayer from './Layers/TransitionLayer';
 import { eventEmitter } from '@/utils/Eventemitter';
 import { useEventEmitter } from '@/hooks/useEventEmitter';
+import { Viewport } from 'pixi-viewport';
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
     Container,
     Graphics,
     Sprite,
+    Text,
+    HTMLText,
+    Viewport,
 });
 
 type ChangeRouteEvent = {

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Layer } from "@/components/Canvas/Layer";
-import { useApplication } from "@pixi/react";
+import { extend, useApplication } from "@pixi/react";
 
 import { createTalentTree, techs } from "@/components/Game/TalentTree/TalentData";
 import NewTalentTree from "@/components/Game/TalentTree/NewTalentTree";
 import TalentTreeBackground from "@/components/Background/TalentTreeBackground";
+
+import { CustomViewport } from "@/components/Canvas/CustomViewport";
 
 interface TalentNode {
     id: string;
@@ -22,7 +24,8 @@ interface TalentTreeData {
     links: TalentLink[];
 }
 
-export default function TalentTree( {visible = true}: {visible?: boolean} ) {
+
+export default function TalentTree({ visible = true }: { visible?: boolean }) {
     const { isInitialised } = useApplication();
     const [talentTreeData, setTalentTreeData] = useState<TalentTreeData>({ nodes: [], links: [] });
 
@@ -36,10 +39,12 @@ export default function TalentTree( {visible = true}: {visible?: boolean} ) {
         <>
             <Layer
                 visible={visible}
-                eventMode="static"
+                eventMode="passive"
             >
                 <TalentTreeBackground />
-                <NewTalentTree />
+                <CustomViewport>
+                    <NewTalentTree />
+                </CustomViewport>
             </Layer>
         </>
     );

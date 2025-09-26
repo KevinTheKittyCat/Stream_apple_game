@@ -48,7 +48,7 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     lastScore: 0,
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
-    incrementScore: (increment) => set((state) => ({ score: Math.max(state.score + increment, 0) })),
+    incrementScore: (increment) => set((state) => ({ score: Math.max(state.score + increment + 1000, 0) })),
     resetScore: () => set({ score: 0 }),
 
     currency: Number(getStorageItem("currency")) || 0,
@@ -79,7 +79,14 @@ export const useGameStore = create<GameStoreProps>((set) => ({
             score: 0,
         }
     }),
-    gameOver: () => set({ state: 'gameOver' }),
+    gameOver: () => set((state) => {
+        state.incrementCurrency(state.score);
+        state.setLastScore(state.score);
+        state.resetScore();
+        return {
+            state: 'gameOver',
+        };
+    }),
     pauseGame: () => set({ state: 'paused' }),
     unpauseGame: () => set({ state: 'playing' }),
     resetTimer: () => set((state) => ({ timer: state.startTime, time: new Date(), totalTime: 0 })),
@@ -88,9 +95,9 @@ export const useGameStore = create<GameStoreProps>((set) => ({
         if (state.state !== 'playing') return {};
         if (final <= 0) {
             // If the timer reaches 0, trigger any necessary game over logic
-            state.incrementCurrency(state.score);
-            state.resetScore();
-            state.setLastScore(state.score);
+            //state.incrementCurrency(state.score);
+            //state.setLastScore(state.score);
+            //state.resetScore();
             state.gameOver();
         }
         return {

@@ -9,33 +9,36 @@ import RopeTree from './RopeTree';
 
 export default function NewTalentTree() {
     const { talents, createTalent } = useTalentTreeStore();
-    
-    useEffect(() => {
-        if (!talents.length) createTalent({
-            ...JSONTALENTS.firstTalent,
-            position: { x: 500, y: 500 }
-        });
 
-        const interval = setInterval(() => {
-            if (talents.length >= 4) return;
-            const newTalent = {
-                ...JSONTALENTS.secondTalent,
-                settled: 0,
-                id: Date.now(),
-                position: { x: 500, y: 500 }
-            };
-            createTalent(newTalent);
-        }, 2000);
-        return () => clearInterval(interval);
+    useEffect(() => {
+        const arrayFromTalents = Object.values(JSONTALENTS);
+        const talentsNotSpawned = arrayFromTalents.filter(talent => !talents.find(t => t.id === talent.id));
+        talentsNotSpawned.reduce((acc, talent) => {
+            let preReqTalent = talents.find(t => t.id === talent?.prerequisites[0].id) || null;
+            //if (!preReqTalent) return acc;
+            const checkPrerequisites = talent.prerequisites.every(prereq => {
+                const foundTalent = talents.find(t => t.id === prereq.id);
+                return foundTalent && foundTalent.currentLevel >= prereq.level;
+            });
+            if (checkPrerequisites) {
+                createTalent({
+                    ...talent,
+                    settled: 0,
+                    //id: "talent_" + Date.now(),
+                    position: preReqTalent?.position ? preReqTalent?.position : { x: 500, y: 500 }
+                });
+            }
+            return acc;
+        }, []);
     }, [talents]);
 
     return (
         <>
             <Layer>
                 {/* ROPES INBETWEEN TALENTS */}
-                 <RopeTree />
+                <RopeTree />
             </Layer>
-            <Layer>
+            <Layer eventMode="passive">
                 {
                     talents.map(talent => (
                         <Talent key={talent.id} {...talent} />

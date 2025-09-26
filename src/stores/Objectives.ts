@@ -1,6 +1,7 @@
 import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { create } from 'zustand'
 import { type Sprite as PixiSprite } from 'pixi.js';
+import { getTalentEffect } from './talentTreeState';
 
 type AppleType = {
     value: number;
@@ -53,8 +54,8 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
             id,
             x: Math.random() * window.innerWidth,
             y: -100,
-            size: 30,
-            speed: 2 + Math.random() * 3,
+            size: getTalentEffect(30, "scale"), // Scale with talents
+            speed: getTalentEffect(2, "fallSpeed") + Math.random() * 3, // Base speed + talent effect
             ref: null,
             type: getRandomAppleType(),
         };

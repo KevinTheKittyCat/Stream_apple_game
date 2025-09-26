@@ -45,7 +45,7 @@ export const Layer = ({ children, background, ...props }: Props) => {
 
     return (
         <pixiContainer
-            eventMode="static"
+            eventMode="passive"
             //width={app.renderer.width}
             //height={app.renderer.height}
             hitArea={hitArea}

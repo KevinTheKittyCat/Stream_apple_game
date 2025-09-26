@@ -1,17 +1,19 @@
-import { Layer } from "@/components/Canvas/Layer";
 import Graphic from "@/components/Canvas/Graphic";
-import GameBackground from "@/components/Background/GameBackground";
 import { Group } from "@/components/Canvas/Group";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTalentTreeStore, type TalentType } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY } from "pixi.js";
-import { checkHitMultiple, checkHitMultipleWithId } from "@/components/Player/HitDetection";
+import { checkHitMultipleWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
 import { useWindowStore } from "@/stores/WindowState";
+import TalentHint from "./TalentHint";
+import { useGameStore } from "@/stores/GameState";
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
-export function Talent({ id, position, settled, prerequisites }: TalentType) {
+export function Talent(talent: TalentType) {
+    const { id, position, settled, prerequisites, cost } = talent;
+    const { currency, incrementCurrency } = useGameStore();
     const groupRef = useRef(null);
     const { scale } = useWindowStore();
     const { setTalentRef, talents, updateTalent } = useTalentTreeStore();
@@ -114,6 +116,27 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
         priority: UPDATE_PRIORITY.LOW,
     })
 
+    const onClick = useCallback(() => {
+        console.log("talent clicked", talent);
+        // Maybe move to talentStore or GameStore
+        const { currentLevel, levels, costMultiplier, cost } = talent;
+        if (currentLevel >= levels) return console.log("Talent already maxed");
+        if (cost > currency) return console.log("Not enough currency");
+        console.log("Purchasing talent", id, cost, currency);
+        incrementCurrency(-cost);
+        updateTalent(id, {
+            currentLevel: currentLevel + 1,
+            cost: Math.floor(cost * costMultiplier)
+        });
+    }, [currency, talent]);
+
+    const [hovered, setHovered] = useState(false);
+    const onMouseEnter = useCallback(() => {
+        setHovered(true);
+    }, []);
+    const onMouseLeave = useCallback(() => {
+        setHovered(false);
+    }, []);
 
     return (
         <>
@@ -123,32 +146,46 @@ export function Talent({ id, position, settled, prerequisites }: TalentType) {
                 y={position.y}
                 scale={{ x: scale, y: scale }}
             >
-                <Graphic // Background Rectangle
-                    size={{ width: outer, height: outer }}
-                    rounded={5}
-                    color={"#D6BBC0"} // NEED MORE TEXTURE VARIATION
-                    stroke={{ color: "#EFBF04", width: 2 }}
-                    x={overlap / 2 - outer / 2}
-                    y={overlap / 2 - outer / 2}
-                />
-                <Sprite
-                    // TODO - Make images centered to the outer rectangle
-                    //size={{ width: overlap, height: overlap }}
-                    height={inner}
-                    texture={"/assets/fruits/Apple.png"}
-                    //size={{ width: inner, height: inner }}
-                    //color={"blue"}
-                    anchor={{ x: -0.07, y: 0.07 }}
-                    x={overlap / 2 - inner / 2}
-                    y={overlap / 2 - inner / 2}
-                />
                 <Graphic
                     size={{ width: overlap, height: overlap }}
-                    //color={"rgba(255,0,0,0.1)"} // DEBUG
                     x={0}
                     y={0}
                 />
+                <Group
+                    x={overlap / 2 - outer / 2}
+                    y={overlap / 2 - outer / 2}
+                    onClick={onClick}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    eventMode={currency >= cost ? "static" : "none"}
+                >
+                    <Graphic // Background Rectangle
+                        size={{ width: outer, height: outer }}
+                        rounded={5}
+                        color={"#6c507686"}//"#D6BBC0" // NEED MORE TEXTURE VARIATION
+                        stroke={{ color: "#EFBF04", width: 2 }}
+                    />
+                    <Sprite
+                        // TODO - Make images centered to the outer rectangle
+                        height={inner}
+                        texture={"/assets/fruits/Apple.png"}
+                        anchor={0.5}
+                        x={outer / 2}
+                        y={outer / 2}
+                    />
+                    {currency < cost && <Graphic
+                        size={{ width: outer, height: outer }}
+                        rounded={5}
+                        color={"rgba(0, 0, 0, 0.4)"} // DEBUG
+                    />}
+                </Group>
             </Group>
+            {hovered && (
+                <TalentHint talent={talent}
+                    x={position.x}
+                    y={position.y}
+                />
+            )}
         </>
     );
 }

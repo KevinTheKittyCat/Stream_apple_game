@@ -44,12 +44,42 @@ export type TalentType = {
     levels: number;
     currentLevel: number;
     description: string;
-    effects: Array<{ type: string; multiply: number }>;
+    effects: Array<{ type: string; multiply?: number, add?: number, set?: number, minus?: number }>;
     prerequisites: Array<{ id: string; level: number }>;
     spawnOn: { x: number; y: number };
     settled: number;
     image: string;
+    cost: number,
+    costMultiplier: number,
 };
+
+export const getTalentEffect = (originalNumber: number, type: string): number => {
+    const talents = useTalentTreeStore.getState().talents
+    const number = talents.reduce((acc: number, talent) => {
+        const effects = talent.effects.filter(e => e.type === type);
+        effects.forEach(e => {
+            if (e?.multiply) acc *= e.multiply * talent.currentLevel;
+            if (e?.add) acc += e.add * talent.currentLevel;
+            if (e?.set) acc = e.set * talent.currentLevel;
+            if (e?.minus) acc -= e.minus * talent.currentLevel;
+        });
+        return acc;
+    }, originalNumber as number);
+    return number;
+}
+/*
+export const getTalentEffects = (): number => {
+    const talents = useTalentTreeStore.getState().talents
+    return talents.reduce((acc: Record<string, number>, talent) => {
+        const effects = talent.effects.forEach(e => {
+            if (e.type !== acc[e.type]) acc[e.type] = originalNumber;
+            if (e.multiply) acc[e.type] *= e.multiply;
+            if (e.add) acc[e.type] += e.add;
+            if (e.set) acc[e.type] = e.set;
+            if (e.minus) acc[e.type] -= e.minus;
+        });
+    }, {} as Record<string, number>);
+}*/
 
 export const JSONTALENTS = {
     firstTalent: {
@@ -64,7 +94,9 @@ export const JSONTALENTS = {
         prerequisites: [],
         spawnOn: { x: 500, y: 500 },
         settled: 2,
-        image: "/assets/fruits/Apple.png"
+        image: "/assets/fruits/Apple.png",
+        cost: 20,
+        costMultiplier: 1.5,
     },
     secondTalent: {
         id: "upgrade_fall_speed",
@@ -75,10 +107,12 @@ export const JSONTALENTS = {
         effects: [
             { type: "fallSpeed", multiply: 1.2 }
         ],
-        prerequisites: [{ id: "upgrade_scale", level: 1 }],
+        prerequisites: [{ id: "upgrade_scale", level: 2 }],
         spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
         settled: 0,
-        image: "/assets/fruits/Orange.png"
+        image: "/assets/fruits/Orange.png",
+        cost: 10,
+        costMultiplier: 1.5,
     },
     thirdTalent: {
         id: "upgrade_player_speed",
@@ -89,9 +123,27 @@ export const JSONTALENTS = {
         effects: [
             { type: "playerSpeed", multiply: 1.2 }
         ],
-        prerequisites: [{ id: "upgrade_scale", level: 1 }],
+        prerequisites: [{ id: "upgrade_scale", level: 2 }],
         spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
         settled: 0,
-        image: "/assets/fruits/Banana.png"
+        image: "/assets/fruits/Banana.png",
+        cost: 15,
+        costMultiplier: 1.5,
+    },
+    fourthTalent: {
+        id: "upgrade_apple_value",
+        levels: 5,
+        currentLevel: 1,
+        title: "Apple Value",
+        description: "Increases the value of the apple.",
+        effects: [
+            { type: "appleValue", add: 1 }
+        ],
+        prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
+        spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
+        settled: 0,
+        image: "/assets/fruits/Banana.png",
+        cost: 15,
+        costMultiplier: 1.5,
     }
 };

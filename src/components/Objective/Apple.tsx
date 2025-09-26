@@ -16,15 +16,15 @@ type AppleProps = {
     id: string;
     x?: number;
     y?: number;
-    fallingSpeed?: number; // Speed at which the apple falls
+    speed?: number; // Speed at which the apple falls
     type?: any;
 };
 
-export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
+export function Apple({ id, x = 100, y = 100, type, speed:fallingSpeed = 2 }: AppleProps) {
     const { scale } = useWindowStore();
     const { incrementScore, state } = useGameStore();
     const { playerRef, getNewTarget, target } = usePlayerStore()
-    const { apples, setAppleRef, fallingSpeed, removeApple } = useObjectivesStore()
+    const { apples, setAppleRef, removeApple } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
     const speedRef = useRef(0); // current speed
 
@@ -48,7 +48,6 @@ export function Apple({ id, x = 100, y = 100, type }: AppleProps) {
         callback(this: React.RefObject<PixiSprite | null>, { deltaTime }) {
             //const now = performance.now();
             const delta = deltaTime / 60 //(now - lastTimeRef.current) / 1000; // seconds
-
 
             // Ease speed towards fallingSpeed
             speedRef.current += (fallingSpeed - speedRef.current) * 0.1; // 0.1 = easing factor
