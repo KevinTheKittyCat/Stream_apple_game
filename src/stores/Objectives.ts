@@ -2,6 +2,7 @@ import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { create } from 'zustand'
 import { type Sprite as PixiSprite } from 'pixi.js';
 import { getTalentEffect } from './talentTreeState';
+import { useGameStore } from './GameState';
 
 type AppleType = {
     value: number;
@@ -48,6 +49,7 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
     resetObjectives: () => set({ apples: [] }),
     addApple: (apple) => set((state) => ({ apples: [...state.apples, apple] })),
     createApple: () => set((state) => {
+        if (useGameStore.getState().state !== 'playing') return {}; // Only add apples when playing
         if (state.apples.length >= state.limit) return {}; // Limit reached
         const id = Math.random().toString(36).substring(2, 15);
         const apple: Objective = {

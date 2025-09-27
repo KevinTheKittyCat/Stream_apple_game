@@ -31,6 +31,7 @@ export default function TalentHint() {
                         {effect?.add && `+${effect.add} `}
                         {effect?.minus && `-${effect.minus} `}
                         {effect?.multiply && `+ ${Math.round(effect.multiply * 100 - 100)}% `}
+                        {effect?.divide && `- ${Math.round(effect.divide * 100 - 100)}% `}
                         {effect?.set && `Set to ${effect.set} `}
                     </strong>
                 </p>

@@ -31,6 +31,7 @@ export function Player() {
 
 
     const getTargetPositionX = useCallback(() => {
+        if (state === 'gameOver') return window.innerWidth / 2;
         if (mouseCoordsRef?.current?.x) {
             return mouseCoordsRef.current.x;
         }
@@ -38,9 +39,10 @@ export function Player() {
             return target.ref.current.x;
         }
         return window.innerWidth / 2;
-    }, [target]);
+    }, [target, state]);
 
     const getTargetPositionY = useCallback(() => {
+        if (state === 'gameOver') return window.innerHeight * 0.9;
         if (mouseCoordsRef?.current?.y) {
             return mouseCoordsRef.current.y;
         }
@@ -48,15 +50,15 @@ export function Player() {
             return target.ref.current.y;
         }
         return window.innerHeight / 2;
-    }, [target]);
+    }, [target, state]);
 
     const { ref } = useAutoMove({
         id: "player",
-        enabled: state === 'playing',
+        enabled: true,
         maxVelocity: movementSpeed,
         targetPos: {
-            x: target?.ref?.current?.x ? getTargetPositionX : window.innerWidth / 2,
-            y: target?.ref?.current?.y ? getTargetPositionY : window.innerHeight / 2
+            x: getTargetPositionX(),
+            y: getTargetPositionY()
         },
         normalizationFactor: 0.01,
         easingFactor: 0.1,
@@ -87,8 +89,6 @@ export function Player() {
     const resetPosition = useCallback(() => {
         if (!app || !spriteRef.current) return;
         resetPlayer();
-        //spriteRef.current.x = app.renderer.width / 2;
-        //spriteRef.current.y = app.renderer.height * 0.90;
     }, [app, spriteRef]);
 
     useEffect(() => {
@@ -97,16 +97,10 @@ export function Player() {
         resetPosition();
     }, [spriteRef]);
 
-    useEffect(() => {
-        if (state === 'gameOver') resetPosition();
-    }, [state, resetPosition]);
-
     return (
         <Group
             ref={spriteRef}
             scale={scale}
-            //x={app.canvas.width / 2}
-            //y={app.canvas.height * 0.98 - spriteRef.current?.height || 0}
             eventMode={'dynamic'}
         >
             <Sprite

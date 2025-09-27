@@ -132,7 +132,7 @@ export function Talent(talent: TalentType) {
                 ref={groupRef}
                 x={position.x}
                 y={position.y}
-                scale={{ x: scale, y: scale }}
+                //scale={{ x: scale, y: scale }}
             >
                 <Graphic
                     size={{ width: overlap, height: overlap }}

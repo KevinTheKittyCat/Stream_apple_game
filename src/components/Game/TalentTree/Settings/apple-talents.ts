@@ -7,7 +7,7 @@ export const apple_tallents = {
         title: "Scale",
         description: "Increases the scale of the apple.",
         effects: [
-            { type: "appleScale", multiply: 1.02 }
+            { type: "appleScale", multiply: 1.02, suffix: "%" }
         ],
         prerequisites: [],
         spawnOn: { x: 500, y: 500 },
@@ -23,7 +23,7 @@ export const apple_tallents = {
         title: "Newton's Eureka",
         description: "Increases the fall speed of the apple.",
         effects: [
-            { type: "fallSpeed", multiply: 1.2 }
+            { type: "fallSpeed", multiply: 1.2, suffix: "%" }
         ],
         prerequisites: [{ id: "upgrade_appleScale", level: 2 }],
         settled: 0,
@@ -38,7 +38,7 @@ export const apple_tallents = {
         title: "Player Speed",
         description: "Increases the speed of the player.",
         effects: [
-            { type: "playerSpeed", multiply: 1.2 }
+            { type: "playerSpeed", multiply: 1.2, suffix: "%" }
         ],
         prerequisites: [{ id: "upgrade_appleScale", level: 2 }],
         settled: 0,
@@ -53,7 +53,7 @@ export const apple_tallents = {
         title: "Apple Value",
         description: "Increases the value of the apple.",
         effects: [
-            { type: "appleValue", add: 1 }
+            { type: "appleValue", add: 1, suffix: "$" }
         ],
         prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
         settled: 0,
@@ -68,7 +68,7 @@ export const apple_tallents = {
         title: "Ain't nobody got time for that",
         description: "Increases the time the apple stays on the screen.",
         effects: [
-            { type: "time", add: 20 }
+            { type: "time", add: 20, suffix: "s" }
         ],
         prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
         settled: 0,
@@ -83,7 +83,7 @@ export const apple_tallents = {
         title: "A chance of meatb-Apples",
         description: "Increases the chance of getting normal apples.",
         effects: [
-            { type: "goodAppleChance", multiply: 1.1 }
+            { type: "goodAppleChance", multiply: 1.1, suffix: "%" }
         ],
         prerequisites: [{ id: "upgrade_apple_value", level: 3 }],
         settled: 0,
@@ -91,4 +91,19 @@ export const apple_tallents = {
         cost: 20,
         costMultiplier: 1.3,
     },
+    apple_spawn_rate: {
+        id: "apple_spawn_rate",
+        levels: 5,
+        currentLevel: 1,
+        title: "More Apples!",
+        description: "Increases the spawn rate of apples.",
+        effects: [
+            { type: "appleSpawnRate", divide: 1.1, suffix: "%" }
+        ],
+        prerequisites: [{ id: "good_apple_chance", level: 2 }],
+        settled: 0,
+        image: "/assets/fruits/Apple.png",
+        cost: 20,
+        costMultiplier: 1.5,
+    }
 };

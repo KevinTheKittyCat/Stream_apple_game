@@ -15,7 +15,6 @@ export default function NewTalentTree() {
         const talentsNotSpawned = arrayFromTalents.filter(talent => !talents.find(t => t.id === talent.id));
         talentsNotSpawned.reduce((acc, talent) => {
             let preReqTalent = talents.find(t => t.id === talent?.prerequisites[0].id) || null;
-            //if (!preReqTalent) return acc;
             const checkPrerequisites = talent.prerequisites.every(prereq => {
                 const foundTalent = talents.find(t => t.id === prereq.id);
                 return foundTalent && foundTalent.currentLevel >= prereq.level;
@@ -24,7 +23,6 @@ export default function NewTalentTree() {
                 createTalent({
                     ...talent,
                     settled: 0,
-                    //id: "talent_" + Date.now(),
                     position: preReqTalent?.position ? preReqTalent?.position : { x: 500, y: 500 }
                 });
             }

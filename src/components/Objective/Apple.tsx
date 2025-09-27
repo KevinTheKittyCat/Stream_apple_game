@@ -59,13 +59,15 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: A
             speedRef.current += (fallingSpeed - speedRef.current) * 0.1; // 0.1 = easing factor
 
             if (!this.current) return;
+            if (state === "gameOver") this.current.scale.set(
+                Math.max(this.current.scale.x - 0.03 * delta * 60, 0),
+                Math.max(this.current.scale.y - 0.03 * delta * 60, 0)
+            );
             this.current.position.y += speedRef.current * delta * 60; // 60 = base frame rate
 
-            if (this.current.position.y > window.innerHeight) {
-                this.current.position.y = 0;
-                this.current.position.x = Math.random() * window.innerWidth;
-                speedRef.current = 0; // reset speed for next fall
+            if (this.current.position.y > window.innerHeight || this.current.scale.x <= 0) {
                 if (target && target.ref === this) getNewTarget();
+                return removeApple(id);
             }
 
             if (!playerRef && !this.current) return;
@@ -73,7 +75,7 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: A
             if (isHit) onHit(this.current);
         },
         context: spriteRef,
-        isEnabled: state === 'playing',
+        isEnabled: true,
         priority: UPDATE_PRIORITY.LOW,
     })
 

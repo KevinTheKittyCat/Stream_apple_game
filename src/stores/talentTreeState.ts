@@ -69,7 +69,7 @@ export type TalentType = {
     levels: number;
     currentLevel: number;
     description: string;
-    effects: Array<{ type: string; multiply?: number, add?: number, set?: number, minus?: number }>;
+    effects: Array<{ type: string; multiply?: number, divide?: number, pow?: number, add?: number, set?: number, minus?: number }>;
     prerequisites: Array<{ id: string; level: number }>;
     spawnOn: { x: number; y: number };
     settled: number;
@@ -83,7 +83,8 @@ export const getTalentEffect = (originalNumber: number, type: string): number =>
     const number = talents.reduce((acc: number, talent) => {
         const effects = talent.effects.filter(e => e.type === type);
         effects.forEach(e => {
-            if (e?.multiply) acc *= e.multiply * talent.currentLevel;
+            if (e?.multiply) acc *= Math.pow(e.multiply, talent.currentLevel);
+            if (e?.divide) acc /= Math.pow(e.divide, talent.currentLevel);
             if (e?.add) acc += e.add * talent.currentLevel;
             if (e?.set) acc = e.set * talent.currentLevel;
             if (e?.minus) acc -= e.minus * talent.currentLevel;
