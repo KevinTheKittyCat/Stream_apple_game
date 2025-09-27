@@ -3,6 +3,7 @@ import { Button } from "@chakra-ui/react";
 import Info from "./Info";
 import { eventEmitter } from "@/utils/Eventemitter";
 import UIWrapper from "../UIWrapper";
+import TalentHint from "./TalentHint";
 
 
 
@@ -45,6 +46,7 @@ export default function TalentTreeUI() {
                     }}
                         onClick={backToGame}>Back to Game</Button>
                     {/* Render your tech tree UI components here */}
+                    <TalentHint />
                 </div>
             </div>
         </UIWrapper>

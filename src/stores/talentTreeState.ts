@@ -1,33 +1,58 @@
+import { allTalents } from '@/components/Game/TalentTree/Settings/all';
 import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
+import { Container } from 'pixi.js';
 import { create } from 'zustand'
 
 interface TalentTreeState {
     talents: TalentType[];
+    hoveringTalent: TalentType | null;
 }
 
 interface TalentTreeActions {
     addTalent: (talent: TalentType) => void;
     createTalent: (talent: TalentType) => void;
     updateTalent: (id: string, updatedFields: Partial<TalentType>) => void;
-    setTalentRef: (id: string, ref: React.RefObject<HTMLDivElement> | null) => void;
+    setTalentRef: (id: string, ref: React.RefObject<Container> | null) => void;
+    setHoveringTalent: (talent: TalentType | null) => void;
 }
 
 type TalentTreeStoreProps = TalentTreeState & TalentTreeActions;
 
+const setStorageSafeTalents = (newTalents) => {
+    const storage = newTalents.map(t => ({
+        id: t.id,
+        position: t.position,
+        levels: t.levels,
+        currentLevel: t.currentLevel,
+        settled: t.settled,
+    }));
+    setItemRemoveRefStringify("talents", storage);
+    return storage;
+}
+
+const getStorageSafeTalents = () => {
+    const fromStorage = getStorageItem("talents") || [];
+    return fromStorage.map(t => ({
+        ...allTalents[t.id as keyof typeof allTalents],
+        ...t,
+    })) as TalentType[];
+}
+
 export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
-    talents: getStorageItem("talents") || [],
+    talents: getStorageSafeTalents(),
+    hoveringTalent: null,
+    setHoveringTalent: (talent) => set({ hoveringTalent: talent }),
     addTalent: (talent) => { set((state) => ({ talents: [...state.talents, talent] })) },
     createTalent: (talent) => {
         set((state) => {
             const newTalents = [...state.talents, talent];
-            setItemRemoveRefStringify("talents", newTalents);
+            setStorageSafeTalents(newTalents);
             return { talents: newTalents }
         });
     },
     updateTalent: (id, updatedFields) => set((state) => {
-        console.log("Updating talent", id, updatedFields);
         const newTalents = state.talents.map(talent => talent.id === id ? { ...talent, ...updatedFields } : talent);
-        setItemRemoveRefStringify("talents", newTalents);
+        setStorageSafeTalents(newTalents);
         return { talents: newTalents };
     }),
     setTalentRef: (id, ref) => set((state) => {
@@ -80,70 +105,3 @@ export const getTalentEffects = (): number => {
         });
     }, {} as Record<string, number>);
 }*/
-
-export const JSONTALENTS = {
-    firstTalent: {
-        id: "upgrade_scale",
-        levels: 5,
-        currentLevel: 1,
-        title: "Scale",
-        description: "Increases the scale of the apple.",
-        effects: [
-            { type: "scale", multiply: 1.2 }
-        ],
-        prerequisites: [],
-        spawnOn: { x: 500, y: 500 },
-        settled: 2,
-        image: "/assets/fruits/Apple.png",
-        cost: 20,
-        costMultiplier: 1.5,
-    },
-    secondTalent: {
-        id: "upgrade_fall_speed",
-        levels: 5,
-        currentLevel: 1,
-        title: "Fall Speed",
-        description: "Increases the fall speed of the apple.",
-        effects: [
-            { type: "fallSpeed", multiply: 1.2 }
-        ],
-        prerequisites: [{ id: "upgrade_scale", level: 2 }],
-        spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
-        settled: 0,
-        image: "/assets/fruits/Orange.png",
-        cost: 10,
-        costMultiplier: 1.5,
-    },
-    thirdTalent: {
-        id: "upgrade_player_speed",
-        levels: 5,
-        currentLevel: 1,
-        title: "Player Speed",
-        description: "Increases the speed of the player.",
-        effects: [
-            { type: "playerSpeed", multiply: 1.2 }
-        ],
-        prerequisites: [{ id: "upgrade_scale", level: 2 }],
-        spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
-        settled: 0,
-        image: "/assets/fruits/Banana.png",
-        cost: 15,
-        costMultiplier: 1.5,
-    },
-    fourthTalent: {
-        id: "upgrade_apple_value",
-        levels: 5,
-        currentLevel: 1,
-        title: "Apple Value",
-        description: "Increases the value of the apple.",
-        effects: [
-            { type: "appleValue", add: 1 }
-        ],
-        prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
-        spawnOn: { ref: "upgrade_scale", pos: { x: 2, y: -2 } },
-        settled: 0,
-        image: "/assets/fruits/Banana.png",
-        cost: 15,
-        costMultiplier: 1.5,
-    }
-};

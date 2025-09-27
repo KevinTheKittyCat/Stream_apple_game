@@ -3,25 +3,25 @@ import { Group } from "@/components/Canvas/Group";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTalentTreeStore, type TalentType } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY } from "pixi.js";
+import { UPDATE_PRIORITY, Container } from "pixi.js";
 import { checkHitMultipleWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
 import { useWindowStore } from "@/stores/WindowState";
 import TalentHint from "./TalentHint";
 import { useGameStore } from "@/stores/GameState";
+
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
 export function Talent(talent: TalentType) {
-    const { id, position, settled, prerequisites, cost } = talent;
+    const { id, position, settled, cost } = talent;
     const { currency, incrementCurrency } = useGameStore();
-    const groupRef = useRef(null);
+    const groupRef = useRef<Container>(null);
     const { scale } = useWindowStore();
-    const { setTalentRef, talents, updateTalent } = useTalentTreeStore();
+    const { setTalentRef, talents, updateTalent, setHoveringTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
 
     const onSettle = useCallback(() => {
         setShouldSettle(2);
-        console.log("Settling talent", id, groupRef.current?.x, groupRef.current?.y);
         updateTalent(id, {
             settled: 2, position: {
                 x: groupRef.current?.x || 0,
@@ -86,29 +86,15 @@ export function Talent(talent: TalentType) {
             obj.position.x += nx * force;
             obj.position.y += ny * force;
         });
-
-        // Apply knockback or any other effect
-        /*otherTalents.forEach(talent => {
-            // Example: Move the talent away from the hit object
-            const pos = talent.position
-            const sub = pos - obj.position
-            const normalize = 
-            const direction = talent.position.clone().subtract(obj.position).normalize();
-            talent.position.add(direction.scale(10)); // Move away by 10 units
-        });*/
     }, [id, talents]);
 
     // Use the `useTick` hook to animate the sprite
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
-            //console.log(shouldSettle)
             if (shouldSettle === 2) return;
-            //console.log(shouldSettle + " is not 2", "it is " + shouldSettle);
-            //console.log(talents)
             const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef.current, false, true);
             if (isHit) onHit(this.current, isHit);
             if (isHit) setShouldSettle(0);
-            //console.log(isHit)
             if (!isHit && shouldSettle < 1) setShouldSettle(1);
         },
         context: groupRef,
@@ -117,12 +103,10 @@ export function Talent(talent: TalentType) {
     })
 
     const onClick = useCallback(() => {
-        console.log("talent clicked", talent);
         // Maybe move to talentStore or GameStore
         const { currentLevel, levels, costMultiplier, cost } = talent;
-        if (currentLevel >= levels) return console.log("Talent already maxed");
-        if (cost > currency) return console.log("Not enough currency");
-        console.log("Purchasing talent", id, cost, currency);
+        if (currentLevel >= levels) return console.info("Talent already maxed");
+        if (cost > currency) return console.info("Not enough currency");
         incrementCurrency(-cost);
         updateTalent(id, {
             currentLevel: currentLevel + 1,
@@ -130,12 +114,16 @@ export function Talent(talent: TalentType) {
         });
     }, [currency, talent]);
 
-    const [hovered, setHovered] = useState(false);
+
     const onMouseEnter = useCallback(() => {
-        setHovered(true);
-    }, []);
+        if (!groupRef.current) return
+        const globalPos = groupRef.current.getGlobalPosition();
+        const bounds = groupRef.current.getBounds();
+        setHoveringTalent({ ...talent, x: globalPos.x + bounds.width, y: globalPos.y + (bounds.height / 2) });
+    }, [talent]);
+
     const onMouseLeave = useCallback(() => {
-        setHovered(false);
+        setHoveringTalent(null);
     }, []);
 
     return (
@@ -157,7 +145,6 @@ export function Talent(talent: TalentType) {
                     onClick={onClick}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
-                    eventMode={currency >= cost ? "static" : "none"}
                 >
                     <Graphic // Background Rectangle
                         size={{ width: outer, height: outer }}
@@ -168,7 +155,7 @@ export function Talent(talent: TalentType) {
                     <Sprite
                         // TODO - Make images centered to the outer rectangle
                         height={inner}
-                        texture={"/assets/fruits/Apple.png"}
+                        texture={talent.image}
                         anchor={0.5}
                         x={outer / 2}
                         y={outer / 2}
@@ -180,12 +167,6 @@ export function Talent(talent: TalentType) {
                     />}
                 </Group>
             </Group>
-            {hovered && (
-                <TalentHint talent={talent}
-                    x={position.x}
-                    y={position.y}
-                />
-            )}
         </>
     );
 }

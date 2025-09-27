@@ -1,17 +1,17 @@
 
 import { Layer } from '@/components/Canvas/Layer';
-import RopeDemo from '@/components/Canvas/RopeDemo';
 import { Talent } from './Talent';
-import { use, useEffect, useState } from 'react';
-import { JSONTALENTS, useTalentTreeStore } from '@/stores/talentTreeState';
-import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
+import { useEffect } from 'react';
+import { useTalentTreeStore} from '@/stores/talentTreeState';
+import { allTalents } from './Settings/all';
 import RopeTree from './RopeTree';
+
 
 export default function NewTalentTree() {
     const { talents, createTalent } = useTalentTreeStore();
 
     useEffect(() => {
-        const arrayFromTalents = Object.values(JSONTALENTS);
+        const arrayFromTalents = Object.values(allTalents);
         const talentsNotSpawned = arrayFromTalents.filter(talent => !talents.find(t => t.id === talent.id));
         talentsNotSpawned.reduce((acc, talent) => {
             let preReqTalent = talents.find(t => t.id === talent?.prerequisites[0].id) || null;

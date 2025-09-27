@@ -1,6 +1,7 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
 import { useObjectivesStore } from './Objectives';
+import { getTalentEffect } from './talentTreeState';
 
 interface GameState {
     state: 'playing' | 'paused' | 'gameOver';
@@ -48,9 +49,10 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     lastScore: 0,
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
-    incrementScore: (increment) => set((state) => ({ score: Math.max(state.score + increment + 1000, 0) })),
+    incrementScore: (increment) => set((state) => ({
+        score: Math.max(state.score + getTalentEffect(increment, "score"), 0)
+    })),
     resetScore: () => set({ score: 0 }),
-
     currency: Number(getStorageItem("currency")) || 0,
     setCurrency: (newCurrency) => set(() => {
         setStorageItem("currency", newCurrency);
@@ -65,8 +67,8 @@ export const useGameStore = create<GameStoreProps>((set) => ({
 
     time: new Date(),
     extraTime: 0,
-    timer: 10,
-    startTime: 10,
+    timer: getTalentEffect(10, "time"),
+    startTime: getTalentEffect(10, "time"),
     totalTime: 0,
     restartGame: () => set((state) => {
         const { resetObjectives } = useObjectivesStore.getState();
@@ -89,7 +91,7 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     }),
     pauseGame: () => set({ state: 'paused' }),
     unpauseGame: () => set({ state: 'playing' }),
-    resetTimer: () => set((state) => ({ timer: state.startTime, time: new Date(), totalTime: 0 })),
+    resetTimer: () => set(() => ({ timer: getTalentEffect(10, "time"), time: new Date(), totalTime: 0 })),
     updateTimer: (number) => set((state) => {
         const final = state.timer + number;
         if (state.state !== 'playing') return {};

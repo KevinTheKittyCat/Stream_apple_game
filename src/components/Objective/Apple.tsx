@@ -2,6 +2,7 @@ import {
     useEffect,
     useRef,
     useCallback,
+    useMemo,
 } from 'react';
 import { useTick } from '@pixi/react';
 import { type Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js'
@@ -11,6 +12,7 @@ import { useGameStore } from '@/stores/GameState';
 import { useObjectivesStore } from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useWindowStore } from '@/stores/WindowState';
+import { getTalentEffect, useTalentTreeStore } from '@/stores/talentTreeState';
 
 type AppleProps = {
     id: string;
@@ -20,13 +22,17 @@ type AppleProps = {
     type?: any;
 };
 
-export function Apple({ id, x = 100, y = 100, type, speed:fallingSpeed = 2 }: AppleProps) {
+export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: AppleProps) {
     const { scale } = useWindowStore();
     const { incrementScore, state } = useGameStore();
+    const { talents } = useTalentTreeStore();
     const { playerRef, getNewTarget, target } = usePlayerStore()
     const { apples, setAppleRef, removeApple } = useObjectivesStore()
     const spriteRef = useRef<PixiSprite | null>(null);
     const speedRef = useRef(0); // current speed
+    const { scale: appleScale } = useMemo(() => ({
+        scale: getTalentEffect(1, "appleScale"),
+    }), [talents]);
 
     const onHit = useCallback((apple: PixiSprite) => {
         //console.log("Apple hit detected!");
@@ -70,14 +76,11 @@ export function Apple({ id, x = 100, y = 100, type, speed:fallingSpeed = 2 }: Ap
         isEnabled: state === 'playing',
         priority: UPDATE_PRIORITY.LOW,
     })
-    
+
     useEffect(() => {
-        if (!spriteRef.current) return;
+        if (!spriteRef) return;
         if (apples.some(apple => apple.id === id && apple.ref)) return //console.warn("Apple ref already set for this id:", id);
         setAppleRef(id, spriteRef);
-        return () => {
-            setAppleRef(id, null);
-        };
     }, [spriteRef, id, apples]);
 
 
@@ -89,6 +92,7 @@ export function Apple({ id, x = 100, y = 100, type, speed:fallingSpeed = 2 }: Ap
             texture={type.image}
             x={x}
             y={y}
+            scale={appleScale}
             width={50 * scale}
             height={50 * scale}
         />

@@ -1,6 +1,7 @@
 import {
     useCallback,
     useEffect,
+    useMemo,
     useRef,
 } from 'react';
 import { useApplication } from '@pixi/react';
@@ -15,18 +16,20 @@ import { useWindowStore } from '@/stores/WindowState';
 import { useGameStore } from '@/stores/GameState';
 import { useCanvasStore } from '@/stores/CanvasState';
 import type { Sprite as PixiSprite } from 'pixi.js';
+import { getTalentEffect, useTalentTreeStore } from '@/stores/talentTreeState';
 
 export function Player() {
     const { scale } = useWindowStore();
     const { state } = useGameStore();
+    const { talents } = useTalentTreeStore();
     const { apples } = useObjectivesStore();
-    const { setPlayerRef, playerRef, target, getNewTarget, movementSpeed, resetPlayer } = usePlayerStore()
+    const { setPlayerRef, playerRef, target, getNewTarget, resetPlayer } = usePlayerStore()
     const spriteRef = useRef<PixiSprite>(null);
     const { app } = useApplication();
     const { mouseCoordsRef } = useCanvasStore();
+    const movementSpeed = useMemo(() => getTalentEffect(4, "playerSpeed"), [getTalentEffect, talents]);
 
 
-    //console.log(target?.ref?.current?.x, target?.ref?.current?.y, target?.ref?.current);
     const getTargetPositionX = useCallback(() => {
         if (mouseCoordsRef?.current?.x) {
             return mouseCoordsRef.current.x;
@@ -50,7 +53,7 @@ export function Player() {
     const { ref } = useAutoMove({
         id: "player",
         enabled: state === 'playing',
-        maxVelocity: movementSpeed * 2,
+        maxVelocity: movementSpeed,
         targetPos: {
             x: target?.ref?.current?.x ? getTargetPositionX : window.innerWidth / 2,
             y: target?.ref?.current?.y ? getTargetPositionY : window.innerHeight / 2
