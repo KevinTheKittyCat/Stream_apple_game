@@ -12,7 +12,8 @@ import { useGameStore } from '@/stores/GameState';
 import { useObjectivesStore } from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useWindowStore } from '@/stores/WindowState';
-import { getTalentEffect, useTalentTreeStore } from '@/stores/talentTreeState';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
+import { getTalentEffect } from '../UtilFunctions/talents';
 
 type AppleProps = {
     id: string;

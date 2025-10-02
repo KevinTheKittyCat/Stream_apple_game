@@ -2,7 +2,7 @@ import { findClosestReachableObjective } from '@/components/Player/getNewTarget'
 import { create } from 'zustand'
 import { useObjectivesStore, type Objective } from './Objectives';
 import { type Sprite as PixiSprite } from 'pixi.js';
-import { getTalentEffect } from './talentTreeState';
+
 
 type TargettingAutoMove = {
     target: Objective | null;
@@ -28,9 +28,6 @@ export const usePlayerStore = create<PlayerStoreProps>((set) => ({
     id: 'player1',
     x: 100,
     y: 100,
-    get movementSpeed() {
-        return getTalentEffect(2, "movementSpeed");
-    },
 
     playerRef: null, // This will hold the reference to the player sprite
     setPlayerRef: (ref: React.RefObject<PixiSprite> | null) => set(() => ({

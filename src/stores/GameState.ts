@@ -1,7 +1,7 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
 import { useObjectivesStore } from './Objectives';
-import { getTalentEffect } from './talentTreeState';
+import { getTalentEffect } from '@/components/UtilFunctions/talents';
 
 interface GameState {
     state: 'playing' | 'paused' | 'gameOver';

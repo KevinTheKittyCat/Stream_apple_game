@@ -1,8 +1,8 @@
 import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { create } from 'zustand'
 import { type Sprite as PixiSprite } from 'pixi.js';
-import { getTalentEffect } from './talentTreeState';
 import { useGameStore } from './GameState';
+import { getTalentEffect } from '@/components/UtilFunctions/talents';
 
 type AppleType = {
     value: number;

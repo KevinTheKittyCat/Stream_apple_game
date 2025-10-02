@@ -1,10 +1,13 @@
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
+import { useTalentTreeStore } from "@/stores/talentTreeState";
+import { getTalentEffect } from "../UtilFunctions/talents";
 
 export default function Basket() {
+    const { talents } = useTalentTreeStore(); 
     const scale = 0.3; // Adjust the scale as needed
-    const centerBasketAmount = 25;
+    const centerBasketAmount = useMemo(() => getTalentEffect(10, "basketSize"), [talents]);
     const widthOfBasketLeft = 96
 
     const centerBasketArray = useMemo(() => {
@@ -29,9 +32,8 @@ export default function Basket() {
             />
             {centerBasketArray}
             <Sprite
-
                 texture={"/assets/basket/BasketRight.png"}
-                x={(centerBasketAmount * 25) + widthOfBasketLeft}
+                x={(centerBasketAmount * 25) + widthOfBasketLeft -2}
             />
         </Group>
     );

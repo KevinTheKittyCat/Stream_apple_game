@@ -1,3 +1,4 @@
+import { checkPrerequisites } from '@/components/Game/TalentTree/NewTalentTree';
 import { allTalents } from '@/components/Game/TalentTree/Settings/all';
 import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
 import { Container } from 'pixi.js';
@@ -5,7 +6,7 @@ import { create } from 'zustand'
 
 interface TalentTreeState {
     talents: TalentType[];
-    hoveringTalent: TalentType | null;
+    hoveringTalent: { x: number; y: number } & TalentType | null;
 }
 
 interface TalentTreeActions {
@@ -30,12 +31,24 @@ const setStorageSafeTalents = (newTalents) => {
     return storage;
 }
 
+type TalentDict = { [key: string]: TalentType };
+
 const getStorageSafeTalents = () => {
-    const fromStorage = getStorageItem("talents") || [];
-    return fromStorage.map(t => ({
-        ...allTalents[t.id as keyof typeof allTalents],
-        ...t,
-    })) as TalentType[];
+    const fromStorage: Partial<TalentType>[] = getStorageItem("talents") || [];
+    let allTalentsConcatted = {...allTalents} as TalentDict;
+    fromStorage.forEach(t => {
+        allTalentsConcatted[t.id as keyof typeof allTalents] = {...allTalentsConcatted[t.id as keyof typeof allTalents], ...t};
+    });
+    const talentsArray = Object.values(allTalentsConcatted);
+
+    return fromStorage.reduce((acc, t) => {
+        const foundTalent = allTalents[t.id as keyof typeof allTalents];
+        if (!foundTalent) return acc; // Ignore talents that no longer exist
+        const combined = {...foundTalent, ...t} as TalentType;
+        // Remove talents that no longer meet prerequisites
+        if (!checkPrerequisites(combined, talentsArray)) return acc;
+        return acc.concat(combined);
+    }, [] as TalentType[]);
 }
 
 export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
@@ -63,13 +76,26 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
     })
 }))
 
+export type effect = {
+    type: string;
+    multiply?: number,
+    divide?: number,
+    add?: number,
+    set?: number,
+    minus?: number,
+
+    prefix?: string | React.JSX.Element | React.ComponentType<any>,
+    suffix?: string | React.JSX.Element | React.ComponentType<any>,
+}
+
 export type TalentType = {
     id: string;
     position?: { x: number; y: number } | null;
     levels: number;
     currentLevel: number;
+    title: string;
     description: string;
-    effects: Array<{ type: string; multiply?: number, divide?: number, pow?: number, add?: number, set?: number, minus?: number }>;
+    effects: effect[];
     prerequisites: Array<{ id: string; level: number }>;
     spawnOn: { x: number; y: number };
     settled: number;
@@ -78,21 +104,6 @@ export type TalentType = {
     costMultiplier: number,
 };
 
-export const getTalentEffect = (originalNumber: number, type: string): number => {
-    const talents = useTalentTreeStore.getState().talents
-    const number = talents.reduce((acc: number, talent) => {
-        const effects = talent.effects.filter(e => e.type === type);
-        effects.forEach(e => {
-            if (e?.multiply) acc *= Math.pow(e.multiply, talent.currentLevel);
-            if (e?.divide) acc /= Math.pow(e.divide, talent.currentLevel);
-            if (e?.add) acc += e.add * talent.currentLevel;
-            if (e?.set) acc = e.set * talent.currentLevel;
-            if (e?.minus) acc -= e.minus * talent.currentLevel;
-        });
-        return acc;
-    }, originalNumber as number);
-    return number;
-}
 /*
 export const getTalentEffects = (): number => {
     const talents = useTalentTreeStore.getState().talents

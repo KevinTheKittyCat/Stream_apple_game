@@ -19,6 +19,7 @@ export function Talent(talent: TalentType) {
     const { scale } = useWindowStore();
     const { setTalentRef, talents, updateTalent, setHoveringTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
+    const [hovering, setHovering] = useState(false);
 
     const onSettle = useCallback(() => {
         setShouldSettle(2);
@@ -92,7 +93,7 @@ export function Talent(talent: TalentType) {
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (shouldSettle === 2) return;
-            const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef.current, false, true);
+            const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef.current, false, false);
             if (isHit) onHit(this.current, isHit);
             if (isHit) setShouldSettle(0);
             if (!isHit && shouldSettle < 1) setShouldSettle(1);
@@ -102,7 +103,8 @@ export function Talent(talent: TalentType) {
         priority: UPDATE_PRIORITY.LOW,
     })
 
-    const onClick = useCallback(() => {
+    const onClick = useCallback((e) => {
+        e.stopPropagation();
         // Maybe move to talentStore or GameStore
         const { currentLevel, levels, costMultiplier, cost } = talent;
         if (currentLevel >= levels) return console.info("Talent already maxed");
@@ -120,10 +122,12 @@ export function Talent(talent: TalentType) {
         const globalPos = groupRef.current.getGlobalPosition();
         const bounds = groupRef.current.getBounds();
         setHoveringTalent({ ...talent, x: globalPos.x + bounds.width, y: globalPos.y + (bounds.height / 2) });
+        setHovering(true);
     }, [talent]);
 
     const onMouseLeave = useCallback(() => {
         setHoveringTalent(null);
+        setHovering(false);
     }, []);
 
     return (
@@ -132,7 +136,6 @@ export function Talent(talent: TalentType) {
                 ref={groupRef}
                 x={position.x}
                 y={position.y}
-                //scale={{ x: scale, y: scale }}
             >
                 <Graphic
                     size={{ width: overlap, height: overlap }}
@@ -149,8 +152,11 @@ export function Talent(talent: TalentType) {
                     <Graphic // Background Rectangle
                         size={{ width: outer, height: outer }}
                         rounded={5}
-                        color={"#6c507686"}//"#D6BBC0" // NEED MORE TEXTURE VARIATION
-                        stroke={{ color: "#EFBF04", width: 2 }}
+                        color={hovering ? "#83628fb9" : "#6c507686"} // NEED MORE TEXTURE VARIATION
+                        stroke={{
+                            color: hovering ? "#face1bff" : "#EFBF04",
+                            width: hovering ? 3 : 2
+                        }}
                     />
                     <Sprite
                         // TODO - Make images centered to the outer rectangle
@@ -159,6 +165,7 @@ export function Talent(talent: TalentType) {
                         anchor={0.5}
                         x={outer / 2}
                         y={outer / 2}
+                        eventMode="none"
                     />
                     {currency < cost && <Graphic
                         size={{ width: outer, height: outer }}

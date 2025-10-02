@@ -16,7 +16,8 @@ import { useWindowStore } from '@/stores/WindowState';
 import { useGameStore } from '@/stores/GameState';
 import { useCanvasStore } from '@/stores/CanvasState';
 import type { Sprite as PixiSprite } from 'pixi.js';
-import { getTalentEffect, useTalentTreeStore } from '@/stores/talentTreeState';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
+import { getTalentEffect } from '../UtilFunctions/talents';
 
 export function Player() {
     const { scale } = useWindowStore();

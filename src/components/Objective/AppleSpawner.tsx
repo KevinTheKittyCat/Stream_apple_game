@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from 'react';
 import { useObjectivesStore } from '@/stores/Objectives';
-import { getTalentEffect, useTalentTreeStore } from '@/stores/talentTreeState';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
 import { useGameStore } from '@/stores/GameState';
+import { getTalentEffect } from '../UtilFunctions/talents';
 
 export default function AppleSpawner() {
     const { createApple, setApples, apples } = useObjectivesStore();
