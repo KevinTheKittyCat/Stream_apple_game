@@ -55,7 +55,7 @@ export function Player() {
 
     const { ref } = useAutoMove({
         id: "player",
-        enabled: true,
+        enabled: state !== 'paused',
         maxVelocity: movementSpeed,
         targetPos: {
             x: getTargetPositionX(),

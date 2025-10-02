@@ -10,7 +10,7 @@ import { RiCopperCoinLine } from "react-icons/ri";
 export default function CalculateFinalResult() {
     const { lastScore, currency } = useGameStore();
     const [score, setScore] = useState({ total: 0 });
-    const [curr, setCurr] = useState(currency - lastScore);
+    const [curr, setCurr] = useState(currency - lastScore?.total ?? 0);
 
     useEffect(() => {
         const waitForRender = setTimeout(() => {

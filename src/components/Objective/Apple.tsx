@@ -76,7 +76,7 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: A
             if (isHit) onHit(this.current);
         },
         context: spriteRef,
-        isEnabled: true,
+        isEnabled: state !== 'paused',
         priority: UPDATE_PRIORITY.LOW,
     })
 
