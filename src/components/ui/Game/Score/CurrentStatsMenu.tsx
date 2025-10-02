@@ -6,7 +6,7 @@ import Timer from "../Timer";
 export default function CurrentStatsMenu() {
 
     return (
-        <Container variant={"gold"} minW={200}>
+        <Container variant={"normal"} minW={200}>
             <Score />
             {/*<ApplesCounter />*/}
             <Timer />

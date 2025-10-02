@@ -1,7 +1,6 @@
 import { defaultConfig, defineConfig, createSystem } from "@chakra-ui/react";
 import { containerRecipe } from "./Common/container.recipe";
 import { buttonRecipe } from "./Common/button.recipe";
-import { flexRecipe } from "./Common/flex.recipe";
 
 
 

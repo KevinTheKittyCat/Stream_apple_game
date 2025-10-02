@@ -1,4 +1,5 @@
 import { useGameStore } from "@/stores/GameState";
+import { Flex } from "@chakra-ui/react";
 
 export default function TotalTime() {
     const { totalTime } = useGameStore()
@@ -6,10 +7,10 @@ export default function TotalTime() {
     //const timeSpent = useMemo(() => (new Date() - time) / 1000, [time])
 
     return (
-        <div className="" style={{display:"flex", gap: "0.5em"}}>
-            <h1>Total Time:</h1>
+        <Flex gap={2} align={"center"} className="score" style={{ fontSize: "1rem" }}>
+            <img src="/assets/Clock.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />
             <h1>{String(totalTime.toFixed(2)).padStart(5, "0")}</h1>
-        </div>
+        </Flex>
     );
 }
 

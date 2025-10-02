@@ -11,6 +11,7 @@ const baseContainerOverwriteStyles = {
   gap: 1,
   p: 2,
   paddingInline: 2,
+  backdropFilter: "blur(10px)"
 }
 
 export const containerRecipe = defineRecipe({

@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 
 export default function Timer() {
-    const { extraTime, time, timer, updateTimer } = useGameStore()
+    const { timer, updateTimer } = useGameStore()
     //const [timer, setTimer] = useState(5);
 
     const minusTimer = useCallback(() => {

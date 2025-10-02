@@ -18,37 +18,19 @@ export default function TalentTreeUI() {
 
     return (
         <UIWrapper>
-            <div className="techtree-ui" style={{
+            <Info />
+            <Button style={{
+                pointerEvents: 'auto',
+                alignSelf: 'flex-start',
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                padding: '10px',
-            }}>
-                <div className="techtree-ui-inner" style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
-                    <Info />
-                    <Button style={{
-                        pointerEvents: 'auto',
-                        alignSelf: 'flex-start',
-                        position: 'absolute',
-                        fontSize: '28px',
-                        padding: '60px 100px',
-                        bottom: 20,
-                        right: 20,
-                    }}
-                        onClick={backToGame}>Back to Game</Button>
-                    {/* Render your tech tree UI components here */}
-                    <TalentHint />
-                </div>
-            </div>
+                fontSize: '28px',
+                padding: '60px 100px',
+                bottom: 20,
+                right: 20,
+            }}
+                onClick={backToGame}>Back to Game</Button>
+            {/* Render your tech tree UI components here */}
+            <TalentHint />
         </UIWrapper>
     );
 }

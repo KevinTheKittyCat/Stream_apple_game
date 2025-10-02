@@ -1,3 +1,18 @@
+@property --num {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+}
+
+.counter {
+    transition: --num 1s;
+    counter-set: num var(--num);
+
+    &::after {
+        content: counter(num);
+    }
+}
+
 .option-menu {
     //margin: auto;
     position: absolute;
