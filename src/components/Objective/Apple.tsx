@@ -37,7 +37,7 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: A
 
     const onHit = useCallback((apple: PixiSprite) => {
         //console.log("Apple hit detected!");
-        incrementScore(type.value)
+        incrementScore(type)
         type?.onHit?.(apple);
         removeApple(id);
         //console.log("Apple removed:", target, target?.ref === spriteRef);

@@ -45,21 +45,33 @@ type GameStoreProps = GameState & GameActions;
 
 export const useGameStore = create<GameStoreProps>((set) => ({
     state: 'playing',
-    score: 0,
-    lastScore: 0,
+    score: {},
+    lastScore: {},
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
-    incrementScore: (increment) => set((state) => ({
-        score: Math.max(state.score + getTalentEffect(increment, "score"), 0)
-    })),
-    resetScore: () => set({ score: 0 }),
+    incrementScore: (type) => set((state) => {
+        const finalValue = Math.floor(getTalentEffect(type.value, type.group || []));
+        return {
+            score: {
+                ...state.score,
+                [type.id]: {
+                    value: (state.score[type.id]?.value || 0) + finalValue,
+                    singleValue: finalValue,
+                    image: type.image,
+                    amount: (state.score[type.id]?.amount || 0) + 1
+                },
+                total: (state.score.total || 0) + finalValue
+            }
+        };
+    }),
+    resetScore: () => set({ score: { total: 0 } }),
     currency: Number(getStorageItem("currency")) || 0,
     setCurrency: (newCurrency) => set(() => {
         setStorageItem("currency", newCurrency);
         return { currency: newCurrency };
     }),
     incrementCurrency: (increment) => set((state) => {
-        const newCurrency = state.currency + increment;
+        const newCurrency = Math.max(state.currency + increment, 0);
         setStorageItem("currency", newCurrency);
         return { currency: newCurrency };
     }),
@@ -82,7 +94,7 @@ export const useGameStore = create<GameStoreProps>((set) => ({
         }
     }),
     gameOver: () => set((state) => {
-        state.incrementCurrency(state.score);
+        state.incrementCurrency(state.score.total);
         state.setLastScore(state.score);
         state.resetScore();
         return {

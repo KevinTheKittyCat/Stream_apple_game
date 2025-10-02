@@ -1,5 +1,8 @@
 import { RiCopperCoinLine } from "react-icons/ri";
-export const apple_tallents = {
+
+import type { TalentDict } from "./all";
+
+export const apple_talents: TalentDict = {
     upgrade_appleScale: {
         id: "upgrade_appleScale",
         levels: 5,
@@ -10,7 +13,6 @@ export const apple_tallents = {
             { type: "appleScale", multiply: 1.02, suffix: "%" }
         ],
         prerequisites: [],
-        spawnOn: { x: 500, y: 500 },
         settled: 2,
         image: "/assets/fruits/Apple.png",
         cost: 20,
@@ -38,7 +40,7 @@ export const apple_tallents = {
         title: "Apple Value",
         description: "Increases the value of the apple.",
         effects: [
-            { type: "appleValue", add: 1, suffix: RiCopperCoinLine }
+            { type: "positiveAppleValue", add: 1, suffix: RiCopperCoinLine }
         ],
         prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
         settled: 0,

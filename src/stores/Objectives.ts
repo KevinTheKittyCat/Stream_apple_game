@@ -4,9 +4,13 @@ import { type Sprite as PixiSprite } from 'pixi.js';
 import { useGameStore } from './GameState';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
 
-type AppleType = {
+export type ObjectiveType = {
     value: number;
     image: string;
+    id: string;
+    onHit?: (apple: PixiSprite) => void;
+    group: string[];
+    weight?: number;
 };
 
 export type Objective = {
@@ -16,7 +20,7 @@ export type Objective = {
     size: number;
     speed: number;
     ref: React.RefObject<PixiSprite> | null;
-    type: AppleType;
+    type: ObjectiveType;
 };
 
 interface ObjectiveStore {
