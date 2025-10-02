@@ -1,6 +1,6 @@
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
-import { LuDollarSign } from "react-icons/lu";
+import { RiCopperCoinLine } from "react-icons/ri";
 
 
 
@@ -11,7 +11,7 @@ export default function LastScore() {
     return (
         <Flex gap={2} align={"center"} className="score" style={{ fontSize: "1rem" }}>
             {/*<img src="/assets/apple/Apple.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />*/}
-            <LuDollarSign />
+            <RiCopperCoinLine color="gold" />
             {/* Score display can be implemented here */}
             <h1>{lastScore}</h1>
         </Flex>

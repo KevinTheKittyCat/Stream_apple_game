@@ -1,9 +1,9 @@
 import { defineRecipe } from "@chakra-ui/react";
 
 
-export const buttonRecipe = defineRecipe({
+export const containerRecipe = defineRecipe({
     base: {
-        // Base styles for all buttons
+        // Base styles for all containers
     },
     variants: {
         visual: {
@@ -15,6 +15,9 @@ export const buttonRecipe = defineRecipe({
                 h: 14,
                 px: 8,
                 fontSize: "lg",
+            },
+            goldContainer: {
+                p: 4,
             },
         },
         size: {

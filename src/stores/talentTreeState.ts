@@ -1,12 +1,12 @@
 import { checkPrerequisites } from '@/components/Game/TalentTree/NewTalentTree';
-import { allTalents } from '@/components/Game/TalentTree/Settings/all';
+import { allTalents, type TalentDict } from '@/components/Game/TalentTree/Settings/all';
 import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
 import { Container } from 'pixi.js';
 import { create } from 'zustand'
 
 interface TalentTreeState {
     talents: TalentType[];
-    hoveringTalent: { x: number; y: number } & TalentType | null;
+    hoveringTalent: { x: number; y: number } & TalentType | TalentType | null;
 }
 
 interface TalentTreeActions {
@@ -14,12 +14,12 @@ interface TalentTreeActions {
     createTalent: (talent: TalentType) => void;
     updateTalent: (id: string, updatedFields: Partial<TalentType>) => void;
     setTalentRef: (id: string, ref: React.RefObject<Container> | null) => void;
-    setHoveringTalent: (talent: TalentType | null) => void;
+    setHoveringTalent: (talent: { x: number; y: number } & TalentType | null) => void;
 }
 
 type TalentTreeStoreProps = TalentTreeState & TalentTreeActions;
 
-const setStorageSafeTalents = (newTalents) => {
+const setStorageSafeTalents = (newTalents: TalentType[]) => {
     const storage = newTalents.map(t => ({
         id: t.id,
         position: t.position,
@@ -31,7 +31,7 @@ const setStorageSafeTalents = (newTalents) => {
     return storage;
 }
 
-type TalentDict = { [key: string]: TalentType };
+
 
 const getStorageSafeTalents = () => {
     const fromStorage: Partial<TalentType>[] = getStorageItem("talents") || [];
@@ -85,7 +85,7 @@ export type effect = {
     minus?: number,
 
     prefix?: string | React.JSX.Element | React.ComponentType<any>,
-    suffix?: string | React.JSX.Element | React.ComponentType<any>,
+    suffix?: string | React.JSX.Element | React.ComponentType<any> | HTMLDivElement,
 }
 
 export type TalentType = {
@@ -97,7 +97,6 @@ export type TalentType = {
     description: string;
     effects: effect[];
     prerequisites: Array<{ id: string; level: number }>;
-    spawnOn: { x: number; y: number };
     settled: number;
     image: string;
     cost: number,

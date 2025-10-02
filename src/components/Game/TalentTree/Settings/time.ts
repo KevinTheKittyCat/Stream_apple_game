@@ -1,7 +1,7 @@
 
 
-
-export const time_talents = {
+import type { TalentDict } from "./all";
+export const time_talents: TalentDict = {
     increase_time_v1: {
         id: "increase_time_v1",
         levels: 3,

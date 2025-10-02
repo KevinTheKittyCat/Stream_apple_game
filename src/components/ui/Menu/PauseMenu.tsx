@@ -27,11 +27,11 @@ export function PauseMenuItems() {
 
     if (state !== "paused") return null;
     return (
-        <Flex direction={"column"} className="pause-menu-items">
+        <Flex direction={"column"} gap={2} className="pause-menu-items">
             <h1>Game Paused</h1>
             <p>The game is currently paused. Press the resume button to continue playing.</p>
-            <Button onClick={onGoToUpgrades}>Upgrades / Store</Button>
-            <Button onClick={unpauseGame}>Resume</Button>
+            <Button variant={"menuButton"} onClick={onGoToUpgrades}>Upgrades / Store</Button>
+            <Button variant={"menuButton"} onClick={unpauseGame}>Resume</Button>
         </Flex>
     );
 }
@@ -49,7 +49,7 @@ export function PauseButton() {
 
     if (state === "gameOver") return null;
     return (
-        <Button className="pause-button" onClick={togglePause} >
+        <Button variant={"iconButton"} top={0} right={0} pos={"absolute"} onClick={togglePause} >
             {state === "paused" ? <IoCloseOutline /> : <LuSettings size={24} />}
         </Button>
     );

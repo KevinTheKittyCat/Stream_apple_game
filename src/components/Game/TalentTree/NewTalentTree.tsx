@@ -20,10 +20,9 @@ export default function NewTalentTree() {
         const talentsNotSpawned = arrayFromTalents.filter(talent => !talents.find(t => t.id === talent.id));
         talentsNotSpawned.reduce((acc, talent) => {
             let preReqTalent = talents.find(t => t.id === talent?.prerequisites[0]?.id) || null;
-            //const checkPrerequisites = checkPre
-            if (!preReqTalent) return acc;
-            console.log(preReqTalent.prerequisites)
-            if (checkPrerequisites(preReqTalent, talents)) {
+            const noPrerequisites = talent.prerequisites.length === 0;
+            if ((!preReqTalent || !talent) && !noPrerequisites) return acc;
+            if (noPrerequisites || checkPrerequisites(talent, talents)) {
                 createTalent({
                     ...talent,
                     settled: 0,

@@ -1,6 +1,6 @@
 
-
-export const basket_talents = {
+import type { TalentDict } from "./all";
+export const basket_talents: TalentDict = {
     basket_size_one: {
         id: "basket_size_one",
         levels: 5,

@@ -32,9 +32,10 @@ export default function TalentHint() {
             </p>
             {talent.effects.map((effect, index) => (
                 <Flex style={{ fontSize: '1.4em' }} key={index} width={"100%"} alignItems={"center"} justifyContent={"center"}>
+                    {effect?.prefix && typeof effect.prefix === "function" ? <effect.prefix /> : null}
                     <p>
                         <strong>
-                            {effect?.prefix && `${effect.prefix} `}
+                            {effect?.prefix && typeof effect.prefix === "string" ? effect.prefix : null}
                             {effect?.add && `${effect.add}`}
                             {effect?.minus && `${effect.minus}`}
                             {effect?.multiply && `${Math.round(effect.multiply * 100 - 100)}`}
@@ -43,7 +44,7 @@ export default function TalentHint() {
                             {effect?.suffix && typeof effect.suffix === "string" ? effect.suffix : null}
                         </strong>
                     </p>
-                    {effect?.suffix && typeof effect.suffix === "string" ? null : <effect.suffix />}
+                    {effect?.suffix && typeof effect.suffix === "function" ? <effect.suffix /> : null}
                 </Flex>
             ))}
             <Flex width={"100%"} alignItems={"center"} justifyContent={"space-evenly"} gap={1} mt={1}>

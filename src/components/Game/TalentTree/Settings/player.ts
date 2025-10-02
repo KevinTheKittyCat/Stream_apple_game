@@ -1,7 +1,7 @@
 
 
-
-export const player_talents = {
+import type { TalentDict } from "./all";
+export const player_talents: TalentDict = {
     upgrade_player_speed: {
         id: "upgrade_player_speed",
         levels: 5,

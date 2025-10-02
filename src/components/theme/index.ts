@@ -1,5 +1,8 @@
 import { defaultConfig, defineConfig, createSystem } from "@chakra-ui/react";
-import { buttonRecipe } from "./Common/Button";
+import { containerRecipe } from "./Common/container.recipe";
+import { buttonRecipe } from "./Common/button.recipe";
+import { flexRecipe } from "./Common/flex.recipe";
+
 
 
 const config = defineConfig({
@@ -14,6 +17,7 @@ const config = defineConfig({
         tokens: {
             colors: {
                 red: { value: "#EE0F0F" },
+                baseBackground: { value: "rgba(255, 255, 255, 0.1)" },
             },
         },
         semanticTokens: {
@@ -29,7 +33,7 @@ const config = defineConfig({
         },
         recipes: {
             button: buttonRecipe,
-            
+            container: containerRecipe,
         },
     },
 })

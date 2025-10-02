@@ -6,8 +6,6 @@ import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY, Container } from "pixi.js";
 import { checkHitMultipleWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
-import { useWindowStore } from "@/stores/WindowState";
-import TalentHint from "./TalentHint";
 import { useGameStore } from "@/stores/GameState";
 
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
@@ -16,7 +14,7 @@ export function Talent(talent: TalentType) {
     const { id, position, settled, cost } = talent;
     const { currency, incrementCurrency } = useGameStore();
     const groupRef = useRef<Container>(null);
-    const { scale } = useWindowStore();
+
     const { setTalentRef, talents, updateTalent, setHoveringTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
     const [hovering, setHovering] = useState(false);

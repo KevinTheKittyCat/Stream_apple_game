@@ -18,10 +18,9 @@ export type BadgeVariantMap = {
 
 export interface ButtonVariant {
   /** @default "md" */
-  size?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "xxl"
-  /** @default "solid" */
-  variant?: "solid" | "subtle" | "surface" | "outline" | "ghost" | "plain"
-  visual?: "headerButton"
+  size?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
+  /** @default "baseButton" */
+  variant?: "solid" | "subtle" | "surface" | "outline" | "ghost" | "plain" | "baseButton" | "menuButton" | "iconButton"
 }
 
 export type ButtonVariantProps = {
@@ -50,6 +49,7 @@ export type CodeVariantMap = {
 export interface ContainerVariant {
   centerContent?: boolean
   fluid?: boolean
+  variant?: "gold" | "normal"
 }
 
 export type ContainerVariantProps = {

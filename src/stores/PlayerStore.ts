@@ -14,7 +14,6 @@ interface PlayerState {
     x: number;
     y: number;
     playerRef: React.RefObject<PixiSprite> | null; // This will hold the reference to the player sprite
-    movementSpeed: number; // Speed of the player movement
 }
 
 interface PlayerActions {
@@ -50,7 +49,7 @@ export const usePlayerStore = create<PlayerStoreProps>((set) => ({
         const closestApple = findClosestReachableObjective({
             objectives: apples,
             ref: state.playerRef,
-            refOffset: { x: 0, y: (window.innerHeight / 10) * (fallingSpeed / state.movementSpeed + 1) }, // Adjust for player height
+            refOffset: { x: 0, y: (window.innerHeight / 10) * (fallingSpeed / 1.2) }, // Adjust for player height
             objectiveOffset: { x: 0, y: 0 }
         });
         return { target: closestApple };

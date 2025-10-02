@@ -3,6 +3,7 @@ import "./styles/option-menu.css"
 import TotalTime from "./TotalTime";
 import LastScore from "./LastScore";
 import { eventEmitter } from "@/utils/Eventemitter";
+import { Button, Container } from "@chakra-ui/react";
 
 export default function OptionMenu() {
     const { restartGame } = useGameStore()
@@ -12,11 +13,11 @@ export default function OptionMenu() {
     }
 
     return (
-        <div className="option-menu">
+        <Container variant={"gold"} className="option-menu">
             <LastScore />
             <TotalTime />
-            <button onClick={goToStore}>Upgrades / Store</button>
-            <button onClick={restartGame} >Restart</button>
-        </div>
+            <Button variant={"menuButton"} onClick={goToStore}>Upgrades / Store</Button>
+            <Button variant={"menuButton"} onClick={restartGame} >Restart</Button>
+        </Container>
     );
 }
