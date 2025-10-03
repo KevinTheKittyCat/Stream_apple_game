@@ -17,7 +17,7 @@ export default function PauseMenu() {
 }
 
 export function PauseMenuItems() {
-    const { state, unpauseGame} = useGameStore();
+    const { state, unpauseGame, gameOver } = useGameStore();
 
 
     const onGoToUpgrades = () => {
@@ -30,6 +30,7 @@ export function PauseMenuItems() {
         <Flex direction={"column"} gap={2} className="pause-menu-items">
             <h1>Game Paused</h1>
             <p>The game is currently paused. Press the resume button to continue playing.</p>
+            <Button variant={"menuButton"} onClick={gameOver}>End Game // REMOVE IN PRODUCTION</Button>
             <Button variant={"menuButton"} onClick={onGoToUpgrades}>Upgrades / Store</Button>
             <Button variant={"menuButton"} onClick={unpauseGame}>Resume</Button>
         </Flex>

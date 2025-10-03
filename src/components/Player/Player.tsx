@@ -105,10 +105,16 @@ export function Player() {
             eventMode={'dynamic'}
         >
             <Sprite
-                anchor={0.5}
-                texture={"https://pixijs.com/assets/bunny.png"}
+                scale={0.5}
+                anchor={{ x: 0.5, y: 1.7 }}
+                texture={"/assets/basket/hand/Under_basket.png"}
             />
             <Basket />
+            <Sprite
+                scale={0.5}
+                anchor={{ x: 0.5, y: 1.7 }}
+                texture={"/assets/basket/hand/Over_basket.png"}
+            />
         </Group>
     );
 }
