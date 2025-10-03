@@ -4,14 +4,17 @@ import { useObjectivesStore } from './Objectives';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
 import type { TalentType } from '@/components/Game/TalentTree/Settings/all';
 
+type ScoreItem = {
+    value: number;
+    singleValue: number;
+    image: string;
+    amount: number;
+};
+
 type ScoreType = {
-    [key: string]: {
-        value: number;
-        singleValue: number;
-        image: string;
-        amount: number;
-    };
-} & { total: number };
+    total: number;
+    [key: string]: ScoreItem | number;
+};
 
 interface GameState {
     state: 'playing' | 'paused' | 'gameOver';
@@ -59,18 +62,18 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     lastScore: { total: 0 },
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
-    incrementScore: (type) => set((state) => {
+    incrementScore: (type: TalentType) => set((state) => {
         const finalValue = Math.floor(getTalentEffect(type.value, type.group || []));
         return {
             score: {
                 ...state.score,
                 [type.id]: {
-                    value: (state.score[type.id]?.value || 0) + finalValue,
+                    value: (state.score[type.id]?.value ?? 0) + finalValue,
                     singleValue: finalValue,
                     image: type.image,
-                    amount: (state.score[type.id]?.amount || 0) + 1
+                    amount: (state.score[type.id]?.amount ?? 0) + 1
                 },
-                total: (state.score.total || 0) + finalValue
+                total: (state.score.total ?? 0) + finalValue
             }
         };
     }),
@@ -129,7 +132,7 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     }),
 
 
-    modifiers: {
+    /*modifiers: {
         red_apple: { add: 1, multiply: 1, spawnRate: 1, onHit: () => { } },
-    }
-}) as GameState & GameActions);
+    }*/
+}));

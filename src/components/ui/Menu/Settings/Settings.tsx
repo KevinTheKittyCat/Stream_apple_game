@@ -1,7 +1,48 @@
-export default function Settings() {
+import { CloseButton, Dialog, Flex, SegmentGroup, Tabs } from "@chakra-ui/react"
+import GeneralSettings from "./General";
+import SoundSettings from "./Sound";
+
+
+export default function Settings({ children }: { children?: React.ReactNode }) {
     return (
-        <div>
-            <h1>Settings</h1>
-        </div>
+        <>
+            <Dialog.Root>
+                <Dialog.Trigger asChild>
+                    {children}
+                </Dialog.Trigger>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                    <Dialog.Content>
+                        <Dialog.Body >
+                            <SettingsContent />
+                        </Dialog.Body>
+                        <Dialog.Footer />
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Dialog.Root>
+        </>
+    );
+}
+
+export function SettingsContent() {
+    return (
+        <Tabs.Root defaultValue="general">
+            <Flex justify={"space-between"} align={"center"} mb={4}>
+                <Tabs.List w={"80%"} >
+                    <Tabs.Trigger value="general">General</Tabs.Trigger>
+                    <Tabs.Trigger value="audio">Audio</Tabs.Trigger>
+                    <Tabs.Indicator />
+                </Tabs.List>
+                <Dialog.CloseTrigger asChild pos={"relative"} right={0} top={1}>
+                    <CloseButton size="sm" width="auto" />
+                </Dialog.CloseTrigger>
+            </Flex>
+            <Tabs.Content value="general">
+                <GeneralSettings />
+            </Tabs.Content>
+            <Tabs.Content value="audio">
+                <SoundSettings />
+            </Tabs.Content>
+        </Tabs.Root>
     );
 }

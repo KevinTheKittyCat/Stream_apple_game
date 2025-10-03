@@ -6,6 +6,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import "./styles/pause-menu.css"
 import { eventEmitter } from "@/utils/Eventemitter";
 import TalentsButton from "./TalentsButton";
+import Settings from "./Settings/Settings";
 
 export default function PauseMenu() {
 
@@ -27,6 +28,9 @@ export function PauseMenuItems() {
             <p>The game is currently paused. Press the resume button to continue playing.</p>
             <Button variant={"menuButton"} onClick={gameOver}>End Game // REMOVE IN PRODUCTION</Button>
             <TalentsButton />
+            <Settings>
+                <Button variant={"menuButton"} w={"100%"}>Settings</Button>
+            </Settings>
             <Button variant={"menuButton"} onClick={unpauseGame}>Resume</Button>
         </Flex>
     );

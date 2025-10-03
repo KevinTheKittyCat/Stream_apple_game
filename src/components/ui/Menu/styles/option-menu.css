@@ -21,11 +21,14 @@
   height: 100%;
 }
 .option-menu button {
+  pointer-events: all;
+}
+.option-menu > button {
   width: 80%;
   pointer-events: all;
   transition: all 0.2s ease-in-out;
 }
-.option-menu button:active {
+.option-menu > button:active {
   scale: 0.9;
 }
 

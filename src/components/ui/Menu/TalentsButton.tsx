@@ -79,7 +79,9 @@ export default function TalentsButton() {
 
     return (
         <Button ref={ref} pos={"relative"} bg={"galaxyBlue"}
+            variant={"menuButton"}
             height={"150px"}
+            width={"80%"}
             onClick={goToStore}
             boxShadow={
                 "inset 0px 0px 4px 3px rgba(0, 0, 0, 0.5), inset 0px 0px 8px 2px rgba(0, 0, 0, 0.7)"
@@ -110,15 +112,12 @@ export default function TalentsButton() {
                 fontSize={"2xl"} align={"center"} justify={"center"}
                 zIndex={1} color="white"
             >
-                <Icon as={RiCopperCoinLine} color="gold" height={"0.8em"} width={"0.8em"} />
-                <Flex height={"100%"} pos={"relative"} align={"center"} justify={"center"}>
-                    <Flex align={"center"} justify={"center"} height={"100%"}>
-                        <p>Talent Tree</p>
-                    </Flex>
-                    <Box pos={"absolute"} top={"50%"} right={0} m={0}
-                        translate={"calc(100% + 0.5em)  -50%"}
+                <Flex pos={"relative"} align={"center"} justify={"center"}>
+                    <Icon as={RiCopperCoinLine} height={"4em"} width={"4em"} />
+                    <Box pos={"absolute"} top={0} right={0} m={0}
+                        //translate={"50% -50%"}
                         bg={"tomato"}
-                        height={"1.2em"}
+                        height={"1.4em"}
                         aspectRatio={"1/1"}
                         borderRadius={"md"}
                         pointerEvents={"none"}

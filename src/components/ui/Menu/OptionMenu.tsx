@@ -6,6 +6,7 @@ import { eventEmitter } from "@/utils/Eventemitter";
 import { Button, Container, Flex } from "@chakra-ui/react";
 import CalculateFinalResult from "./CalculateFinalResult";
 import TalentsButton from "./TalentsButton";
+import Settings from "./Settings/Settings";
 
 export default function OptionMenu() {
     const { restartGame } = useGameStore()
@@ -30,6 +31,9 @@ export default function OptionMenu() {
                     <TalentsButton />
                 </Flex>
             </Flex>
+            <Settings>
+                <Button variant={"menuButton"} w={"100%"}>Settings</Button>
+            </Settings>
             <Button variant={"menuButton"} onClick={restartGame} >Restart</Button>
         </Flex >
     );
