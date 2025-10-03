@@ -33,16 +33,29 @@ const setStorageSafeTalents = (newTalents: TalentType[]) => {
 
 const getStorageSafeTalents = () => {
     const fromStorage: Partial<TalentType>[] = getStorageItem("talents") || [];
-    let allTalentsConcatted = {...allTalents} as TalentDict;
+    let allTalentsConcatted = { ...allTalents } as TalentDict;
     fromStorage.forEach(t => {
-        allTalentsConcatted[t.id as keyof typeof allTalents] = {...allTalentsConcatted[t.id as keyof typeof allTalents], ...t};
+        allTalentsConcatted[t.id as keyof typeof allTalents] = { ...allTalentsConcatted[t.id as keyof typeof allTalents], ...t };
     });
     const talentsArray = Object.values(allTalentsConcatted);
 
     return fromStorage.reduce((acc, t) => {
         const foundTalent = allTalents[t.id as keyof typeof allTalents];
         if (!foundTalent) return acc; // Ignore talents that no longer exist
-        const combined = {...foundTalent, ...t} as TalentType;
+        
+        // Calculate cost properly using base cost and multiplier
+        const baseCost = foundTalent.cost || 1;
+        const costMultiplier = foundTalent.costMultiplier || 1.5;
+        const currentLevel = t.currentLevel || 0;
+        
+        // Cost formula: baseCost * (multiplier ^ currentLevel)
+        const calculatedCost = Math.round(baseCost * Math.pow(costMultiplier, currentLevel));
+        
+        const combined = {
+            ...foundTalent,
+            ...t,
+            cost: calculatedCost
+        } as TalentType;
         // Remove talents that no longer meet prerequisites
         if (!checkPrerequisites(combined, talentsArray)) return acc;
         return acc.concat(combined);

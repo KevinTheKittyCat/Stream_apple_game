@@ -2,11 +2,21 @@ import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Stora
 import { create } from 'zustand'
 import { useObjectivesStore } from './Objectives';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
+import type { TalentType } from '@/components/Game/TalentTree/Settings/all';
+
+type ScoreType = {
+    [key: string]: {
+        value: number;
+        singleValue: number;
+        image: string;
+        amount: number;
+    };
+} & { total: number };
 
 interface GameState {
     state: 'playing' | 'paused' | 'gameOver';
-    score: number;
-    lastScore: number;
+    score: ScoreType;
+    lastScore: ScoreType;
 
     currency: number;
 
@@ -23,9 +33,9 @@ interface GameActions {
     pauseGame: () => void;
     unpauseGame: () => void;
 
-    setScore: (newScore: number) => void;
-    setLastScore: (newLastScore: number) => void;
-    incrementScore: (increment: number) => void;
+    setScore: (newScore: ScoreType) => void;
+    setLastScore: (newLastScore: ScoreType) => void;
+    incrementScore: (increment: TalentType) => void;
     resetScore: () => void;
 
     setCurrency: (newCurrency: number) => void;
@@ -45,8 +55,8 @@ type GameStoreProps = GameState & GameActions;
 
 export const useGameStore = create<GameStoreProps>((set) => ({
     state: 'playing',
-    score: {},
-    lastScore: {},
+    score: { total: 0 },
+    lastScore: { total: 0 },
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
     incrementScore: (type) => set((state) => {
@@ -86,11 +96,9 @@ export const useGameStore = create<GameStoreProps>((set) => ({
         const { resetObjectives } = useObjectivesStore.getState();
         state.resetTimer();
         resetObjectives();
-
-
         return {
             state: 'playing',
-            score: 0,
+            score: { total: 0 },
         }
     }),
     gameOver: () => set((state) => {

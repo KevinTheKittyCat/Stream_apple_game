@@ -52,7 +52,7 @@ export const apple_talents: TalentDict = {
         id: "good_apple_chance",
         levels: 10,
         currentLevel: 0,
-        title: "A chance of meatb-Apples",
+        title: "With a chance of apples",
         description: "Increases the chance of getting normal apples.",
         effects: [
             { type: "goodAppleChance", multiply: 1.1, suffix: "%" }

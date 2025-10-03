@@ -19,6 +19,7 @@ export function Talent(talent: TalentType) {
     const { setTalentRef, talents, updateTalent, setHoveringTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
     const [hovering, setHovering] = useState(false);
+    const isMaxLeveled = talent.currentLevel >= talent.levels;
 
     const onSettle = useCallback(() => {
         setShouldSettle(2);
@@ -117,17 +118,18 @@ export function Talent(talent: TalentType) {
 
 
     const onMouseEnter = useCallback(() => {
-        if (!groupRef.current) return
+        if (!groupRef.current) return console.error("No group ref");
         const globalPos = groupRef.current.getGlobalPosition();
         const bounds = groupRef.current.getBounds();
         setHoveringTalent({ ...talent, x: globalPos.x + bounds.width, y: globalPos.y + (bounds.height / 2) });
         setHovering(true);
-    }, [talent]);
+    }, [talent, setHoveringTalent, setHovering]);
 
     const onMouseLeave = useCallback(() => {
         setHoveringTalent(null);
         setHovering(false);
-    }, []);
+    }, [setHoveringTalent, setHovering]);
+
 
     return (
         <>
@@ -151,14 +153,13 @@ export function Talent(talent: TalentType) {
                     <Graphic // Background Rectangle
                         size={{ width: outer, height: outer }}
                         rounded={5}
-                        color={hovering ? "#83628fb9" : "#6c507686"} // NEED MORE TEXTURE VARIATION
-                        stroke={{
+                        color={hovering && !isMaxLeveled ? "#83628fb9" : "#6c507686"} // NEED MORE TEXTURE VARIATION
+                        stroke={isMaxLeveled ? undefined :{
                             color: hovering ? "#face1bff" : "#EFBF04",
                             width: hovering ? 3 : 2
                         }}
                     />
                     <Sprite
-                        // TODO - Make images centered to the outer rectangle
                         height={inner}
                         texture={talent.image}
                         anchor={0.5}
@@ -170,6 +171,11 @@ export function Talent(talent: TalentType) {
                         size={{ width: outer, height: outer }}
                         rounded={5}
                         color={"rgba(0, 0, 0, 0.4)"} // DEBUG
+                    />}
+                    {talent.currentLevel >= talent.levels && <Graphic
+                        size={{ width: outer, height: outer }}
+                        rounded={5}
+                        color={"#e9bafa78"} // DEBUG
                     />}
                 </Group>
             </Group>

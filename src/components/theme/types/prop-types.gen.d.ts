@@ -31,6 +31,9 @@ export interface UtilityValues {
     | "purple"
     | "pink"
     | "baseBackground"
+    | "galaxyBlue"
+    | "galaxyPurple"
+    | "galaxyPink"
     | "bg"
     | "fg"
     | "border"
@@ -277,4 +280,7 @@ export interface UtilityValues {
     | "slide-to-right"
     | "scale-in"
     | "scale-out"
+    | "starMovement"
+    | "starPulse"
+    | "moveMask"
 }

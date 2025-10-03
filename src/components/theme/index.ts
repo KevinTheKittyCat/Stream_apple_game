@@ -17,6 +17,11 @@ const config = defineConfig({
             colors: {
                 red: { value: "#EE0F0F" },
                 baseBackground: { value: "rgba(255, 255, 255, 0.1)" },
+
+                // Galaxy Colors
+                galaxyBlue: { value: "#070B34" },
+                galaxyPurple: { value: "#855988" },
+                galaxyPink: { value: "#FF69B4" },
             },
             blurs: {
                 sm: { value: "blur(10px)" },
@@ -36,6 +41,20 @@ const config = defineConfig({
             spin: {
                 from: { transform: "rotate(0deg)" },
                 to: { transform: "rotate(360deg)" },
+            },
+            starMovement: {
+                "0%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(5px)" },
+                "100%": { transform: "translateY(0px)" },
+            },
+            starPulse: {
+                "0%": { opacity: 0.8 },
+                "50%": { opacity: 0 },
+                "100%": { opacity: 0.6 },
+            },
+            moveMask: {
+                "0%": { maskPosition: "0% 0%" },
+                "100%": { maskPosition: "100% 100%" },
             },
         },
         recipes: {

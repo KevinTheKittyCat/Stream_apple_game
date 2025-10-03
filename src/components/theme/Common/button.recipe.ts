@@ -26,6 +26,7 @@ export const buttonRecipe = defineRecipe({
                 width: "100%",
                 fontSize: "md",
                 padding: "0.75em 1em",
+                minHeight: "5em",
             },
             iconButton: {
                 _icon: { width: "6", height: "6" },

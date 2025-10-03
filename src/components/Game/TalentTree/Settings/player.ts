@@ -17,6 +17,7 @@ export const player_talents: TalentDict = {
         cost: 15,
         costMultiplier: 1.5,
     },
+    
     // TODO: Add "move on the Y axis" talent - requires changing the game mechanics
     // TODO: Add "dash" talent - requires changing the game mechanics
     // TODO: Add a "friend" - collects apples for you - talent - requires changing the game mechanics

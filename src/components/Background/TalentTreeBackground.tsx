@@ -67,33 +67,9 @@ export default function TalentTreeBackground() {
         <Layer
             filters={[
                 filter,
-                //noisefilter
             ]}
             eventMode="static"
             background={{
-                /*gradient: {
-                    colorStops: [{
-                        color: "#855988",
-                        offset: 0
-                    }, {
-                        color: "#6B4984",
-                        offset: 0.3
-                    }, {
-                        color: "#483475",
-                        offset: 0.5
-                    }, {
-                        color: "#2B2F77",
-                        offset: 0.52
-                    }, {
-                        color: "#141852",
-                        offset: 0.54
-                    }, {
-                        color: "#070B34",
-                        offset: 0.7
-                    }
-                    ],
-                    rotation: 45
-                },*/
                 backgroundColor: "#070B34",
                 alpha: 1
             }}
@@ -103,15 +79,6 @@ export default function TalentTreeBackground() {
             ))}
             <Galaxy alpha={0.1} color={"#855988"} />
             <Galaxy alpha={0.1} color={"#070B34"} />
-            {/*<Galaxy />
-            <Galaxy />
-            */}
-            {/* Test Stars */}
-            {/*
-            <Star position={{ x: 100, y: 100 }} />
-            <Star position={{ x: 300, y: 200 }} />
-            <Star position={{ x: 500, y: 150 }} />
-            */}
         </Layer>
     );
 }
