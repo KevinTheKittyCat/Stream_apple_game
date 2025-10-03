@@ -98,6 +98,14 @@ export function Player() {
         resetPosition();
     }, [spriteRef]);
 
+    const scaleAndAnchor = useMemo(() => {
+        const scale = 0.8;
+        return {
+            scale: scale,
+            anchor: { x: 0.5, y: 1.1 }
+        };
+    }, []);
+
     return (
         <Group
             ref={spriteRef}
@@ -105,14 +113,14 @@ export function Player() {
             eventMode={'dynamic'}
         >
             <Sprite
-                scale={0.5}
-                anchor={{ x: 0.5, y: 1.7 }}
+                scale={scaleAndAnchor.scale}
+                anchor={scaleAndAnchor.anchor}
                 texture={"/assets/basket/hand/Under_basket.png"}
             />
             <Basket />
             <Sprite
-                scale={0.5}
-                anchor={{ x: 0.5, y: 1.7 }}
+                scale={scaleAndAnchor.scale}
+                anchor={scaleAndAnchor.anchor}
                 texture={"/assets/basket/hand/Over_basket.png"}
             />
         </Group>
