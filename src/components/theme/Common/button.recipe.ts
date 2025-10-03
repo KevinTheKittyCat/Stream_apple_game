@@ -6,16 +6,15 @@ export const buttonRecipe = defineRecipe({
         alignItems: "center",
         justifyContent: "center",
         padding: "0.5em 1em",
-        //backDropFilter: "blur(10px)",
         bg: "baseBackground",
         borderRadius: "0.375rem",
-        border: "1px solid rgba(255, 255, 255, 0.2)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
         fontSize: "large",
         width: "fit-content",
         height: "fit-content",
         transition: "all 0.2s ease-in-out",
         color: "white",
-        backdropFilter: "blur(10px)"
+        backdropFilter: "{blurs.menu}"
     },
     variants: {
         variant: {

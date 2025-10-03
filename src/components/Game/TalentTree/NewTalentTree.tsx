@@ -2,8 +2,8 @@
 import { Layer } from '@/components/Canvas/Layer';
 import { Talent } from './Talent';
 import { useEffect } from 'react';
-import { useTalentTreeStore, type TalentType } from '@/stores/talentTreeState';
-import { allTalents } from './Settings/all';
+import { useTalentTreeStore} from '@/stores/talentTreeState';
+import { allTalents, type TalentType } from './Settings/all';
 import RopeTree from './RopeTree';
 
 export const checkPrerequisites = (talent: TalentType, talents: TalentType[]) => talent?.prerequisites?.every(prereq => {

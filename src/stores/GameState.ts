@@ -103,7 +103,7 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     }),
     pauseGame: () => set({ state: 'paused' }),
     unpauseGame: () => set({ state: 'playing' }),
-    resetTimer: () => set(() => ({ timer: getTalentEffect(10, "time"), time: new Date(), totalTime: 0 })),
+    resetTimer: () => set(() => ({ timer: getTalentEffect(10, "time"), time: new Date(), totalTime: 0, startTime: getTalentEffect(10, "time") })),
     updateTimer: (number) => set((state) => {
         const final = state.timer + number;
         if (state.state !== 'playing') return {};

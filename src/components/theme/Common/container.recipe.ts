@@ -11,7 +11,7 @@ const baseContainerOverwriteStyles = {
   gap: 1,
   p: 2,
   paddingInline: 2,
-  backdropFilter: "blur(10px)"
+  backdropFilter: "{blurs.menu}"
 }
 
 export const containerRecipe = defineRecipe({
@@ -24,14 +24,12 @@ export const containerRecipe = defineRecipe({
         ...baseContainerOverwriteStyles,
         bg: "baseBackground",
         border: "1px solid rgba(255, 187, 29, 0.2)",
-        backDropFilter: "blur(10px)",
         borderRadius: "md",
       },
       normal: {
         ...baseContainerOverwriteStyles,
         bg: "baseBackground",
         border: "1px solid rgba(255, 255, 255, 0.2)",
-        backDropFilter: "blur(10px)",
         borderRadius: "md",
       },
     },

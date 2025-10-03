@@ -1,12 +1,13 @@
 import Graphic from "@/components/Canvas/Graphic";
 import { Group } from "@/components/Canvas/Group";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTalentTreeStore, type TalentType } from "@/stores/talentTreeState";
+import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
 import { UPDATE_PRIORITY, Container } from "pixi.js";
 import { checkHitMultipleWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
 import { useGameStore } from "@/stores/GameState";
+import type { TalentType } from "./Settings/all";
 
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 

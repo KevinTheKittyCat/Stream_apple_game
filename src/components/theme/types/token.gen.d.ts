@@ -467,6 +467,7 @@ export type Token =
   | "radii.l1"
   | "radii.l2"
   | "radii.l3"
+  | "blurs.menu"
   | "spacing.-1"
   | "spacing.-2"
   | "spacing.-3"
@@ -554,7 +555,7 @@ export type AspectRatiosToken = "square" | "landscape" | "portrait" | "wide" | "
 
 export type AnimationsToken = "spin" | "ping" | "pulse" | "bounce"
 
-export type BlursToken = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl"
+export type BlursToken = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "menu"
 
 export type BordersToken = "xs" | "sm" | "md" | "lg" | "xl"
 

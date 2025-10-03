@@ -18,10 +18,18 @@ const config = defineConfig({
                 red: { value: "#EE0F0F" },
                 baseBackground: { value: "rgba(255, 255, 255, 0.1)" },
             },
+            blurs: {
+                sm: { value: "blur(10px)" },
+                md: { value: "blur(20px)" },
+                lg: { value: "blur(40px)" },
+            },
         },
         semanticTokens: {
             colors: {
                 danger: { value: "{colors.red}" },
+            },
+            blurs: {
+                menu: { value: "{blurs.md}" },
             },
         },
         keyframes: {

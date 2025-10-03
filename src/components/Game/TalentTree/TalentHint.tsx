@@ -1,10 +1,10 @@
 import Graphic from "@/components/Canvas/Graphic";
 import { Group } from "@/components/Canvas/Group";
 import { usePortalStore } from "@/stores/PortalState";
-import type { TalentType } from "@/stores/talentTreeState";
 import { outer, inner, overlap } from "./Talent";
 import AdaptableGraphic from "@/components/Canvas/AdaptableGraphic";
 import Text from "@/components/Canvas/Text";
+import type { TalentType } from "./Settings/all";
 
 type TalentHintTypes = {
     talent: TalentType;

@@ -7,9 +7,9 @@ export default function CurrentStatsMenu() {
 
     return (
         <Container variant={"normal"} minW={200}>
+            <Timer />
             <Score />
             {/*<ApplesCounter />*/}
-            <Timer />
         </Container>
     );
 }

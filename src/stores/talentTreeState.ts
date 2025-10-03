@@ -1,5 +1,5 @@
 import { checkPrerequisites } from '@/components/Game/TalentTree/NewTalentTree';
-import { allTalents, type TalentDict } from '@/components/Game/TalentTree/Settings/all';
+import { allTalents, type TalentDict, type TalentType } from '@/components/Game/TalentTree/Settings/all';
 import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
 import { Container } from 'pixi.js';
 import { create } from 'zustand'
@@ -30,8 +30,6 @@ const setStorageSafeTalents = (newTalents: TalentType[]) => {
     setItemRemoveRefStringify("talents", storage);
     return storage;
 }
-
-
 
 const getStorageSafeTalents = () => {
     const fromStorage: Partial<TalentType>[] = getStorageItem("talents") || [];
@@ -76,32 +74,6 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
     })
 }))
 
-export type effect = {
-    type: string;
-    multiply?: number,
-    divide?: number,
-    add?: number,
-    set?: number,
-    minus?: number,
-
-    prefix?: string | React.JSX.Element | React.ComponentType<any>,
-    suffix?: string | React.JSX.Element | React.ComponentType<any> | HTMLDivElement,
-}
-
-export type TalentType = {
-    id: string;
-    position?: { x: number; y: number } | null;
-    levels: number;
-    currentLevel: number;
-    title: string;
-    description: string;
-    effects: effect[];
-    prerequisites: Array<{ id: string; level: number }>;
-    settled: number;
-    image: string;
-    cost: number,
-    costMultiplier: number,
-};
 
 /*
 export const getTalentEffects = (): number => {

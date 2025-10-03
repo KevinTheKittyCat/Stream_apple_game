@@ -1,8 +1,9 @@
-import { useTalentTreeStore, type TalentType } from '@/stores/talentTreeState';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
 import { overlap } from './Talent';
 import { useMemo } from 'react';
 import MyRope from "../../Canvas/Rope";
 import { useWindowStore } from '@/stores/WindowState';
+import type { TalentType } from './Settings/all';
 
 interface PreReqRopeProps {
     talent: TalentType;

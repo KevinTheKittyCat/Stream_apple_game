@@ -23,10 +23,6 @@
 }
 .option-menu button {
   width: 80%;
-  height: 4em;
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
-  outline: 1px solid white;
   pointer-events: all;
   transition: all 0.2s ease-in-out;
 }
