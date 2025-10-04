@@ -31,7 +31,6 @@ export default function UIWrapper({children}: {children?: React.ReactNode}) {
                 <div className="portal-ui" style={{}} ref={portalDivRef} />
                 {children}
             </div>
-            
         </div>
     );
 }

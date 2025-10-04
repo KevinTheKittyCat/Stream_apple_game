@@ -282,5 +282,6 @@ export interface UtilityValues {
     | "scale-out"
     | "starMovement"
     | "starPulse"
+    | "becomeVisible"
     | "moveMask"
 }

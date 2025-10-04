@@ -48,13 +48,19 @@ const config = defineConfig({
                 "100%": { transform: "translateY(0px)" },
             },
             starPulse: {
-                "0%": { opacity: 0.8 },
-                "50%": { opacity: 0 },
-                "100%": { opacity: 0.6 },
+                "0%": { "--opacity": 0.8 },
+                "50%": { "--opacity": 0 },
+                "100%": { "--opacity": 0.8 },
+            },
+            becomeVisible: {
+                to: { opacity: 1 },
             },
             moveMask: {
                 "0%": { maskPosition: "0% 0%" },
-                "100%": { maskPosition: "100% 100%" },
+                "25%": { maskPosition: "0% 100%" },
+                "50%": { maskPosition: "100% 100%" },
+                "75%": { maskPosition: "100% 0%" },
+                "100%": { maskPosition: "0% 0%" },
             },
         },
         recipes: {

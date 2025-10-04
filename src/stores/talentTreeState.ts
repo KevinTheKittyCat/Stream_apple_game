@@ -86,18 +86,3 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
         };
     })
 }))
-
-
-/*
-export const getTalentEffects = (): number => {
-    const talents = useTalentTreeStore.getState().talents
-    return talents.reduce((acc: Record<string, number>, talent) => {
-        const effects = talent.effects.forEach(e => {
-            if (e.type !== acc[e.type]) acc[e.type] = originalNumber;
-            if (e.multiply) acc[e.type] *= e.multiply;
-            if (e.add) acc[e.type] += e.add;
-            if (e.set) acc[e.type] = e.set;
-            if (e.minus) acc[e.type] -= e.minus;
-        });
-    }, {} as Record<string, number>);
-}*/

@@ -16,7 +16,7 @@ export default function TalentTreeBackground() {
     const { width, height } = useWindowStore();
 
     const stars = useMemo(() => {
-        const normalAmount = 80 / 1.7; // 1.7 is 1920/1080 ratio
+        const normalAmount = 50 / 1.7; // 1.7 is 1920/1080 ratio
         const starAmount = Math.floor((width / height) * (normalAmount))
         const tempStars = [] as { x: number; y: number; id: string }[];
 
@@ -53,15 +53,6 @@ export default function TalentTreeBackground() {
         quality: 4,       // Blur quality (higher = better but slower)
         kernelSize: 5     // Size of blur kernel matrix
     }), []);
-
-    const noisefilter = useMemo(() => new NoiseFilter({
-        noise: 0.01,      // Slightly increased noise intensity
-        seed: Math.random(),
-        resolution: 0.3   // Lower resolution = bigger chunks (try 0.1-0.5)
-    }), []);
-
-
-
 
     return (
         <Layer

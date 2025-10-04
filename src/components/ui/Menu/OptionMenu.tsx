@@ -2,18 +2,13 @@ import { useGameStore } from "@/stores/GameState";
 import "./styles/option-menu.css"
 import TotalTime from "./TotalTime";
 import LastScore from "./LastScore";
-import { eventEmitter } from "@/utils/Eventemitter";
 import { Button, Container, Flex } from "@chakra-ui/react";
 import CalculateFinalResult from "./CalculateFinalResult";
 import TalentsButton from "./TalentsButton";
 import Settings from "./Settings/Settings";
 
 export default function OptionMenu() {
-    const { restartGame } = useGameStore()
-
-    const goToStore = () => {
-        eventEmitter.emit('changeRoute', { route: '/talentTree' });
-    }
+    const { restartGame } = useGameStore();
 
     return (
         <Flex className="option-menu" gap={2}>
@@ -26,7 +21,7 @@ export default function OptionMenu() {
                     <TotalTime />
                 </Container>
             </Flex>
-            <Flex width={"100%"} justify={"flex-start"} gap={2}>
+            <Flex width={"80%"} justify={"flex-start"} gap={2}>
                 <Flex width={"50%"} justify={"flex-end"} gap={2}>
                     <TalentsButton />
                 </Flex>
@@ -34,7 +29,7 @@ export default function OptionMenu() {
             <Settings>
                 <Button variant={"menuButton"} w={"100%"}>Settings</Button>
             </Settings>
-            <Button variant={"menuButton"} onClick={restartGame} >Restart</Button>
+            <Button variant={"menuButton"} onClick={restartGame}>Restart</Button>
         </Flex >
     );
 }

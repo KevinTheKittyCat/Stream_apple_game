@@ -9,21 +9,14 @@ import { type Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js'
 import { Sprite } from '../Canvas/Sprite';
 import { checkHit } from '../Player/HitDetection';
 import { useGameStore } from '@/stores/GameState';
-import { useObjectivesStore } from '@/stores/Objectives';
+import { useObjectivesStore, type Objective} from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useWindowStore } from '@/stores/WindowState';
 import { useTalentTreeStore } from '@/stores/talentTreeState';
 import { getTalentEffect } from '../UtilFunctions/talents';
 
-type AppleProps = {
-    id: string;
-    x?: number;
-    y?: number;
-    speed?: number; // Speed at which the apple falls
-    type?: any;
-};
 
-export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: AppleProps) {
+export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: Objective) {
     const { scale } = useWindowStore();
     const { incrementScore, state } = useGameStore();
     const { talents } = useTalentTreeStore();
@@ -36,18 +29,16 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: A
     }), [talents]);
 
     const onHit = useCallback((apple: PixiSprite) => {
-        //console.log("Apple hit detected!");
         incrementScore(type)
         type?.onHit?.(apple);
         removeApple(id);
-        //console.log("Apple removed:", target, target?.ref === spriteRef);
         if (target && target.ref === spriteRef) getNewTarget();
     }, [id, removeApple, target, apples]);
 
-    const checkHitWithPlayer = useCallback((currentApple, playerRef) => {
+    const checkHitWithPlayer = useCallback((currentApple: PixiSprite | null, playerRef: React.RefObject<PixiSprite | null> | null) => {
         if (!playerRef || !playerRef.current) return false;
         const hit = checkHit(currentApple, playerRef.current);
-        return hit
+        return hit;
     }, [playerRef]);
 
 

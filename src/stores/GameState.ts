@@ -1,8 +1,7 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { create } from 'zustand'
-import { useObjectivesStore } from './Objectives';
+import { useObjectivesStore, type ObjectiveType } from './Objectives';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
-import type { TalentType } from '@/components/Game/TalentTree/Settings/all';
 
 type ScoreItem = {
     value: number;
@@ -11,7 +10,7 @@ type ScoreItem = {
     amount: number;
 };
 
-type ScoreType = {
+export type ScoreType = {
     total: number;
     [key: string]: ScoreItem | number;
 };
@@ -38,7 +37,7 @@ interface GameActions {
 
     setScore: (newScore: ScoreType) => void;
     setLastScore: (newLastScore: ScoreType) => void;
-    incrementScore: (increment: TalentType) => void;
+    incrementScore: (increment: ObjectiveType) => void;
     resetScore: () => void;
 
     setCurrency: (newCurrency: number) => void;
@@ -62,16 +61,17 @@ export const useGameStore = create<GameStoreProps>((set) => ({
     lastScore: { total: 0 },
     setScore: (newScore) => set({ score: newScore }),
     setLastScore: (newLastScore) => set({ lastScore: newLastScore }),
-    incrementScore: (type: TalentType) => set((state) => {
+    incrementScore: (type: ObjectiveType) => set((state) => {
         const finalValue = Math.floor(getTalentEffect(type.value, type.group || []));
+        const currentItem = state.score[type.id] as ScoreItem | undefined;
         return {
             score: {
                 ...state.score,
                 [type.id]: {
-                    value: (state.score[type.id]?.value ?? 0) + finalValue,
+                    value: (currentItem?.value ?? 0) + finalValue,
                     singleValue: finalValue,
                     image: type.image,
-                    amount: (state.score[type.id]?.amount ?? 0) + 1
+                    amount: (currentItem?.amount ?? 0) + 1
                 },
                 total: (state.score.total ?? 0) + finalValue
             }
@@ -119,10 +119,6 @@ export const useGameStore = create<GameStoreProps>((set) => ({
         const final = state.timer + number;
         if (state.state !== 'playing') return {};
         if (final <= 0) {
-            // If the timer reaches 0, trigger any necessary game over logic
-            //state.incrementCurrency(state.score);
-            //state.setLastScore(state.score);
-            //state.resetScore();
             state.gameOver();
         }
         return {

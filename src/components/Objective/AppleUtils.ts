@@ -14,9 +14,10 @@ export const appleTypes: Record<string, ObjectiveType> = {
 type randomAppleTypeOptions = {
     excludedTypes?: string[];
     weights?: { [key: string]: number };
+    modifiers?: any // NOT DEVELOPED YET;
 }
 
-export function getRandomAppleType({ excludedTypes = [], modifiers = {} }: randomAppleTypeOptions = {}): { value: number; image: string } {
+export function getRandomAppleType({ excludedTypes = [], modifiers = {} }: randomAppleTypeOptions = {}): ObjectiveType {
     const availableTypes = Object.keys(appleTypes).filter(type => !excludedTypes.includes(type));
     if (availableTypes.length === 0) return appleTypes.APPLE; // Default type
 

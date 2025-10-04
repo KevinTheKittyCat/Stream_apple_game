@@ -38,16 +38,18 @@ export function checkHitMultiple(
     return hit.length > 0 ? hit : false; // Return all hits or false if no hits
 }
 
+export type HitObjectWithId = { id: string, ref: React.RefObject<any> };
+
 export function checkHitMultipleWithId(
-    objects: { id: string, ref: React.RefObject<any> }[],
+    objects: HitObjectWithId[],
     target: React.RefObject<any> | null,
     shouldReturnTarget: boolean = false,
     shouldReturnOnFirstHit: boolean = true
-) {
+): HitObjectWithId[] | false {
     let hit = [];
     if (!target) return false;
     for (const object of objects) {
-        const hitResult = checkHit(object.ref?.current || object.ref, target, shouldReturnTarget);
+        const hitResult = checkHit(object.ref.current, target, shouldReturnTarget);
         if (!hitResult) continue;
 
         hit.push(object);

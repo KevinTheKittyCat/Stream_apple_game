@@ -3,11 +3,12 @@ import { Group } from "@/components/Canvas/Group";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY, Container } from "pixi.js";
-import { checkHitMultipleWithId } from "@/components/Player/HitDetection";
+import { UPDATE_PRIORITY, type Container, type Sprite as PixiSprite } from "pixi.js";
+import { checkHitMultipleWithId, type HitObjectWithId } from "@/components/Player/HitDetection";
 import { Sprite } from "@/components/Canvas/Sprite";
 import { useGameStore } from "@/stores/GameState";
 import type { TalentType } from "./Settings/all";
+
 
 export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
@@ -50,13 +51,13 @@ export function Talent(talent: TalentType) {
         return () => clearInterval(timeout);
     }, [shouldSettle]);
 
-    const onHit = useCallback((obj, objHits) => {
+    const onHit = useCallback((obj: PixiSprite | null, objHits: HitObjectWithId[]) => {
         // Move away from other talents
         // Physics-based repulsion: push obj away from all hit objects
         objHits.forEach((hitObject) => {
             const { ref } = hitObject;
             const { current: hitObjectCurrent } = ref;
-            if (!hitObjectCurrent || !hitObjectCurrent.position || !obj.position) return;
+            if (!hitObjectCurrent || !hitObjectCurrent.position || !obj?.position) return;
 
             // Calculate direction vector from hitObject to obj
             let dx = obj.position.x - hitObjectCurrent.position.x;
@@ -93,17 +94,17 @@ export function Talent(talent: TalentType) {
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (shouldSettle === 2) return;
-            const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef.current, false, false);
+            const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef, false, false) as HitObjectWithId[] | false;
             if (isHit) onHit(this.current, isHit);
             if (isHit) setShouldSettle(0);
             if (!isHit && shouldSettle < 1) setShouldSettle(1);
         },
-        context: groupRef,
+        context: groupRef as React.RefObject<PixiSprite | null>,
         isEnabled: true,
         priority: UPDATE_PRIORITY.LOW,
     })
 
-    const onClick = useCallback((e) => {
+    const onClick = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         // Maybe move to talentStore or GameStore
         const { currentLevel, levels, costMultiplier, cost } = talent;

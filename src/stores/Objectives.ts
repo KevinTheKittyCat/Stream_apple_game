@@ -19,7 +19,7 @@ export type Objective = {
     y: number;
     size: number;
     speed: number;
-    ref: React.RefObject<PixiSprite> | null;
+    ref: React.RefObject<PixiSprite | null> | null;
     type: ObjectiveType;
 };
 
@@ -35,7 +35,7 @@ interface ObjectiveActions {
     addApple: (apple: Objective) => void;
     createApple: () => void;
     removeApple: (id: string) => void;
-    setAppleRef: (id: string, ref: React.RefObject<PixiSprite> | null) => void;
+    setAppleRef: (id: string, ref: React.RefObject<PixiSprite | null> | null) => void;
 };
 
 type ObjectiveStoreProps = ObjectiveStore & ObjectiveActions;
