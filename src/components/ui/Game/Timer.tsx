@@ -18,7 +18,7 @@ export default function Timer() {
         return () => clearInterval(interval); // Cleanup on unmount or timer change
     }, [minusTimer, timer]);
 
-    const percentage = useMemo(() => (timer / startTime) * 100, [timer, startTime]);
+    const percentage = useMemo(() => (timer - 1) / (startTime - 1) * 100, [timer, startTime]);
     const backgroundColor = useMemo(() => {
         if (percentage > 50) return "limegreen";
         if (percentage > 20) return "orange";

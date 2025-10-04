@@ -10,7 +10,7 @@ export type TalentEffect = {
     add?: number,
     set?: number,
     minus?: number,
-    boolean: boolean,
+    boolean?: boolean,
 
     prefix?: string | React.JSX.Element | React.ComponentType<any>,
     suffix?: string | React.JSX.Element | React.ComponentType<any> | HTMLDivElement,
