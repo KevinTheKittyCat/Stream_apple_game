@@ -55,6 +55,12 @@ const config = defineConfig({
             becomeVisible: {
                 to: { opacity: 1 },
             },
+            twinkle: {
+                "0%": { scale: 1 },
+                "33%": { scale: 0.8 },
+                "66%": { scale: 2.2 },
+                "100%": { scale: 1 },
+            },
             moveMask: {
                 "0%": { maskPosition: "0% 0%" },
                 "25%": { maskPosition: "0% 100%" },

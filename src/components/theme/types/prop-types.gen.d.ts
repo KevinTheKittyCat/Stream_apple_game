@@ -283,5 +283,6 @@ export interface UtilityValues {
     | "starMovement"
     | "starPulse"
     | "becomeVisible"
+    | "twinkle"
     | "moveMask"
 }

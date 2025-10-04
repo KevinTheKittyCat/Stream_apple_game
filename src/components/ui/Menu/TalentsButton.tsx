@@ -1,5 +1,6 @@
 import { useGameStore } from "@/stores/GameState";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
+import { useWindowStore } from "@/stores/WindowState";
 import { eventEmitter } from "@/utils/Eventemitter";
 import { AspectRatio, Box, Button, Flex, Icon } from "@chakra-ui/react";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -19,6 +20,7 @@ type StarType = {
 export default function TalentsButton() {
     const { talents } = useTalentTreeStore();
     const { currency } = useGameStore();
+    const { width, height } = useWindowStore();
     const ref = useRef<HTMLButtonElement>(null);
 
     const goToStore = useCallback(() => {
@@ -31,12 +33,11 @@ export default function TalentsButton() {
         if (!ref.current) return;
         const { width, height } = ref.current.getBoundingClientRect();
         setDimensions({ width, height });
-
-    }, []);
+    }, [width, height]);
 
     const stars = useMemo(() => {
         const { width, height } = dimensions;
-        const normalAmount = 20;
+        const normalAmount = 5;
         const starAmount = Math.floor((width / height) * (normalAmount))
         const tempStars = [] as StarType[];
 
@@ -102,20 +103,32 @@ export default function TalentsButton() {
             onMouseLeave={() => setHover(false)}
             transition={"box-shadow 0.3s ease-in-out"}
             overflow={"hidden"}
-            _icon={{ transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out", }}
+            _icon={{
+                transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out",
+                filter: "drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.7))"
+            }}
             _hover={{
                 _icon: {
-                    transform: "rotate(20deg)",
-                    filter: "drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5))"
+                    //transform: "rotate(20deg)",
+                    filter: "drop-shadow(1px 3px 0px rgba(0, 0, 0, 0.7))"
+                    //filter: "drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5))"
                 }
             }}
+            border={"none"}
             boxShadow={
+                //"inset 0 7px 4px #000000cc"
                 //hover ?
-                "inset 0px 0px 4px 3px rgba(0, 0, 0, 0.5), inset 0px 0px 8px 2px rgba(0, 0, 0, 0.7)"
+                "1px 1px 0px rgba(255,255,255,.3), inset 1px 1px 0px rgba(0,0,0,.7) "
+                //" 0px -1px 0px rgba(255,255,255,.3), inset 0px 1px 2px rgba(0,0,0,.7), "
+                //"1px 0px 0px rgba(255,255,255,.3), inset -1px 0px 2px rgba(0,0,0,.7), " +
+                //" -1px 0px 0px rgba(255,255,255,.3), inset 1px 0px 2px rgba(0,0,0,.7) "
+                //"inset 0 1px 1px rgba(0, 0, 0, 0.6), inset 0 -1px 1px rgba(255, 255, 255, 0.4), 0 2px 5px rgba(0, 0, 0, 0.5)"
+                //"inset 0px 0px 4px 3px rgba(0, 0, 0, 0.5), inset 0px 0px 8px 2px rgba(0, 0, 0, 0.7)"
                 //: "inset 2px 2px 2px rgba(0, 0, 0, 0.8), inset -2px -2px 1px rgba(0, 0, 0, 0.8)"
             }>
+
             {RenderStars}
-            <Box
+            < Box
                 bg={"galaxyPurple"}
                 style={{
                     animation: "moveMask 60s linear infinite",
@@ -125,7 +138,7 @@ export default function TalentsButton() {
                     WebkitMask: "url('/assets/galaxy/noise.png') luminance",
                 }}
             />
-            <Flex w={"100%"} height={"100%"} gap={1}
+            < Flex w={"100%"} height={"100%"} gap={1}
                 fontSize={"2xl"} align={"center"} justify={"center"}
                 zIndex={1} color="white"
             >
@@ -146,8 +159,8 @@ export default function TalentsButton() {
                         </AspectRatio>
                     </Box>
                 </Flex>
-            </Flex>
-        </Button>
+            </Flex >
+        </Button >
     )
 }
 
@@ -157,7 +170,7 @@ function Star({ star, index, hover }: { star: StarType, index: number, hover: bo
     const transitions = useMemo(() => {
         return [
             `--opacity 0.7s ease-in-out`,
-            `--opacityMain 0.7s ease-in-out`,
+            `--opacityMain 0.2s ease-in-out`,
             `width 0.7s ease-in-out`,
             `height 0.7s ease-in-out`,
         ]
@@ -173,7 +186,7 @@ function Star({ star, index, hover }: { star: StarType, index: number, hover: bo
                 opacity: `max(var(--opacity, 0), var(--opacityMain, 0))`,
                 transition: transitions.join(", "),
             } as React.CSSProperties}
-            animation={`starPulse 8s infinite forwards, starMovement 7s infinite`}
+            animation={`starPulse 8s infinite forwards, starMovement 7s infinite, twinkle 6s infinite`}
             animationDelay={star.animationDelay}
             filter={index % 2 === 0 ? "blur(1px)" : "blur(3px)"}
         />

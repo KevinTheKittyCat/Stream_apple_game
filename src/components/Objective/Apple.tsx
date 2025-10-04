@@ -87,7 +87,7 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: O
             x={x}
             y={y}
             scale={appleScale}
-            width={50 * scale}
+            //width={50 * scale}
             height={50 * scale}
         />
     );
