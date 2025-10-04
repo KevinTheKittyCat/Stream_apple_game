@@ -1,19 +1,25 @@
 import { useGameStore } from "@/stores/GameState";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { eventEmitter } from "@/utils/Eventemitter";
-import { AspectRatio, Box, Button, Container, Flex, Icon, Text } from "@chakra-ui/react";
+import { AspectRatio, Box, Button, Flex, Icon } from "@chakra-ui/react";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { RiCopperCoinLine } from "react-icons/ri";
 
 
 
 
-
+type StarType = {
+    x: number;
+    y: number;
+    id: string,
+    opacity: number,
+    animationDelay: string
+};
 
 export default function TalentsButton() {
     const { talents } = useTalentTreeStore();
     const { currency } = useGameStore();
-    const ref = useRef(null);
+    const ref = useRef<HTMLButtonElement>(null);
 
     const goToStore = useCallback(() => {
         eventEmitter.emit('changeRoute', { route: '/talentTree' });
@@ -22,17 +28,17 @@ export default function TalentsButton() {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     useLayoutEffect(() => {
-        if (ref.current) {
-            const { width, height } = ref.current.getBoundingClientRect();
-            setDimensions({ width, height });
-        }
+        if (!ref.current) return;
+        const { width, height } = ref.current.getBoundingClientRect();
+        setDimensions({ width, height });
+
     }, []);
 
     const stars = useMemo(() => {
         const { width, height } = dimensions;
-        const normalAmount = 20; // 1.7 is 1920/1080 ratio
+        const normalAmount = 20;
         const starAmount = Math.floor((width / height) * (normalAmount))
-        const tempStars = [] as { x: number; y: number; id: string, opacity: number, animationDelay: string }[];
+        const tempStars = [] as StarType[];
 
         // Divide into grid
         const padding = 5;
@@ -63,7 +69,6 @@ export default function TalentsButton() {
                 id: randomCol + "-" + randomRow,
                 opacity: 0.1 + Math.random() * 0.3,
                 animationDelay: Math.random() * -5 + "s"
-
             });
         }
         return tempStars;
@@ -77,45 +82,58 @@ export default function TalentsButton() {
         }, 0);
     }, [talents]);
 
+    const [hover, setHover] = useState(false);
+
+    const RenderStars = useMemo(() => {
+        return stars.map((star, index) => {
+            return (
+                <Star key={star.id} star={star} index={index} hover={hover} />
+            )
+        })
+    }, [stars, hover]);
+
     return (
         <Button ref={ref} pos={"relative"} bg={"galaxyBlue"}
             variant={"menuButton"}
             height={"150px"}
-            width={"80%"}
+            width={"100%"}
             onClick={goToStore}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            transition={"box-shadow 0.3s ease-in-out"}
+            overflow={"hidden"}
+            _icon={{ transition: "transform 0.3s ease-in-out, filter 0.3s ease-in-out", }}
+            _hover={{
+                _icon: {
+                    transform: "rotate(20deg)",
+                    filter: "drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5))"
+                }
+            }}
             boxShadow={
+                //hover ?
                 "inset 0px 0px 4px 3px rgba(0, 0, 0, 0.5), inset 0px 0px 8px 2px rgba(0, 0, 0, 0.7)"
-                //"inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(0, 0, 0, 0.5)"
-            }
-        >
-
-            {stars.map((star, index) => (
-                <Box key={star.id} pos={"absolute"} top={star.y} left={star.x}
-                    width={"4px"} height={"4px"} bg={"white"} borderRadius={"50%"}
-                    opacity={star.opacity}
-                    animation={"starPulse 8s infinite, starMovement 7s infinite"}
-                    animationDelay={star.animationDelay}
-                    filter={index % 2 === 0 ? "blur(1px)" : "blur(3px)"}
-                />
-            ))}
-
+                //: "inset 2px 2px 2px rgba(0, 0, 0, 0.8), inset -2px -2px 1px rgba(0, 0, 0, 0.8)"
+            }>
+            {RenderStars}
             <Box
                 bg={"galaxyPurple"}
                 style={{
-                    animation: "moveMask 30s linear infinite",
+                    animation: "moveMask 60s linear infinite",
                     width: "100%", height: "100%", opacity: 0.5,
                     position: "absolute", top: 0, left: 0,
                     mask: "url('/assets/galaxy/noise.png') luminance",
                     WebkitMask: "url('/assets/galaxy/noise.png') luminance",
-                }} />
+                }}
+            />
             <Flex w={"100%"} height={"100%"} gap={1}
                 fontSize={"2xl"} align={"center"} justify={"center"}
                 zIndex={1} color="white"
             >
                 <Flex pos={"relative"} align={"center"} justify={"center"}>
-                    <Icon as={RiCopperCoinLine} height={"4em"} width={"4em"} />
+                    <Icon as={RiCopperCoinLine}
+                        height={"4em"} width={"4em"}
+                    />
                     <Box pos={"absolute"} top={0} right={0} m={0}
-                        //translate={"50% -50%"}
                         bg={"tomato"}
                         height={"1.4em"}
                         aspectRatio={"1/1"}
@@ -128,8 +146,36 @@ export default function TalentsButton() {
                         </AspectRatio>
                     </Box>
                 </Flex>
-
             </Flex>
         </Button>
+    )
+}
+
+function Star({ star, index, hover }: { star: StarType, index: number, hover: boolean }) {
+    const animation = useMemo(() => hover && Math.random() > 0.5 ? 1 : 0, [hover]);
+    const size = useMemo(() => hover && Math.random() > 0.5 ? 8 : 4, [hover]);
+    const transitions = useMemo(() => {
+        return [
+            `--opacity 0.7s ease-in-out`,
+            `--opacityMain 0.7s ease-in-out`,
+            `width 0.7s ease-in-out`,
+            `height 0.7s ease-in-out`,
+        ]
+    }, []);
+    if (index === 0) console.log("reRendering", animation);
+    return (
+        <Box key={star.id} pos={"absolute"} top={star.y} left={star.x}
+            width={`${size}px`} height={`${size}px`} bg={"white"} borderRadius={"50%"}
+            //opacity={star.opacity}
+            style={{
+                "--opacityMain": animation,
+                //"--opacity": star.opacity,
+                opacity: `max(var(--opacity, 0), var(--opacityMain, 0))`,
+                transition: transitions.join(", "),
+            } as React.CSSProperties}
+            animation={`starPulse 8s infinite forwards, starMovement 7s infinite`}
+            animationDelay={star.animationDelay}
+            filter={index % 2 === 0 ? "blur(1px)" : "blur(3px)"}
+        />
     )
 }
