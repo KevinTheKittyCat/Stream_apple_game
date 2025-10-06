@@ -1,7 +1,7 @@
 import { findClosestReachableObjective } from '@/components/Player/getNewTarget';
-import { create } from 'zustand'
-import { useObjectivesStore, type Objective } from './Objectives';
 import { type Sprite as PixiSprite } from 'pixi.js';
+import { create } from 'zustand';
+import { useObjectivesStore, type Objective } from './Objectives';
 
 
 type TargettingAutoMove = {

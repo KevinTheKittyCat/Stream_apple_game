@@ -1,6 +1,5 @@
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
-import { LuDollarSign } from "react-icons/lu";
 import { RiCopperCoinLine } from "react-icons/ri";
 
 

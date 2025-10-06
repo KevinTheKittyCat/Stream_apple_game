@@ -1,20 +1,16 @@
 import {
     Assets,
-    Texture,
     Sprite as PixiSprite,
+    Texture,
 } from 'pixi.js';
 
-import {
-    useEffect,
-    useState,
-    forwardRef,
-    use,
-    useCallback,
-    useRef,
-    useImperativeHandle,
-    useMemo,
-} from 'react';
 import type { PixiReactElementProps } from '@pixi/react';
+import {
+    forwardRef,
+    useEffect,
+    useMemo,
+    useState
+} from 'react';
 
 type Props = {
     texture?: string | Texture;

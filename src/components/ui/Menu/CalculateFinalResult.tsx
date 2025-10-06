@@ -1,8 +1,8 @@
+import type { ScoreType } from "@/stores/GameState";
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { RiCopperCoinLine } from "react-icons/ri";
-import type { ScoreType } from "@/stores/GameState";
 
 
 
@@ -22,6 +22,7 @@ export default function CalculateFinalResult() {
     }, [lastScore, currency]);
 
     const scorers = useMemo(() => {
+        // @ts-ignore
         return Object.entries(score).filter(([key, v]) => v !== 0 && key !== "total").sort((a, b) => b[1].value - a[1].value);
     }, [score]);
 

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
-import { scale } from "framer-motion";
 
 
 const treeTops = [
@@ -15,7 +14,7 @@ const treeTrunks = [
     "/assets/tree/trunk/trunk_object_05.png",
 ];
 
-export default function TreeSprite({ x, y, scale = 1 }) {
+export default function TreeSprite({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
     const { top, trunk } = useMemo(() => {
         const top = treeTops[Math.floor(Math.random() * treeTops.length)];
         const trunk = treeTrunks[Math.floor(Math.random() * treeTrunks.length)];

@@ -1,4 +1,4 @@
-import { eventEmitter } from "@/utils/Eventemitter";
+import { eventEmitter, type EventEmitterData } from "@/utils/Eventemitter";
 import { useCallback, useEffect, useRef } from "react";
 
 export function useEventEmitter(eventName: string, callback: Function) {
@@ -9,7 +9,7 @@ export function useEventEmitter(eventName: string, callback: Function) {
         callbackRef.current = callback;
     }, [callback]);
 
-    const onTwitchEvent = useCallback((data) => {
+    const onTwitchEvent = useCallback((data: EventEmitterData) => {
         callbackRef.current(data);
     }, []); // No dependencies - this won't change
 

@@ -1,7 +1,7 @@
-import { outer, inner } from "./Talent";
 import AdaptableGraphic from "@/components/Canvas/AdaptableGraphic";
 import Text from "@/components/Canvas/Text";
 import type { TalentType } from "./Settings/all";
+import { inner, outer } from "./Talent";
 
 type TalentHintTypes = {
     talent: TalentType;

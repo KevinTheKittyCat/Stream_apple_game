@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect } from "react";
 import { useExtend } from "@pixi/react";
 import { Container } from "pixi.js";
+import { useEffect, useRef, useState } from "react";
 import MyRope from "./Rope";
 
 export default function RopeDemo() {
@@ -51,7 +51,6 @@ export default function RopeDemo() {
             height={window.innerHeight}
         >
             <MyRope
-                ref={ropeRef}
                 segments={15}
                 gravity={1200}
                 stiffness={0.8}

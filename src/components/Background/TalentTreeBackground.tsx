@@ -1,11 +1,9 @@
+import { useWindowStore } from "@/stores/WindowState";
+import { BlurFilter } from "pixi.js";
 import { useMemo } from "react";
 import { Layer } from "../Canvas/Layer";
-import Star from "./TalentTree/Star";
-import { useWindowStore } from "@/stores/WindowState";
-import * as PIXI from 'pixi.js';
-import { BlurFilter, NoiseFilter } from "pixi.js";
 import Galaxy from "./TalentTree/Galaxy";
-import Test from "../Canvas/Shaders/Test";
+import Star from "./TalentTree/Star";
 
 
 

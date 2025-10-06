@@ -9,7 +9,7 @@ export default function AppleSpawner() {
     const { createApple, setApples, apples } = useObjectivesStore();
     const { talents } = useTalentTreeStore();
     const { state } = useGameStore();
-    const [increaseInterval, setIncreaseInterval] = useState(0);
+    const [increaseInterval] = useState(0);
     //const spawnRate = 200
 
     useEffect(() => {

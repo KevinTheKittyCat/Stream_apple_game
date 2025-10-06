@@ -1,12 +1,11 @@
 import { useGameStore } from "@/stores/GameState";
-import { Flex, Button } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useCallback } from "react";
-import { LuSettings } from "react-icons/lu";
 import { IoCloseOutline } from "react-icons/io5";
-import "./styles/pause-menu.css"
-import { eventEmitter } from "@/utils/Eventemitter";
-import TalentsButton from "./TalentsButton";
+import { LuSettings } from "react-icons/lu";
 import Settings from "./Settings/Settings";
+import "./styles/pause-menu.css";
+import TalentsButton from "./TalentsButton";
 
 export default function PauseMenu() {
 

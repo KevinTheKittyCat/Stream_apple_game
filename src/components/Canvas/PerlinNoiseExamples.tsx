@@ -1,12 +1,12 @@
-import React from 'react';
-import PerlinNoiseTexture, { 
-    usePerlinNoiseTexture, 
-    generatePerlinNoiseTexture 
+import PerlinNoiseTexture, {
+    generatePerlinNoiseTexture,
+    usePerlinNoiseTexture
 } from '@/components/Canvas/PerlinNoiseTexture';
+import { Sprite } from '@/components/Canvas/Sprite';
 import { useWindowStore } from '@/stores/WindowState';
 import { extend } from '@pixi/react';
 import { Container, Sprite as PixiSprite, Texture } from 'pixi.js';
-import { Sprite } from '@/components/Canvas/Sprite';
+import React from 'react';
 
 extend({
     Container,

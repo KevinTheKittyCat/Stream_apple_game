@@ -1,7 +1,7 @@
 
 
 
-
+/*
 
 export const talentData = [
     {
@@ -106,3 +106,4 @@ export const createTalentTree = (techs) => {
 };
 
 
+*/

@@ -1,18 +1,18 @@
-import {
-    useEffect,
-    useRef,
-    useCallback,
-    useMemo,
-} from 'react';
-import { useTick } from '@pixi/react';
-import { type Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js'
-import { Sprite } from '../Canvas/Sprite';
-import { checkHit } from '../Player/HitDetection';
 import { useGameStore } from '@/stores/GameState';
-import { useObjectivesStore, type Objective} from '@/stores/Objectives';
+import { useObjectivesStore, type Objective } from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useWindowStore } from '@/stores/WindowState';
 import { useTalentTreeStore } from '@/stores/talentTreeState';
+import { useTick } from '@pixi/react';
+import { UPDATE_PRIORITY, type Sprite as PixiSprite } from 'pixi.js';
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
+import { Sprite } from '../Canvas/Sprite';
+import { checkHit } from '../Player/HitDetection';
 import { getTalentEffect } from '../UtilFunctions/talents';
 
 

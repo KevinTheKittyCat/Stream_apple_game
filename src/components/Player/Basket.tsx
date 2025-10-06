@@ -1,7 +1,7 @@
+import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
-import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { getTalentEffect } from "../UtilFunctions/talents";
 
 export default function Basket() {

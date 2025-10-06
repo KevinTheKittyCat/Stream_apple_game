@@ -13,8 +13,8 @@ export default function TalentHint() {
         <Flex direction={"column"} align={"center"} gap={1} p={4}
             style={{
                 position: 'absolute',
-                top: hoveringTalent.y,
-                left: hoveringTalent.x,
+                top: hoveringTalent?.y || hoveringTalent?.position?.y,
+                left: hoveringTalent?.x || hoveringTalent?.position?.x,
                 backgroundColor: "#6c507686",
                 borderRadius: '8px',
                 pointerEvents: 'none',

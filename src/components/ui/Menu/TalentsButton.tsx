@@ -1,27 +1,18 @@
 import { useGameStore } from "@/stores/GameState";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
-import { useWindowStore } from "@/stores/WindowState";
 import { eventEmitter } from "@/utils/Eventemitter";
 import { AspectRatio, Box, Button, Flex, Icon } from "@chakra-ui/react";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { RiCopperCoinLine } from "react-icons/ri";
 import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
 
 
 
 
-type StarType = {
-    x: number;
-    y: number;
-    id: string,
-    opacity: number,
-    animationDelay: string
-};
 
 export default function TalentsButton() {
     const { talents } = useTalentTreeStore();
     const { currency } = useGameStore();
-    const { width, height } = useWindowStore();
     const ref = useRef<HTMLButtonElement>(null);
 
     const goToStore = useCallback(() => {

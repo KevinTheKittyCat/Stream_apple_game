@@ -14,12 +14,14 @@ export const setStorageItem = (storageId: string, item: any) => {
  * Example: 
  * setItemRemoveRefStringify("talents", [{ ref: 1, name: "Talent 1" }, { ref: 2, name: "Talent 2" }]);
  */
-export const setItemRemoveRefStringify = (storageId, talents) => {
+export const setItemRemoveRefStringify = (storageId: string, talents: Array<{ ref: number, name: string }>) => {
     localStorage.setItem(storageId, JSON.stringify(talents.map(({ ref, ...rest }) => rest)));
 };
 
 
 export const getStorageItem = (storageId: string) => {
-    const talents = JSON.parse(localStorage.getItem(storageId)) || undefined;
+    if (!localStorage.getItem(storageId)) return undefined;
+    const item = localStorage.getItem(storageId) as string;
+    const talents = JSON.parse(item);
     return talents;
 };

@@ -1,7 +1,6 @@
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { IoTimer } from "react-icons/io5";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
 
 export default function Timer() {

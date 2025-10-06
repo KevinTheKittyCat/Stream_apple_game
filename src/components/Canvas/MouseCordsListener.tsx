@@ -1,9 +1,9 @@
+import { useCanvasStore, type MouseCoords } from "@/stores/CanvasState";
 import { useApplication } from "@pixi/react";
-import { useCallback, useEffect, useRef } from "react";
 import {
     FederatedPointerEvent,
 } from 'pixi.js';
-import { useCanvasStore, type MouseCoords } from "@/stores/CanvasState";
+import { useCallback, useEffect, useRef } from "react";
 
 
 export default function MouseCordsListener() {

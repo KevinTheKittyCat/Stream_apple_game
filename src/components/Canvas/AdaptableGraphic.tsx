@@ -1,6 +1,6 @@
 import { useApplication } from "@pixi/react";
-import { useMemo, useRef, useEffect, useState } from "react";
-import { Graphics } from 'pixi.js';
+import { Graphics, type ContainerChild } from 'pixi.js';
+import { useEffect, useMemo, useRef, useState } from "react";
 
 
 type AdaptableGraphicProps = {
@@ -16,7 +16,7 @@ type AdaptableGraphicProps = {
     x?: number;
     y?: number;
     anchor?: { x: number; y: number };
-} & Omit<React.ComponentProps<typeof Graphics>, 'children'>;
+} & Omit<Partial<ContainerChild>, 'children'>;
 
 
 export default function AdaptableGraphic({

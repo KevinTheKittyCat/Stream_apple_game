@@ -4,7 +4,7 @@
 
 
 
-export const handleIfRef = (item: any) => {
+export const handleIfRef = (item: React.RefObject<any> | any) => {
     if (item?.current) {
         const newCurrent = item.current;
         return newCurrent;
@@ -12,7 +12,7 @@ export const handleIfRef = (item: any) => {
     return item;
 }
 
-export const handlePositionIfRef = (item: any) => {
+export const handlePositionIfRef = (item: React.RefObject<any> | any) => {
     const resolvedItem = handleIfRef(item);
     return  Object.assign({}, { x: resolvedItem.x, y: resolvedItem.y });
 }

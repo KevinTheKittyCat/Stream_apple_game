@@ -1,10 +1,10 @@
-import { useApplication } from "@pixi/react";
-import { Player } from "../../Player/Player";
 import { Layer } from "@/components/Canvas/Layer";
 import { Apple } from "@/components/Objective/Apple";
 import AppleSpawner from "@/components/Objective/AppleSpawner";
-import BackgroundLayer from "./BackgroundLayer";
 import { useWindowStore } from "@/stores/WindowState";
+import { useApplication } from "@pixi/react";
+import { Player } from "../../Player/Player";
+import BackgroundLayer from "./BackgroundLayer";
 
 export default function GameLayer({visible = true}: {visible?: boolean}) {
   const { isInitialised } = useApplication();
@@ -23,7 +23,7 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
       >
         <Player />
         {apples.map(apple => (
-          <Apple key={apple.id} id={apple.id} {...apple} />
+          <Apple key={apple.id} {...apple} />
         ))}
       </Layer>
     </>

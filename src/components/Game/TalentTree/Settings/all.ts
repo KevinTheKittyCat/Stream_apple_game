@@ -1,5 +1,6 @@
-import { apple_talents } from "./apple-talents"
-import { basket_talents } from "./basket"
+import { Sprite as PixiSprite } from "pixi.js";
+import { apple_talents } from "./apple-talents";
+import { basket_talents } from "./basket";
 import { player_talents } from "./player";
 import { time_talents } from "./time";
 
@@ -29,6 +30,7 @@ export type TalentType = {
     image: string;
     cost: number,
     costMultiplier: number,
+    ref?: React.RefObject<PixiSprite | null>;
 };
 
 export type TalentDict = { [key: string]: TalentType };
@@ -43,4 +45,5 @@ const allTalents = {
 
 export {
     allTalents
-} 
+};
+

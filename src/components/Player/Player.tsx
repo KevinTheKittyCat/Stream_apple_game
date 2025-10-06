@@ -1,23 +1,22 @@
+import { useCanvasStore } from '@/stores/CanvasState';
+import { useGameStore } from '@/stores/GameState';
+import { useObjectivesStore } from '@/stores/Objectives';
+import { usePlayerStore } from '@/stores/PlayerStore';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
+import { useWindowStore } from '@/stores/WindowState';
+import { useApplication } from '@pixi/react';
+import type { Sprite as PixiSprite } from 'pixi.js';
 import {
     useCallback,
     useEffect,
     useMemo,
     useRef,
 } from 'react';
-import { useApplication } from '@pixi/react';
-import { Sprite } from '../Canvas/Sprite';
 import { Group } from '../Canvas/Group';
-import Tophat from './Tophat';
-import { usePlayerStore } from '@/stores/PlayerStore';
-import { useObjectivesStore } from '@/stores/Objectives';
-import useAutoMove from './useAutoMove';
-import Basket from './Basket';
-import { useWindowStore } from '@/stores/WindowState';
-import { useGameStore } from '@/stores/GameState';
-import { useCanvasStore } from '@/stores/CanvasState';
-import type { Sprite as PixiSprite } from 'pixi.js';
-import { useTalentTreeStore } from '@/stores/talentTreeState';
+import { Sprite } from '../Canvas/Sprite';
 import { getTalentEffect } from '../UtilFunctions/talents';
+import Basket from './Basket';
+import useAutoMove from './useAutoMove';
 
 export function Player() {
     const { scale } = useWindowStore();

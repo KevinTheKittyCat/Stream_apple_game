@@ -1,8 +1,8 @@
+import { useWindowStore } from "@/stores/WindowState";
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
 import { useParallax } from "./useParallax";
-import { useWindowStore } from "@/stores/WindowState";
 
 export default function GameBackground() {
     const { width, height } = useWindowStore();
@@ -20,7 +20,7 @@ export default function GameBackground() {
         min: -width * 0.1,
         max: 0,
         offset: -width * 0.02,
-        direction: "horizontal",
+        //direction: "horizontal",
     });
 
     const { ref: forestRef } = useParallax({
@@ -28,7 +28,7 @@ export default function GameBackground() {
         min: -width * 0.07,
         max: 0,
         offset: -width * 0.04,
-        direction: "horizontal",
+        //direction: "horizontal",
     });
 
     const { ref: grassRef } = useParallax({
@@ -36,7 +36,7 @@ export default function GameBackground() {
         min: -width * 0.05,
         max: 0,
         offset: -width * 0.02,
-        direction: "horizontal",
+        //direction: "horizontal",
     });
 
 

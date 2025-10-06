@@ -1,6 +1,5 @@
-import useDelta from "@/hooks/useDelta";
 import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY, Sprite as PixiSprite } from "pixi.js";
+import { Sprite as PixiSprite, UPDATE_PRIORITY } from "pixi.js";
 import { useEffect, useRef } from "react";
 
 type UseAutoMoveProps = {
@@ -21,8 +20,8 @@ export default function useAutoMove({
     easingFactor = 0.1,
 }: UseAutoMoveProps) {
     const contextRef = useRef<PixiSprite | null>(null)
-    const velocityXRef = useRef(0); // Current velocity (can be negative or positive)
-    const velocityYRef = useRef(0); // Current velocity for Y movement (if needed)
+    const velocityXRef = useRef<number>(0); // Current velocity (can be negative or positive)
+    const velocityYRef = useRef<number>(0); // Current velocity for Y movement (if needed)
     const xRef = useRef(targetPos.x);
     const yRef = useRef(targetPos.y);
 
@@ -47,7 +46,7 @@ export default function useAutoMove({
             if (!this.current) return;
             const delta = deltaTime / 60;
 
-            if (isNumber(targetX)) this.current.position.x += calculateMovement({
+            if (targetX && isNumber(targetX)) this.current.position.x += calculateMovement({
                 current: this.current.position.x,
                 target: targetX,
                 maxVelocity: maxVelocity,
@@ -56,7 +55,7 @@ export default function useAutoMove({
                 normalizationFactor: normalizationFactor,
                 easingFactor: easingFactor
             });
-            if (isNumber(targetY)) this.current.position.y += calculateMovement({
+            if (targetY && isNumber(targetY)) this.current.position.y += calculateMovement({
                 current: this.current.position.y,
                 target: targetY,
                 maxVelocity: maxVelocity,
@@ -82,8 +81,18 @@ export default function useAutoMove({
 
 
 
-const isNumber = (value: any) => {
+const isNumber = (value: unknown) => {
     return typeof value === "number" && !isNaN(value) && typeof value !== "undefined";
+}
+
+type CalculateMovementProps = {
+    current: number;
+    target: number;
+    maxVelocity?: number;
+    delta: number;
+    velocityRef: React.RefObject<number>;
+    normalizationFactor?: number;
+    easingFactor?: number;
 }
 
 const calculateMovement = ({
@@ -94,7 +103,7 @@ const calculateMovement = ({
     velocityRef,
     normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
     easingFactor = 0.1, // Easing factor for smoother movement
-}) => {
+}: CalculateMovementProps) => {
     const distance = target - current;
     //let velocity = 0;
 

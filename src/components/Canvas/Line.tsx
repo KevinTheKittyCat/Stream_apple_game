@@ -1,11 +1,7 @@
-import { type PixiReactElementProps } from '@pixi/react';
 import type { Graphics } from 'pixi.js';
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
-type Props = {
-    children: React.ReactNode;
-} & Omit<PixiReactElementProps, 'children'>
 
 const checkIfStraightLine = (from: { x: number; y: number }, to: { x: number; y: number }) => {
     return from.x === to.x || from.y === to.y;

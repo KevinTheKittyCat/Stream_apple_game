@@ -1,12 +1,12 @@
 import { checkPrerequisites } from '@/components/Game/TalentTree/NewTalentTree';
 import { allTalents, type TalentDict, type TalentType } from '@/components/Game/TalentTree/Settings/all';
-import { getStorageItem, setItemRemoveRefStringify } from '@/components/UtilFunctions/Storage/storageHelper';
+import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
 import { Container } from 'pixi.js';
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface TalentTreeState {
     talents: TalentType[];
-    hoveringTalent: { x: number; y: number } & TalentType | TalentType | null;
+    hoveringTalent: ({ x: number; y: number } & TalentType) | null;
 }
 
 interface TalentTreeActions {
@@ -14,7 +14,7 @@ interface TalentTreeActions {
     createTalent: (talent: TalentType) => void;
     updateTalent: (id: string, updatedFields: Partial<TalentType>) => void;
     setTalentRef: (id: string, ref: React.RefObject<Container> | null) => void;
-    setHoveringTalent: (talent: { x: number; y: number } & TalentType | null) => void;
+    setHoveringTalent: (talent: ({ x: number; y: number } & TalentType) | null) => void;
 }
 
 type TalentTreeStoreProps = TalentTreeState & TalentTreeActions;
@@ -27,7 +27,7 @@ const setStorageSafeTalents = (newTalents: TalentType[]) => {
         currentLevel: t.currentLevel,
         settled: t.settled,
     }));
-    setItemRemoveRefStringify("talents", storage);
+    setStorageItem("talents", storage);
     return storage;
 }
 
@@ -79,6 +79,7 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
         setStorageSafeTalents(newTalents);
         return { talents: newTalents };
     }),
+    // @ts-ignore
     setTalentRef: (id, ref) => set((state) => {
         //console.log(id, ref);
         return {
