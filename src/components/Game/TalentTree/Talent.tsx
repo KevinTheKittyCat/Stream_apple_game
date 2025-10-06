@@ -96,7 +96,7 @@ export function Talent(talent: TalentType) {
         callback(this: React.RefObject<PixiSprite | null>) {
             if (shouldSettle === 2) return;
             // @ts-ignore
-            const talentsWithRefs = talents.filter(t => t.ref) as TalentType[];
+            const talentsWithRefs = talents.filter(t => t?.ref?.current) as TalentType[];
             if (talentsWithRefs.length <= 1) return;
             // @ts-ignore
             const isHit = checkHitMultipleWithId(talentsWithRefs.filter(talent => talent.id !== id) as HitObjectWithId[], groupRef, false, false) as HitObjectWithId[] | false;
