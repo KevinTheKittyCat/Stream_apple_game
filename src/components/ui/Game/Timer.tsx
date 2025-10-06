@@ -1,10 +1,12 @@
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IoTimer } from "react-icons/io5";
+import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
 
 export default function Timer() {
     const { timer, updateTimer, startTime } = useGameStore()
+    const barRef = useRef<HTMLDivElement>(null);
     //const [timer, setTimer] = useState(5);
 
     const minusTimer = useCallback(() => {
@@ -25,15 +27,26 @@ export default function Timer() {
         return "red";
     }, [percentage]);
 
+    const bg = useMemo(() => {
+        if (percentage > 50) return "galaxyBlue";
+        if (percentage > 20) return "galaxyPurple";
+        return "tomato";
+    }, [percentage]);
+
     return (
         <Flex gap={2} align={"center"} justify={"center"} className="score" style={{ fontSize: "1rem" }} w={"100%"}>
             <img src="/assets/Clock.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />
             <Flex w={"100%"} bg={"gray.200"} borderRadius={"md"} overflow={"hidden"} alignItems={"center"}>
-                <Flex style={{
+                <Flex ref={barRef} style={{
                     width: `${percentage}%`, height: "8px",
                     background: backgroundColor,
                     transition: `width 1s linear, background ${backgroundColor === "limegreen" ? 0 : 0.5}s linear`,
-                }} borderRadius={"md"}  />
+                }} borderRadius={"md"}>
+                    <HTMLGalaxyBackground container={barRef} bg={bg}
+                        borderRadius={"md"}
+                        transition={`background 1s linear`}
+                    />
+                </Flex>
             </Flex>
         </Flex>
     );
