@@ -1,5 +1,7 @@
 
+import { basePath } from "@/config/constants";
 import type { TalentDict } from "./all";
+
 export const basket_talents: TalentDict = {
     basket_size_one: {
         id: "basket_size_one",
@@ -12,7 +14,7 @@ export const basket_talents: TalentDict = {
         ],
         prerequisites: [{ id: "apple_spawn_rate", level: 2 }],
         settled: 0,
-        image: "/assets/fruits/Apple.png",
+        image: `${basePath}/assets/fruits/Apple.png`,
         cost: 20,
         costMultiplier: 1.5,
     }

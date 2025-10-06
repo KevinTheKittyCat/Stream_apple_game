@@ -1,13 +1,19 @@
+import { basePath } from "@/config/constants";
 import { useWindowStore } from "@/stores/WindowState";
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
 import { Sprite } from "../Canvas/Sprite";
 import { useParallax } from "./useParallax";
 
+const assets = {
+    background: `${basePath}/assets/background/bg.png`,
+    clouds: `${basePath}/assets/background/bg_clouds.png`,
+    parallaxFar: `${basePath}/assets/background/bg_parallaxFar.png`,
+    parallaxNear: `${basePath}/assets/background/bg_parallaxNear.png`,
+}
+
 export default function GameBackground() {
     const { width, height } = useWindowStore();
- 
-
     const backgroundSettings = useMemo(() => {
         return {
             width: width * 1.1,
@@ -43,10 +49,10 @@ export default function GameBackground() {
     return (
         <>
             <Group>
-                <Sprite texture="/assets/background/bg.png" {...backgroundSettings} />
-                <Sprite id={"clouds"} ref={cloudsRef} texture="/assets/background/bg_clouds.png" {...backgroundSettings} />
-                <Sprite ref={grassRef} texture="/assets/background/bg_parallaxFar.png" {...backgroundSettings} />
-                <Sprite ref={forestRef} texture="/assets/background/bg_parallaxNear.png" {...backgroundSettings} />
+                <Sprite texture={assets.background} {...backgroundSettings} />
+                <Sprite id={"clouds"} ref={cloudsRef} texture={assets.clouds} {...backgroundSettings} />
+                <Sprite ref={grassRef} texture={assets.parallaxFar} {...backgroundSettings} />
+                <Sprite ref={forestRef} texture={assets.parallaxNear} {...backgroundSettings} />
             </Group>
         </>
     )

@@ -1,3 +1,4 @@
+import { basePath } from '@/config/constants';
 import { useEventEmitter } from '@/hooks/useEventEmitter';
 import { eventEmitter, type ChangeRouteEvent, type TransitionEvent } from '@/utils/Eventemitter';
 import { Application, extend } from '@pixi/react';
@@ -54,8 +55,8 @@ export default function CanvasApp() {
         <div id="game-container" ref={gameContainerRef}>
             <Application eventMode="static" resizeTo={window} antialias={true}>
                 <MouseCordsListener />
-                <GameLayer visible={currentRoute === '/'} />
-                <TalentTree visible={currentRoute === '/talentTree'} />
+                <GameLayer visible={currentRoute === `${basePath}/`} />
+                <TalentTree visible={currentRoute === `${basePath}/talentTree`} />
                 <TransitionLayer />
             </Application>
         </div>

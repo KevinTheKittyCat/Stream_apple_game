@@ -1,3 +1,4 @@
+import { basePath } from "@/config/constants";
 import { useCanvasStore } from '@/stores/CanvasState';
 import { useGameStore } from '@/stores/GameState';
 import { useObjectivesStore } from '@/stores/Objectives';
@@ -114,13 +115,13 @@ export function Player() {
             <Sprite
                 scale={scaleAndAnchor.scale}
                 anchor={scaleAndAnchor.anchor}
-                texture={"/assets/basket/hand/Under_basket.png"}
+                texture={`${basePath}/assets/basket/hand/Under_basket.png`}
             />
             <Basket />
             <Sprite
                 scale={scaleAndAnchor.scale}
                 anchor={scaleAndAnchor.anchor}
-                texture={"/assets/basket/hand/Over_basket.png"}
+                texture={`${basePath}/assets/basket/hand/Over_basket.png`}
             />
         </Group>
     );

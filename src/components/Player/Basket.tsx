@@ -1,3 +1,4 @@
+import { basePath } from "@/config/constants";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useMemo } from "react";
 import { Group } from "../Canvas/Group";
@@ -14,7 +15,7 @@ export default function Basket() {
         return Array.from({ length: centerBasketAmount }, (_, i) => (
             <Sprite
                 key={i}
-                texture={`/assets/basket/BasketMiddle.png`}
+                texture={`${basePath}/assets/basket/BasketMiddle.png`}
                 x={i * 25 + widthOfBasketLeft}
             />
         ));
@@ -27,12 +28,12 @@ export default function Basket() {
             scale={scale}
         >
             <Sprite
-                texture={"/assets/basket/BasketLeft.png"}
+                texture={`${basePath}/assets/basket/BasketLeft.png`}
                 x={0}
             />
             {centerBasketArray}
             <Sprite
-                texture={"/assets/basket/BasketRight.png"}
+                texture={`${basePath}/assets/basket/BasketRight.png`}
                 x={(centerBasketAmount * 25) + widthOfBasketLeft -2}
             />
         </Group>

@@ -14,7 +14,7 @@
     "chakra:watch": "chokidar \"src/components/theme/**/*.ts\" \"!src/components/theme/**/*.d.ts\" -c \"npm run chakra:types\" > NUL 2>&1",
     "test:watch": "chokidar \"src/components/theme/**/*.ts\" -c \"npm run test:watch\"",
     "test:watch-chok": "echo testing",
-    "predeploy": "npm run build",
+    "predeploy": "vite build && tsc",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

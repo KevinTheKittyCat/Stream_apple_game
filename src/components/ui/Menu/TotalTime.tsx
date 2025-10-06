@@ -1,3 +1,4 @@
+import { basePath } from "@/config/constants";
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
 
@@ -8,7 +9,7 @@ export default function TotalTime() {
 
     return (
         <Flex gap={2} align={"center"} className="score" style={{ fontSize: "1rem" }}>
-            <img src="/assets/Clock.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />
+            <img src={`${basePath}/assets/Clock.png`} alt="Score Icon" style={{ width: "1em", height: "1em" }} />
             <h1>{String(totalTime.toFixed(2)).padStart(5, "0")}</h1>
         </Flex>
     );

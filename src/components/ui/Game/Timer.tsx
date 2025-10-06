@@ -1,8 +1,8 @@
+import { basePath } from "@/config/constants";
 import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
-
 export default function Timer() {
     const { timer, updateTimer, startTime } = useGameStore()
     const barRef = useRef<HTMLDivElement>(null);
@@ -34,7 +34,7 @@ export default function Timer() {
 
     return (
         <Flex gap={2} align={"center"} justify={"center"} className="score" style={{ fontSize: "1rem" }} w={"100%"}>
-            <img src="/assets/Clock.png" alt="Score Icon" style={{ width: "1em", height: "1em" }} />
+            <img src={`${basePath}/assets/Clock.png`} alt="Score Icon" style={{ width: "1em", height: "1em" }} />
             <Flex w={"100%"} bg={"gray.200"} borderRadius={"md"} overflow={"hidden"} alignItems={"center"}>
                 <Flex ref={barRef} style={{
                     width: `${percentage}%`, height: "8px",
