@@ -1,10 +1,10 @@
-import { Flex, Button, Image, type ButtonProps, useBreakpoint, type FlexProps } from "@chakra-ui/react"
+import { Button, Flex, Image, type ButtonProps, type FlexProps } from "@chakra-ui/react"
 import { useRouter } from "@tanstack/react-router"
 import { AnimatePresence, motion } from "framer-motion"
 
-import Logo from "../../assets/Logo.png"
-import { useState } from "react"
 import { useBreakpointValue } from "@chakra-ui/react"
+import { useState } from "react"
+import Logo from "../../assets/Logo.png"
 
 
 

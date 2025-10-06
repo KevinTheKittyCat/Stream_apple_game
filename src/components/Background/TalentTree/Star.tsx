@@ -1,8 +1,7 @@
 import Graphic from "@/components/Canvas/Graphic";
-import { useCallback, useMemo, useRef } from "react";
-import { BlurFilter, UPDATE_PRIORITY } from 'pixi.js';
 import { useTick } from "@pixi/react";
-
+import { BlurFilter, Graphics as Pixigraphic, Sprite as PixiSprite, UPDATE_PRIORITY } from 'pixi.js';
+import { useCallback, useMemo, useRef } from "react";
 
 type StarProps = {
     position: { x: number; y: number };
@@ -14,7 +13,7 @@ type StarProps = {
 export default function Star({ position, size, animate = true, ...props }: StarProps) {
     const alphaRef = useRef(Math.random() * 0.6); // Initial alpha between 0 and 0.6
     const increasingRef = useRef(true);
-    const startRef = useRef<PIXI.Graphics | null>(null);
+    const startRef = useRef<Pixigraphic | null>(null);
 
     const filter = useMemo(() => new BlurFilter({
         strength: 8,      // Overall blur strength
@@ -22,7 +21,7 @@ export default function Star({ position, size, animate = true, ...props }: StarP
         kernelSize: 5     // Size of blur kernel matrix
     }), []);
 
-    const drawStar = useCallback((g: PIXI.Graphics, deltaTime: number) => {
+    const drawStar = useCallback((g: Pixigraphic, deltaTime: number) => {
         g.clear();
         const cx = 0;
         const cy = 0;

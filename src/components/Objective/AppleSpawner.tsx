@@ -1,8 +1,8 @@
 
-import { useEffect, useState } from 'react';
+import { useGameStore } from '@/stores/GameState';
 import { useObjectivesStore } from '@/stores/Objectives';
 import { useTalentTreeStore } from '@/stores/talentTreeState';
-import { useGameStore } from '@/stores/GameState';
+import { useEffect, useState } from 'react';
 import { getTalentEffect } from '../UtilFunctions/talents';
 
 export default function AppleSpawner() {
@@ -28,5 +28,5 @@ export default function AppleSpawner() {
         return () => clearInterval(interval);
     }, [state]);*/
 
-    return { apples, setApples }; // This component does not render anything
+    return { apples, setApples };
 }
