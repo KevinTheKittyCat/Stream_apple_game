@@ -12,10 +12,6 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
-  base: '/Stream_apple_game/',
-  build: {
-    outDir: 'docs',
-  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
