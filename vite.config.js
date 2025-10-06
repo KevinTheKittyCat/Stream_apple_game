@@ -12,6 +12,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
+  base: process.env.VITE_PUBLIC_BASE ?? undefined,
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
