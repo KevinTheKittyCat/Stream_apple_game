@@ -1,14 +1,15 @@
+import { basePath } from '@/config/constants';
+import { useEventEmitter } from '@/hooks/useEventEmitter';
+import { eventEmitter, type ChangeRouteEvent, type TransitionEvent } from '@/utils/Eventemitter';
 import { Application, extend } from '@pixi/react';
-import { Container, Graphics, Sprite, Text, HTMLText } from 'pixi.js';
 import { useLocation, useNavigate } from '@tanstack/react-router';
+import { Viewport } from 'pixi-viewport';
+import { Container, Graphics, HTMLText, Sprite, Text } from 'pixi.js';
+import { useRef } from 'react';
 import GameLayer from './Layers/GameLayer';
 import TalentTree from './Layers/TalentTree';
-import { useRef } from 'react';
-import MouseCordsListener from './MouseCordsListener';
 import TransitionLayer from './Layers/TransitionLayer';
-import { eventEmitter } from '@/utils/Eventemitter';
-import { useEventEmitter } from '@/hooks/useEventEmitter';
-import { Viewport } from 'pixi-viewport';
+import MouseCordsListener from './MouseCordsListener';
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
@@ -18,12 +19,9 @@ extend({
     Text,
     HTMLText,
     Viewport,
+    pixiViewport: Viewport
 });
 
-type ChangeRouteEvent = {
-    route: string;
-    data?: Record<string, any>;
-};
 
 
 export default function CanvasApp() {
@@ -36,8 +34,8 @@ export default function CanvasApp() {
         eventEmitter.emit('transition', { dir: 'in' });
 
         const waitForReady = new Promise<void>((resolve, reject) => {
-            eventEmitter.on('transition', (data) => {
-                if (data.ready) resolve();
+            eventEmitter.on('transition', (data: TransitionEvent) => {
+                if (data?.ready) resolve();
             });
             setTimeout(() => {
                 reject(new Error('Transition timed out'));
@@ -57,8 +55,8 @@ export default function CanvasApp() {
         <div id="game-container" ref={gameContainerRef}>
             <Application eventMode="static" resizeTo={window} antialias={true}>
                 <MouseCordsListener />
-                <GameLayer visible={currentRoute === '/'} />
-                <TalentTree visible={currentRoute === '/talentTree'} />
+                <GameLayer visible={currentRoute === `${basePath}/`} />
+                <TalentTree visible={currentRoute === `${basePath}/talentTree`} />
                 <TransitionLayer />
             </Application>
         </div>

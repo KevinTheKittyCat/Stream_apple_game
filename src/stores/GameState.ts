@@ -1,7 +1,7 @@
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
-import { create } from 'zustand'
-import { useObjectivesStore, type ObjectiveType } from './Objectives';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
+import { create } from 'zustand';
+import { useObjectivesStore, type ObjectiveType } from './Objectives';
 
 type ScoreItem = {
     value: number;
@@ -45,11 +45,6 @@ interface GameActions {
     resetCurrency: () => void;
     resetTimer: () => void;
     updateTimer: (number: number) => void;
-}
-
-interface Modifiers {
-    // NOT DEVELOPED YET
-    // CURRENTLY DOUBLED WITH TALENTTREESTATE
 }
 
 type GameStoreProps = GameState & GameActions;

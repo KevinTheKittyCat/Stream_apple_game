@@ -1,11 +1,10 @@
 import { type PixiReactElementProps } from '@pixi/react';
-import { Container } from 'pixi.js';
 
 import React from 'react';
 
 type Props = {
     children: React.ReactNode;
-} & Omit<PixiReactElementProps<typeof Container>, 'children'>
+} & Omit<PixiReactElementProps, 'children'>
 
 export const Group = ({ children, ...props }: Props) => {
 

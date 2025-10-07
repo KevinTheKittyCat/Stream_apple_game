@@ -1,8 +1,7 @@
 import { useWindowStore } from '@/stores/WindowState';
-import { useApplication, type PixiReactElementProps } from '@pixi/react';
-import { Rectangle, Graphics, FillGradient, type GradientOptions } from 'pixi.js';
-import { useMemo } from 'react';
-import React from 'react';
+import { type PixiReactElementProps } from '@pixi/react';
+import { FillGradient, Graphics, Rectangle, type GradientOptions } from 'pixi.js';
+import React, { useMemo } from 'react';
 
 type Props = {
     children: React.ReactNode;

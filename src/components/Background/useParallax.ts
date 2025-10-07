@@ -1,7 +1,6 @@
 import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY, Sprite as PixiSprite, Sprite } from "pixi.js";
+import { Sprite as PixiSprite, Sprite, UPDATE_PRIORITY } from "pixi.js";
 import { useEffect, useRef } from "react";
-import { useApplication } from "@pixi/react";
 
 
 
@@ -9,13 +8,13 @@ export const useParallax = ({
     speed = 0.01,
     min = -window.innerWidth * 0.1,
     max = window.innerWidth * 0.1,
-    direction = "horizontal", // "horizontal" or "vertical"
+    //direction = "horizontal", // "horizontal" or "vertical"
     offset = 0,
 }: {
     speed?: number;
     min?: number;
     max?: number;
-    direction?: "horizontal" | "vertical";
+    //direction?: "horizontal" | "vertical";
     offset?: number;
 }) => {
     const parallaxRef = useRef<Sprite | null>(null);

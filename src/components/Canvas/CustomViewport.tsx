@@ -1,11 +1,10 @@
-import { useRef, useEffect } from 'react';
-import { Application, extend, useApplication, useExtend } from '@pixi/react';
+// @ts-ignore
+import { useApplication, useExtend } from '@pixi/react';
 import { Viewport } from 'pixi-viewport';
 import * as PIXI from 'pixi.js';
+import { useEffect, useRef } from 'react';
 
-//extend({ Viewport, Sprite: PIXI.Sprite });
-
-export const CustomViewport = ({ children } : { children: React.ReactNode }) => {
+export const CustomViewport = ({ children }: { children: React.ReactNode }) => {
     const { app } = useApplication();
     useExtend({ Viewport, Sprite: PIXI.Sprite });
     const viewportRef = useRef<Viewport>(null);
@@ -23,6 +22,7 @@ export const CustomViewport = ({ children } : { children: React.ReactNode }) => 
     }, []);
 
     return (
+        // @ts-ignore
         <pixiViewport
             events={app.renderer.events}
             ticker={app.ticker}
@@ -31,6 +31,7 @@ export const CustomViewport = ({ children } : { children: React.ReactNode }) => 
             ref={viewportRef}
         >
             {children}
+            {/* @ts-ignore */}
         </pixiViewport>
     );
 };

@@ -1,4 +1,4 @@
-import { CloseButton, Dialog, Flex, SegmentGroup, Tabs } from "@chakra-ui/react"
+import { CloseButton, Dialog, Flex, Tabs } from "@chakra-ui/react";
 import GeneralSettings from "./General";
 import SoundSettings from "./Sound";
 

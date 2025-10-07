@@ -1,8 +1,7 @@
 import { useExtend, useTick } from "@pixi/react";
-import { Point, Container, Graphics, UPDATE_PRIORITY } from "pixi.js";
-import { useEffect, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
+import { Container, Graphics, Sprite as PixiSprite, Point, UPDATE_PRIORITY } from "pixi.js";
+import { useEffect, useRef } from "react";
 import { handlePositionIfRef } from "../UtilFunctions/RefHandling";
-import { useWindowStore } from "@/stores/WindowState";
 
 // Physics particle for rope simulation
 class RopeParticle {
@@ -121,12 +120,14 @@ type RopeProps = {
     gravity?: number;
     stiffness?: number;
     constraintIterations?: number;
-    from: { x: number; y: number };
-    to?: { x: number; y: number };
+    from?: { x: number; y: number } | React.RefObject<PixiSprite | null> | undefined;
+    to?: { x: number; y: number } | React.RefObject<PixiSprite | null> | undefined;
     pinFrom?: boolean;
     pinTo?: boolean;
+    fromOffset?: { x: number; y: number };
+    toOffset?: { x: number; y: number };
 };
-
+/*
 type RopeRef = {
     applyForceToStart: (forceX: number, forceY: number) => void;
     applyForceToEnd: (forceX: number, forceY: number) => void;
@@ -138,10 +139,9 @@ type RopeRef = {
     setStartPosition: (x: number, y: number) => void;
     setEndPosition: (x: number, y: number) => void;
     getParticlePosition: (index: number) => { x: number; y: number } | null;
-};
+};*/
 
 export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } }) {
-    const { scale } = useWindowStore();
     // Extend PIXI React with required components
     useExtend({ Container, Graphics });
 
@@ -212,7 +212,7 @@ export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } 
     );
 }
 
-export default forwardRef<RopeRef, RopeProps>(function MyRope({
+export default function MyRope({
     segments = 10,
     segmentLength = 50,
     gravity = 980, // pixels per second squared
@@ -224,7 +224,7 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
     toOffset,
     pinFrom = true,
     pinTo = false
-}, ref) {
+}: RopeProps) {
     const particles = useRef<RopeParticle[]>([]);
     const constraints = useRef<RopeConstraint[]>([]);
     const points = useRef<Point[]>([]);
@@ -352,4 +352,4 @@ export default forwardRef<RopeRef, RopeProps>(function MyRope({
     });
 
     return <RopeMesh points={points} />;
-});
+};

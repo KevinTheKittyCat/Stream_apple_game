@@ -1,6 +1,6 @@
-import { defaultConfig, defineConfig, createSystem } from "@chakra-ui/react";
-import { containerRecipe } from "./Common/container.recipe";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 import { buttonRecipe } from "./Common/button.recipe";
+import { containerRecipe } from "./Common/container.recipe";
 
 
 

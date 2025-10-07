@@ -1,6 +1,8 @@
 
 
+import { basePath } from "@/config/constants";
 import type { TalentDict } from "./all";
+
 export const time_talents: TalentDict = {
     increase_time_v1: {
         id: "increase_time_v1",
@@ -13,7 +15,7 @@ export const time_talents: TalentDict = {
         ],
         prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
         settled: 0,
-        image: "/assets/fruits/Apple.png",
+        image: `${basePath}/assets/fruits/Apple.png`,
         cost: 20,
         costMultiplier: 1.5,
     },

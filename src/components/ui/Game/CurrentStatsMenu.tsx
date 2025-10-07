@@ -1,4 +1,4 @@
-import { Container, Flex } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import Score from "./Score/Score";
 import Timer from "./Timer";
 

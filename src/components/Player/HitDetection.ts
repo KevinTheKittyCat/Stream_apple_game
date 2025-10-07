@@ -49,7 +49,7 @@ export function checkHitMultipleWithId(
     let hit = [];
     if (!target) return false;
     for (const object of objects) {
-        const hitResult = checkHit(object.ref.current, target, shouldReturnTarget);
+        const hitResult = checkHit(object.ref.current, target.current || target, shouldReturnTarget);
         if (!hitResult) continue;
 
         hit.push(object);

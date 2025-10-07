@@ -1,5 +1,6 @@
 import { RiCopperCoinLine } from "react-icons/ri";
 
+import { basePath } from "@/config/constants";
 import type { TalentDict } from "./all";
 
 export const apple_talents: TalentDict = {
@@ -14,7 +15,7 @@ export const apple_talents: TalentDict = {
         ],
         prerequisites: [],
         settled: 2,
-        image: "/assets/fruits/Apple.png",
+        image: `${basePath}/assets/fruits/Apple.png`,
         cost: 20,
         costMultiplier: 1.5,
     },
@@ -29,7 +30,7 @@ export const apple_talents: TalentDict = {
         ],
         prerequisites: [{ id: "upgrade_appleScale", level: 2 }],
         settled: 0,
-        image: "/assets/fruits/Orange.png",
+        image: `${basePath}/assets/fruits/Orange.png`,
         cost: 10,
         costMultiplier: 1.5,
     },
@@ -44,7 +45,7 @@ export const apple_talents: TalentDict = {
         ],
         prerequisites: [{ id: "upgrade_player_speed", level: 2 }],
         settled: 0,
-        image: "/assets/fruits/Banana.png",
+        image: `${basePath}/assets/fruits/Banana.png`,
         cost: 15,
         costMultiplier: 1.5,
     },
@@ -59,7 +60,7 @@ export const apple_talents: TalentDict = {
         ],
         prerequisites: [{ id: "upgrade_apple_value", level: 3 }],
         settled: 0,
-        image: "/assets/fruits/Apple.png",
+        image: `${basePath}/assets/fruits/Apple.png`,
         cost: 20,
         costMultiplier: 1.3,
     },
@@ -74,7 +75,7 @@ export const apple_talents: TalentDict = {
         ],
         prerequisites: [{ id: "good_apple_chance", level: 2 }],
         settled: 0,
-        image: "/assets/fruits/Apple.png",
+        image: `${basePath}/assets/fruits/Apple.png`,
         cost: 20,
         costMultiplier: 1.5,
     }

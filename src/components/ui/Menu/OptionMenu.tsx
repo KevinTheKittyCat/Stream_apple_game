@@ -1,11 +1,11 @@
 import { useGameStore } from "@/stores/GameState";
-import "./styles/option-menu.css"
-import TotalTime from "./TotalTime";
-import LastScore from "./LastScore";
 import { Button, Container, Flex } from "@chakra-ui/react";
 import CalculateFinalResult from "./CalculateFinalResult";
-import TalentsButton from "./TalentsButton";
+import LastScore from "./LastScore";
 import Settings from "./Settings/Settings";
+import "./styles/option-menu.css";
+import TalentsButton from "./TalentsButton";
+import TotalTime from "./TotalTime";
 
 export default function OptionMenu() {
     const { restartGame } = useGameStore();

@@ -11,7 +11,6 @@ export const findClosestReachableObjective = ({
     objectives,
     ref,
     refOffset = { x: 0, y: 0 },
-    objectiveOffset = { x: 0, y: 0 }
 }: findClosestProps) => {
     if (!ref || !ref.current) return null; // Ensure ref is valid
     const { x, y } = ref.current.position

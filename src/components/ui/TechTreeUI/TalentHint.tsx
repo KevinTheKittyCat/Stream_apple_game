@@ -1,3 +1,4 @@
+import { basePath } from "@/config/constants";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { Flex, Image } from "@chakra-ui/react";
 import { useMemo } from "react";
@@ -13,8 +14,8 @@ export default function TalentHint() {
         <Flex direction={"column"} align={"center"} gap={1} p={4}
             style={{
                 position: 'absolute',
-                top: hoveringTalent.y,
-                left: hoveringTalent.x,
+                top: hoveringTalent?.y || hoveringTalent?.position?.y,
+                left: hoveringTalent?.x || hoveringTalent?.position?.x,
                 backgroundColor: "#6c507686",
                 borderRadius: '8px',
                 pointerEvents: 'none',
@@ -50,7 +51,7 @@ export default function TalentHint() {
             <Flex width={"100%"} alignItems={"center"} justifyContent={"space-evenly"} gap={1} mt={1}>
                 {talent.levels > talent.currentLevel &&
                     <Flex alignItems={"center"} gap={1}>
-                        <Image h={"1em"} src={"/assets/fruits/Apple.png"} alt={talent.description} />
+                        <Image h={"1em"} src={`${basePath}/assets/fruits/Apple.png`} alt={talent.description} />
                         <p>{talent.cost}</p>
                     </Flex>
                 }

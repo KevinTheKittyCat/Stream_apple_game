@@ -1,7 +1,8 @@
 {
-  "name": "base-template",
+  "name": "stream_apple_game",
   "private": true,
   "type": "module",
+  "homepage": "https://KevinTheKittyCat.github.io/Stream_apple_game",
   "scripts": {
     "dev": "npm-run-all --parallel dev:app chakra:watch",
     "dev:app": "vite --port 3000",
@@ -9,10 +10,12 @@
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",
-    "chakra:types": "npx @chakra-ui/cli typegen ./src/components/theme/index.ts --outdir ./src/components/theme/types > NUL 2>&1",
+    "chakra:types": "npx @chakra-ui/cli typegen ./src/components/theme/index.ts",
     "chakra:watch": "chokidar \"src/components/theme/**/*.ts\" \"!src/components/theme/**/*.d.ts\" -c \"npm run chakra:types\" > NUL 2>&1",
     "test:watch": "chokidar \"src/components/theme/**/*.ts\" -c \"npm run test:watch\"",
-    "test:watch-chok": "echo testing"
+    "test:watch-chok": "echo testing",
+    "predeploy": "vite build && tsc",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@chakra-ui/cli": "^3.18.0",
@@ -25,6 +28,7 @@
     "@tanstack/react-router-devtools": "^1.114.3",
     "@tanstack/router-plugin": "^1.114.3",
     "framer-motion": "^12.11.3",
+    "gh-pages": "^6.3.0",
     "matter-js": "^0.20.0",
     "next-themes": "^0.4.6",
     "pixi-viewport": "^6.0.3",

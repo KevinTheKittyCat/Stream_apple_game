@@ -1,20 +1,22 @@
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
+import './styles.css'
 
 import { Provider } from "@/components/ui/provider"
-import { system } from './components/theme/index.ts'
 import { ChakraProvider } from '@chakra-ui/react'
+import { system } from './components/theme/index.ts'
+import { basePath } from './config/constants.ts'
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
+  basepath: basePath,
   context: {},
   defaultPreload: 'intent',
   scrollRestoration: true,

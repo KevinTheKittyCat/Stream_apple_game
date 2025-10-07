@@ -1,8 +1,8 @@
-import { useApplication } from "@pixi/react";
-import { Layer } from "@/components/Canvas/Layer";
 import GameBackground from "@/components/Background/GameBackground";
-import Graphic from "../Graphic";
+import { Layer } from "@/components/Canvas/Layer";
 import { useWindowStore } from "@/stores/WindowState";
+import { useApplication } from "@pixi/react";
+import Graphic from "../Graphic";
 
 export default function BackgroundLayer({visible = true}: {visible?: boolean}) {
     const { width, height } = useWindowStore();

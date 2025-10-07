@@ -1,5 +1,31 @@
+
+export interface Listener {
+    name: string;
+    callback: Function;
+}
+
+export interface EventMap {
+    [event: string]: any;
+}
+
+export type TransitionEvent = {
+    dir: 'in' | 'out';
+    ready?: boolean;
+}
+
+export type ChangeRouteEvent = {
+    route: string;
+    data?: Record<string, any>;
+}
+
+
+export type EmitFunction<T extends keyof EventMap> = (eventName: T, data: EventMap[T]) => void;
+export type EventType<T extends keyof EventMap> = (data: EventMap[T]) => void;
+export type EventEmitterData = TransitionEvent | ChangeRouteEvent;
+
+
 export class EventEmitter {
-    listeners = [];
+    listeners: Listener[] = [];
 
     emit(eventName: string, data: any) {
         this.listeners
@@ -32,7 +58,7 @@ export class EventEmitter {
         );
     }
     destroy() {
-        this.listener.length = 0;
+        this.listeners.length = 0;
     }
 }
 

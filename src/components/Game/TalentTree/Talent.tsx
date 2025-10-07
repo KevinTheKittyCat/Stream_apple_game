@@ -1,12 +1,12 @@
 import Graphic from "@/components/Canvas/Graphic";
 import { Group } from "@/components/Canvas/Group";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Sprite } from "@/components/Canvas/Sprite";
+import { checkHitMultipleWithId, type HitObjectWithId } from "@/components/Player/HitDetection";
+import { useGameStore } from "@/stores/GameState";
 import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useTick } from "@pixi/react";
-import { UPDATE_PRIORITY, type Container, type Sprite as PixiSprite } from "pixi.js";
-import { checkHitMultipleWithId, type HitObjectWithId } from "@/components/Player/HitDetection";
-import { Sprite } from "@/components/Canvas/Sprite";
-import { useGameStore } from "@/stores/GameState";
+import { FederatedEvent, UPDATE_PRIORITY, type Container, type Sprite as PixiSprite } from "pixi.js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { TalentType } from "./Settings/all";
 
 
@@ -34,6 +34,7 @@ export function Talent(talent: TalentType) {
 
     useEffect(() => {
         if (!groupRef.current) return;
+        // @ts-ignore
         setTalentRef(id, groupRef);
     }, [groupRef]);
 
@@ -94,7 +95,11 @@ export function Talent(talent: TalentType) {
     useTick({
         callback(this: React.RefObject<PixiSprite | null>) {
             if (shouldSettle === 2) return;
-            const isHit = checkHitMultipleWithId(talents.filter(talent => talent.id !== id), groupRef, false, false) as HitObjectWithId[] | false;
+            // @ts-ignore
+            const talentsWithRefs = talents.filter(t => t?.ref?.current) as TalentType[];
+            if (talentsWithRefs.length <= 1) return;
+            // @ts-ignore
+            const isHit = checkHitMultipleWithId(talentsWithRefs.filter(talent => talent.id !== id) as HitObjectWithId[], groupRef, false, false) as HitObjectWithId[] | false;
             if (isHit) onHit(this.current, isHit);
             if (isHit) setShouldSettle(0);
             if (!isHit && shouldSettle < 1) setShouldSettle(1);
@@ -104,7 +109,7 @@ export function Talent(talent: TalentType) {
         priority: UPDATE_PRIORITY.LOW,
     })
 
-    const onClick = useCallback((e: React.MouseEvent) => {
+    const onClick = useCallback((e: React.MouseEvent | FederatedEvent) => {
         e.stopPropagation();
         // Maybe move to talentStore or GameStore
         const { currentLevel, levels, costMultiplier, cost } = talent;
@@ -136,8 +141,8 @@ export function Talent(talent: TalentType) {
         <>
             <Group
                 ref={groupRef}
-                x={position.x}
-                y={position.y}
+                x={position?.x}
+                y={position?.y}
             >
                 <Graphic
                     size={{ width: overlap, height: overlap }}

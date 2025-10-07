@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useWindowStore } from '@/stores/WindowState';
 import { extend, useTick } from '@pixi/react';
 import {
     Container,
-    Mesh,
     Geometry,
+    Mesh,
     Shader,
     Texture,
 } from 'pixi.js';
-import { useWindowStore } from '@/stores/WindowState';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 extend({
     Container,
@@ -310,6 +310,7 @@ export const PerlinNoiseTexture: React.FC<PerlinNoiseTextureProps> = ({
     if (method === 'shader' && shader) {
         return (
             <pixiContainer>
+                {/* @ts-ignore */}
                 <pixiMesh geometry={geometry} shader={shader as any} />
             </pixiContainer>
         );

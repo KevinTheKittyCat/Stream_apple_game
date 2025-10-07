@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { extend } from '@pixi/react';
-import { Container, Texture } from 'pixi.js';
 import { Sprite } from '@/components/Canvas/Sprite';
 import { useWindowStore } from '@/stores/WindowState';
 import createPerlinNoiseTexture, { PerlinNoisePresets, createPerlinNoiseTextures } from '@/utils/PerlinNoiseGenerator';
+import { extend } from '@pixi/react';
+import { Container, Texture } from 'pixi.js';
+import { useEffect, useState } from 'react';
 
 extend({
     Container,
@@ -27,18 +27,6 @@ export const BasicPerlinTextureExample = () => {
         
         setTexture(newTexture);
     }, []);
-
-    const generateNewTexture = () => {
-        const newTexture = createPerlinNoiseTexture({
-            width: 256,
-            height: 256,
-            scale: 0.02,
-            octaves: 4,
-            persistence: 0.5,
-            seed: Math.random() * 1000, // New random seed
-        });
-        setTexture(newTexture);
-    };
 
     return (
         <pixiContainer>
@@ -141,7 +129,7 @@ export const PresetTexturesExample = () => {
 // Example 4: Dynamic texture generation with different scales
 export const DynamicScaleExample = () => {
     const [currentTexture, setCurrentTexture] = useState<Texture | null>(null);
-    const [currentScale, setCurrentScale] = useState(0.01);
+    const [currentScale, /*setCurrentScale*/] = useState(0.01);
 
     useEffect(() => {
         const texture = createPerlinNoiseTexture({
@@ -156,9 +144,9 @@ export const DynamicScaleExample = () => {
     }, [currentScale]);
 
     // In a real app, you'd have UI controls to change the scale
-    const changeScale = (newScale: number) => {
+    /*const changeScale = (newScale: number) => {
         setCurrentScale(newScale);
-    };
+    };*/
 
     return (
         <pixiContainer>

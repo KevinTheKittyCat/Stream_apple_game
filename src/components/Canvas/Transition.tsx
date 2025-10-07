@@ -1,14 +1,14 @@
 
-import { Assets, BlurFilter, Container, MeshGeometry, Mesh, Shader, Color, type BlurFilterOptions, Texture } from 'pixi.js';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import vertex from '@/components/Canvas/Shaders/multipassMesh.vert?raw';
 import noiseFragment from '@/components/Canvas/Shaders/noise.frag?raw';
 import smoothNoiseFragment from '@/components/Canvas/Shaders/smoothNoise.frag?raw';
-import { extend, useTick } from '@pixi/react';
-import { useWindowStore } from '@/stores/WindowState';
-import createPerlinNoiseTexture from '@/utils/PerlinNoiseGenerator';
-import { eventEmitter } from '@/utils/Eventemitter';
 import { useEventEmitter } from '@/hooks/useEventEmitter';
+import { useWindowStore } from '@/stores/WindowState';
+import { eventEmitter, type TransitionEvent } from '@/utils/Eventemitter';
+import createPerlinNoiseTexture from '@/utils/PerlinNoiseGenerator';
+import { extend, useTick } from '@pixi/react';
+import { Assets, BlurFilter, Color, Container, Mesh, MeshGeometry, Shader, Texture, type BlurFilterOptions } from 'pixi.js';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 extend({
     Container,
@@ -124,7 +124,7 @@ export default function Transition({
 
     const animationState = useRef<'waiting' | 'entering' | 'exiting'>('exiting');
 
-    useEventEmitter("transition", (data) => {
+    useEventEmitter("transition", (data: TransitionEvent) => {
         if (data?.dir === "in") animationState.current = "entering";
         if (data?.dir === "out") animationState.current = "exiting";
     });

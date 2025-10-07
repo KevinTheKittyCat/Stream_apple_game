@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { basePath } from "@/config/constants";
 import { useWindowStore } from "@/stores/WindowState";
 import { Box, Flex, type FlexProps } from "@chakra-ui/react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 
 
@@ -98,8 +99,8 @@ export default function HTMLGalaxyBackground(
                     animation: "moveMask 60s linear infinite",
                     width: "100%", height: "100%", opacity: 0.5,
                     position: "absolute", top: 0, left: 0,
-                    mask: "url('/assets/galaxy/noise.png') luminance",
-                    WebkitMask: "url('/assets/galaxy/noise.png') luminance",
+                    mask: `url('${basePath}/assets/galaxy/noise.png') luminance`,
+                    WebkitMask: `url('${basePath}/assets/galaxy/noise.png') luminance`,
                 }}
             />
         </Flex>
