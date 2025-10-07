@@ -38,8 +38,7 @@ export default function HTMLGalaxyBackground(
         const { width, height } = dimensions;
         if (width === 0 || height === 0) return [];
         const normalAmount = 5;
-        const starAmount = Math.floor((width / height) * (normalAmount))
-        console.log("starAmount", starAmount, width, height, (width / height));
+        const starAmount = Math.floor((width / height) * (normalAmount));
         const tempStars = [] as StarType[];
 
         // Divide into grid
@@ -107,7 +106,7 @@ export default function HTMLGalaxyBackground(
     );
 }
 
-
+// TODO - HOVER RE-RENDERS - FIX THAT.
 function Star({ star, index, hover }: { star: StarType, index: number, hover: boolean }) {
     const animation = useMemo(() => hover && Math.random() > 0.5 ? 1 : 0, [hover]);
     const size = useMemo(() => hover && Math.random() > 0.5 ? 8 : 4, [hover]);
@@ -119,7 +118,6 @@ function Star({ star, index, hover }: { star: StarType, index: number, hover: bo
             `height 0.7s ease-in-out`,
         ]
     }, []);
-    if (index === 0) console.log("reRendering", animation);
     return (
         <Box key={star.id} pos={"absolute"} top={star.y} left={star.x}
             width={`${size}px`} height={`${size}px`} bg={"white"} borderRadius={"50%"}

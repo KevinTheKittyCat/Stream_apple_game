@@ -1,3 +1,4 @@
+import { createPowerupTypeModifiers } from '@/components/Game/Powerups/handlePowerupFunctions';
 import { getRandomAppleType } from '@/components/Objective/AppleUtils';
 import { getTalentEffect } from '@/components/UtilFunctions/talents';
 import { type Sprite as PixiSprite } from 'pixi.js';
@@ -63,7 +64,7 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
             size: getTalentEffect(30, "scale"), // Scale with talents
             speed: getTalentEffect(2, "fallSpeed") + Math.random() * 3, // Base speed + talent effect
             ref: null,
-            type: getRandomAppleType(),
+            type: getRandomAppleType(createPowerupTypeModifiers()),
         };
         return { apples: [...state.apples, apple] };
     }),

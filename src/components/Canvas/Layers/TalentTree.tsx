@@ -19,7 +19,7 @@ export default function TalentTree({ visible = true }: { visible?: boolean }) {
             >
                 <TalentTreeBackground />
                 <CustomViewport>
-                    <NewTalentTree />
+                    <NewTalentTree visible={visible} />
                 </CustomViewport>
             </Layer>
         </>

@@ -1,4 +1,5 @@
 import { Layer } from "@/components/Canvas/Layer";
+import { PowerupsListener } from "@/components/Game/Powerups/PowerupListener";
 import { Apple } from "@/components/Objective/Apple";
 import AppleSpawner from "@/components/Objective/AppleSpawner";
 import { useWindowStore } from "@/stores/WindowState";
@@ -14,6 +15,9 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
   if (!isInitialised) return null;
   return (
     <>
+      {/* LISTENERS */}
+      <PowerupsListener />
+
       <BackgroundLayer visible={visible} />
       <Layer
         visible={visible}

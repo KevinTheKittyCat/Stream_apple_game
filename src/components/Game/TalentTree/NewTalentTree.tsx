@@ -1,10 +1,10 @@
 
 import { Layer } from '@/components/Canvas/Layer';
-import { Talent } from './Talent';
+import { useTalentTreeStore } from '@/stores/talentTreeState';
 import { useEffect } from 'react';
-import { useTalentTreeStore} from '@/stores/talentTreeState';
-import { allTalents, type TalentType } from './Settings/all';
 import RopeTree from './RopeTree';
+import { allTalents, type TalentType } from './Settings/all';
+import { Talent } from './Talent';
 
 export const checkPrerequisites = (talent: TalentType, talents: TalentType[]) => talent?.prerequisites?.every(prereq => {
     const foundTalent = talents.find(t => t.id === prereq.id);
@@ -12,7 +12,7 @@ export const checkPrerequisites = (talent: TalentType, talents: TalentType[]) =>
 });
 
 
-export default function NewTalentTree() {
+export default function NewTalentTree({ visible = true }: { visible?: boolean }) {
     const { talents, createTalent } = useTalentTreeStore();
 
     useEffect(() => {
@@ -33,6 +33,7 @@ export default function NewTalentTree() {
         }, []);
     }, [talents]);
 
+    if (!visible) return null;
     return (
         <>
             <Layer>

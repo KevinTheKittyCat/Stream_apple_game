@@ -66,7 +66,7 @@ export function Player() {
     });
 
     useEffect(() => {
-        if (!target || !target.ref || !target.ref.current) getNewTarget();
+        //if (!target || !target.ref || !target.ref.current) getNewTarget();
         const interval = setInterval(() => {
             if (!target || !target.ref || !target.ref.current) getNewTarget();
         }, 1000); // Check every second

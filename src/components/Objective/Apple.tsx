@@ -75,7 +75,7 @@ export function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: O
         if (!spriteRef) return;
         if (apples.some(apple => apple.id === id && apple.ref)) return //console.warn("Apple ref already set for this id:", id);
         setAppleRef(id, spriteRef);
-    }, [spriteRef, id, apples]);
+    }, [spriteRef, id]);
 
 
     return (
