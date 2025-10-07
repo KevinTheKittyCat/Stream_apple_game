@@ -16,13 +16,14 @@ import {
 import { Group } from '../Canvas/Group';
 import { Sprite } from '../Canvas/Sprite';
 import { getTalentEffect } from '../UtilFunctions/talents';
+import { applyEffects } from "../UtilFunctions/talents/getEffects";
 import Basket from './Basket';
 import useAutoMove from './useAutoMove';
 
 export function Player() {
     const { scale } = useWindowStore();
     const { state } = useGameStore();
-    const { talents } = useTalentTreeStore();
+    const { talents, talentsDict } = useTalentTreeStore();
     const { apples } = useObjectivesStore();
     const { setPlayerRef, playerRef, target, getNewTarget, resetPlayer } = usePlayerStore()
     const spriteRef = useRef<PixiSprite>(null);
@@ -40,10 +41,10 @@ export function Player() {
             return target.ref.current.x;
         }
         return window.innerWidth / 2;
-    }, [target, state]);
+    }, [target, state, talentsDict]);
 
     const getTargetPositionY = useCallback(() => {
-        if (state === 'gameOver') return window.innerHeight * 0.9;
+        if (state === 'gameOver' || !applyEffects(0, "playerYAxis")) return window.innerHeight * 0.9;
         if (mouseCoordsRef?.current?.y) {
             return mouseCoordsRef.current.y;
         }
@@ -51,18 +52,18 @@ export function Player() {
             return target.ref.current.y;
         }
         return window.innerHeight / 2;
-    }, [target, state]);
+    }, [target, state, talentsDict]);
 
     const { ref } = useAutoMove({
         id: "player",
         enabled: state !== 'paused',
         maxVelocity: movementSpeed,
         targetPos: {
-            x: getTargetPositionX(),
-            y: getTargetPositionY()
+            x: getTargetPositionX,
+            y: getTargetPositionY
         },
         normalizationFactor: 0.01,
-        easingFactor: 0.1,
+        easingFactor: 0.5,
     });
 
     useEffect(() => {

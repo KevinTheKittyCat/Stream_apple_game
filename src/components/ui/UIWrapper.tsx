@@ -1,5 +1,6 @@
 import { usePortalStore } from "@/stores/PortalState";
 import { useEffect, useRef } from "react";
+import { FPSCounter } from "./Utils/FPSCounter";
 
 // MAKE THIS INTO THEME LATER
 export default function UIWrapper({children}: {children?: React.ReactNode}) {
@@ -29,6 +30,7 @@ export default function UIWrapper({children}: {children?: React.ReactNode}) {
                 flexDirection: 'column',
             }}>
                 <div className="portal-ui" style={{}} ref={portalDivRef} />
+                <FPSCounter />
                 {children}
             </div>
         </div>

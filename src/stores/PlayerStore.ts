@@ -47,7 +47,7 @@ export const usePlayerStore = create<PlayerStoreProps>((set) => ({
         if (!apples || apples.length === 0) return { target: null };
         if (!state.playerRef) return { target: null };
         const closestApple = findClosestReachableObjective({
-            objectives: apples,
+            objectives: apples.filter(a => a.type.value > 0), // Only target apples with positive value
             ref: state.playerRef,
             refOffset: { x: 0, y: (window.innerHeight / 10) * (fallingSpeed / 1.2) }, // Adjust for player height
             objectiveOffset: { x: 0, y: 0 }

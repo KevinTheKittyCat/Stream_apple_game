@@ -2,13 +2,21 @@ import { useTick } from "@pixi/react";
 import { Sprite as PixiSprite, UPDATE_PRIORITY } from "pixi.js";
 import { useEffect, useRef } from "react";
 
-type UseAutoMoveProps = {
+export type onReachTargetType = (info: {
+    x: number;
+    y: number;
+    reachedX: boolean;
+    reachedY: boolean
+}) => void;
+
+export type UseAutoMoveProps = {
     enabled?: boolean;
     targetPos: { x?: number | (() => number); y?: number | (() => number) };
     id?: string;
     maxVelocity?: number; // Maximum speed of the sprite
     normalizationFactor?: number; // Factor to normalize distance for smoother movement
     easingFactor?: number; // Easing factor for smoother movement
+    onReachTarget?: onReachTargetType; // Callback when target is reached
 };
 
 export default function useAutoMove({
@@ -18,6 +26,7 @@ export default function useAutoMove({
     maxVelocity = 2,
     normalizationFactor = 0.01, // Factor to normalize distance for smoother movement
     easingFactor = 0.1,
+    onReachTarget
 }: UseAutoMoveProps) {
     const contextRef = useRef<PixiSprite | null>(null)
     const velocityXRef = useRef<number>(0); // Current velocity (can be negative or positive)
@@ -64,6 +73,16 @@ export default function useAutoMove({
                 normalizationFactor: normalizationFactor,
                 easingFactor: easingFactor
             });
+            if (targetX && isNumber(targetX) && Math.abs(this.current.position.x - targetX) < 1 ||
+                targetY && isNumber(targetY) && Math.abs(this.current.position.y - targetY) < 1) {
+                // Reached target
+                onReachTarget?.({
+                    x: this.current.position.x,
+                    y: this.current.position.y,
+                    reachedX: targetX && isNumber(targetX) ? Math.abs(this.current.position.x - targetX) < 1 : false,
+                    reachedY: targetY && isNumber(targetY) ? Math.abs(this.current.position.y - targetY) < 1 : false,
+                });
+            }
         },
         context: contextRef,
         isEnabled: enabled,

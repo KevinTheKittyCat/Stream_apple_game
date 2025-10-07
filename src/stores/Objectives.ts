@@ -37,6 +37,7 @@ interface ObjectiveActions {
     createApple: () => void;
     removeApple: (id: string) => void;
     setAppleRef: (id: string, ref: React.RefObject<PixiSprite | null> | null) => void;
+    updateApple: (id: string, newData: Partial<Objective>) => void;
 };
 
 type ObjectiveStoreProps = ObjectiveStore & ObjectiveActions;
@@ -62,7 +63,7 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
             x: Math.random() * window.innerWidth,
             y: -100,
             size: getTalentEffect(30, "scale"), // Scale with talents
-            speed: getTalentEffect(2, "fallSpeed") + Math.random() * 3, // Base speed + talent effect
+            speed: getTalentEffect(3, "fallSpeed") + Math.random() * 3, // Base speed + talent effect
             ref: null,
             type: getRandomAppleType(createPowerupTypeModifiers()),
         };
@@ -70,6 +71,11 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
     }),
     removeApple: (id) => {
         set((state) => ({ apples: state.apples.filter(apple => apple.id !== id) }));
+    },
+    updateApple: (id, newData) => {
+        set((state) => ({
+            apples: state.apples.map(apple => (apple.id === id ? { ...apple, ...newData } : apple))
+        }));
     },
     setAppleRef: (id, ref) => set((state) => {
         return {

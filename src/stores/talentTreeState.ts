@@ -1,12 +1,13 @@
 import { checkPrerequisites } from '@/components/Game/TalentTree/NewTalentTree';
 import { allTalents, type TalentDict, type TalentType } from '@/components/Game/TalentTree/Settings/all';
 import { getStorageItem, setStorageItem } from '@/components/UtilFunctions/Storage/storageHelper';
+import { handleCreateEffectDict, type EffectDictType } from '@/components/UtilFunctions/talents/handleCreateEffectDict';
 import { Container } from 'pixi.js';
 import { create } from 'zustand';
 
 interface TalentTreeState {
     talents: TalentType[];
-    talentsDict: TalentDict;
+    talentsDict: EffectDictType;
     hoveringTalent: ({ x: number; y: number } & TalentType) | null;
 }
 
@@ -21,12 +22,6 @@ interface TalentTreeActions {
 
 type TalentTreeStoreProps = TalentTreeState & TalentTreeActions;
 
-const handleCreateDict = (talents: TalentType[]) => {
-    return talents.reduce((acc, talent) => {
-        if (talent.id) acc[talent.id] = talent;
-        return acc;
-    }, {} as TalentDict)
-}
 
 const setStorageSafeTalents = (newTalents: TalentType[]) => {
     const storage = newTalents.map(t => ({
@@ -71,7 +66,7 @@ const getStorageSafeTalents = () => {
     }, [] as TalentType[]);
     return {
         talents: storageSafeTalents,
-        talentsDict: handleCreateDict(storageSafeTalents)
+        talentsDict: handleCreateEffectDict(storageSafeTalents)
     };
 }
 
@@ -85,23 +80,23 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
         set((state) => {
             const newTalents = [...state.talents, talent];
             setStorageSafeTalents(newTalents);
-            return { talents: newTalents, talentsDict: handleCreateDict(newTalents) };
+            return { talents: newTalents, talentsDict: handleCreateEffectDict(newTalents) };
         });
     },
     updateTalent: (id, updatedFields) => set((state) => {
         const newTalents = state.talents.map(talent => talent.id === id ? { ...talent, ...updatedFields } : talent);
         setStorageSafeTalents(newTalents);
-        return { talents: newTalents, talentsDict: handleCreateDict(newTalents) };
+        return { talents: newTalents, talentsDict: handleCreateEffectDict(newTalents) };
     }),
     // @ts-ignore
     setTalentRef: (id, ref) => set((state) => {
         return {
             talents: state.talents.map(talent => (talent.id === id && ref) ? { ...talent, ref: ref } : talent),
-            talentsDict: {...state.talentsDict, [id]: { ...state.talentsDict[id], ref: ref } }
+            talentsDict: { ...state.talentsDict, [id]: { ...state.talentsDict[id], ref: ref } }
         };
     }),
 
     updateTalentsDict: (talents) => set((state) => ({
-        talentsDict: handleCreateDict(state.talents.concat(talents || []))
+        talentsDict: handleCreateEffectDict(state.talents.concat(talents || []))
     }))
 }));

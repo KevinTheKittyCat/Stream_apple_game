@@ -2,8 +2,12 @@ import { Layer } from "@/components/Canvas/Layer";
 import { PowerupsListener } from "@/components/Game/Powerups/PowerupListener";
 import { Apple } from "@/components/Objective/Apple";
 import AppleSpawner from "@/components/Objective/AppleSpawner";
+import { Parrot } from "@/components/Player/Parrot";
+import { applyEffects } from "@/components/UtilFunctions/talents/getEffects";
+import { useTalentTreeStore } from "@/stores/talentTreeState";
 import { useWindowStore } from "@/stores/WindowState";
 import { useApplication } from "@pixi/react";
+import { useMemo } from "react";
 import { Player } from "../../Player/Player";
 import BackgroundLayer from "./BackgroundLayer";
 
@@ -11,7 +15,9 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
   const { isInitialised } = useApplication();
   const { width, height } = useWindowStore();
   const { apples } = AppleSpawner(); // Limit the number of apples to 10
-
+  const { talents } = useTalentTreeStore();
+  const hasParrot = useMemo(() => applyEffects(0, "parrotCompanion"), [applyEffects, talents]);
+  
   if (!isInitialised) return null;
   return (
     <>
@@ -25,6 +31,7 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
         width={width}
         height={height}
       >
+        {hasParrot ? <Parrot /> : null}
         <Player />
         {apples.map(apple => (
           <Apple key={apple.id} {...apple} />

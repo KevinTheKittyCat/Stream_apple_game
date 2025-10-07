@@ -33,8 +33,23 @@ export const player_talents: TalentDict = {
         cost: 200,
         costMultiplier: 1,
     },
-    
-    // TODO: Add "move on the Y axis" talent - requires changing the game mechanics
+    parrot_companion: {
+        id: "parrot_companion",
+        levels: 1,
+        currentLevel: 0,
+        title: "Parrot Companion",
+        description: "Unlocks a parrot that eats worms from apples for you.",
+        effects: [
+            { type: "parrotCompanion", boolean: true }
+        ],
+        prerequisites: [{ id: "upgrade_appleScale", level: 2 }],
+        settled: 0,
+        image: `${basePath}/assets/companions/parrot/Parrot.png`,
+        cost: 300,
+        costMultiplier: 1,
+    },
+
     // TODO: Add "dash" talent - requires changing the game mechanics
-    // TODO: Add a "friend" - collects apples for you - talent - requires changing the game mechanics
+    // TODO: MAKE PARROT SQUACK WHEN CLICKED
+
 };

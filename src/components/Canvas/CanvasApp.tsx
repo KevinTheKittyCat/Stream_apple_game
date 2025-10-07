@@ -4,7 +4,7 @@ import { eventEmitter, type ChangeRouteEvent, type TransitionEvent } from '@/uti
 import { Application, extend } from '@pixi/react';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Viewport } from 'pixi-viewport';
-import { Container, Graphics, HTMLText, Sprite, Text } from 'pixi.js';
+import { AnimatedSprite, Container, Graphics, HTMLText, Sprite, Text } from 'pixi.js';
 import { useRef } from 'react';
 import GameLayer from './Layers/GameLayer';
 import TalentTree from './Layers/TalentTree';
@@ -16,6 +16,7 @@ extend({
     Container,
     Graphics,
     Sprite,
+    AnimatedSprite,
     Text,
     HTMLText,
     Viewport,
@@ -53,7 +54,7 @@ export default function CanvasApp() {
 
     return (
         <div id="game-container" ref={gameContainerRef}>
-            <Application eventMode="static" resizeTo={window} antialias={true}>
+            <Application autoStart={true} eventMode="static" resizeTo={window} antialias={true}>
                 <MouseCordsListener />
                 <GameLayer visible={currentRoute === `${basePath}/`} />
                 <TalentTree visible={currentRoute === `${basePath}/talentTree`} />

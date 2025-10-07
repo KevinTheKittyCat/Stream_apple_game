@@ -3,8 +3,8 @@ import type { Objective } from "@/stores/Objectives";
 type findClosestProps = {
     objectives: Objective[],
     ref: React.RefObject<any> | null,
-    refOffset: { x: number, y: number },
-    objectiveOffset: { x: number, y: number }
+    refOffset?: { x: number, y: number },
+    objectiveOffset?: { x: number, y: number }
 }
 
 export const findClosestReachableObjective = ({
@@ -12,12 +12,13 @@ export const findClosestReachableObjective = ({
     ref,
     refOffset = { x: 0, y: 0 },
 }: findClosestProps) => {
+    if (!ref || !ref.current) console.warn("findClosestReachableObjective: ref is null");
     if (!ref || !ref.current) return null; // Ensure ref is valid
     const { x, y } = ref.current.position
 
     const closestObjective = objectives.reduce((acc, objective) => {
         if (!objective.ref || !objective.ref.current || !objective.ref.current.position) return acc; // Ensure objective has a valid ref
-        if (objective.type.value < 0) return acc; // Skip if objective is not reachable
+        //if (objective.type.value < 0) return acc; // Skip if objective is not reachable
         const pos = objective.ref.current.position
         const distance = Math.sqrt(
             // TODO ADD OBJECTIVE OFFSET
