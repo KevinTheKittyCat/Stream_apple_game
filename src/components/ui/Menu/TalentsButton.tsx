@@ -11,8 +11,8 @@ import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
 
 
 export default function TalentsButton() {
-    const { talents } = useTalentTreeStore();
-    const { currency } = useGameStore();
+    const talents = useTalentTreeStore((state) => state.talents);
+    const currency = useGameStore((state) => state.currency);
     const ref = useRef<HTMLButtonElement>(null);
 
     const goToStore = useCallback(() => {

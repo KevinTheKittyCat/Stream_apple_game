@@ -6,7 +6,7 @@ import UIWrapper from "@/components/ui/UIWrapper";
 import { useGameStore } from "@/stores/GameState";
 
 export default function GameUI() {
-    const { state } = useGameStore();
+    const state = useGameStore((state) => state.state);
     return (
         <UIWrapper>
             <PauseMenu />

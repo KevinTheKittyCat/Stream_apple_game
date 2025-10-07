@@ -1,7 +1,7 @@
 import { useObjectivesStore } from "@/stores/Objectives";
 
 export default function ApplesCounter() {
-    const { apples } = useObjectivesStore()
+    const apples = useObjectivesStore((state) => state.apples);
 
     return (
         <div className="apples-counter">

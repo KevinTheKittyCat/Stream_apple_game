@@ -3,7 +3,7 @@ import { useGameStore } from "@/stores/GameState";
 import { Flex } from "@chakra-ui/react";
 
 export default function TotalTime() {
-    const { totalTime } = useGameStore()
+    const totalTime = useGameStore((state) => state.totalTime);
     //const [timer, setTimer] = useState(5);
     //const timeSpent = useMemo(() => (new Date() - time) / 1000, [time])
 

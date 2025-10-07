@@ -1,7 +1,6 @@
 import { basePath } from "@/config/constants";
 import { useCanvasStore } from '@/stores/CanvasState';
 import { useGameStore } from '@/stores/GameState';
-import { useObjectivesStore } from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useTalentTreeStore } from '@/stores/talentTreeState';
 import { useWindowStore } from '@/stores/WindowState';
@@ -22,9 +21,8 @@ import useAutoMove from './useAutoMove';
 
 export function Player() {
     const { scale } = useWindowStore();
-    const { state } = useGameStore();
+    const state = useGameStore((state) => state.state);
     const { talents, talentsDict } = useTalentTreeStore();
-    const { apples } = useObjectivesStore();
     const { setPlayerRef, playerRef, target, getNewTarget, resetPlayer } = usePlayerStore()
     const spriteRef = useRef<PixiSprite>(null);
     const { app } = useApplication();
@@ -73,7 +71,7 @@ export function Player() {
         }, 1000); // Check every second
 
         return () => clearInterval(interval);
-    }, [apples, getNewTarget, target]);
+    }, [getNewTarget, target]);
 
     useEffect(() => {
         if (spriteRef?.current) ref.current = spriteRef.current

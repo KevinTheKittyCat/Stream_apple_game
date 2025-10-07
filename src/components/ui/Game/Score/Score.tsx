@@ -7,7 +7,7 @@ import { RiCopperCoinLine } from "react-icons/ri";
 
 
 export default function Score() {
-    const { score } = useGameStore();
+    const score = useGameStore((state) => state.score);
     
     return (
         <Flex gap={2} align={"center"} className="score" style={{ fontSize: "1rem" }}>

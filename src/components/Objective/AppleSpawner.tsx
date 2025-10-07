@@ -6,9 +6,10 @@ import { useEffect, useState } from 'react';
 import { getTalentEffect } from '../UtilFunctions/talents';
 
 export default function AppleSpawner() {
-    const { createApple, setApples, apples } = useObjectivesStore();
+    //const setApples = useObjectivesStore((state) => state.setApples);
+    const createApple = useObjectivesStore((state) => state.createApple);
     const { talents } = useTalentTreeStore();
-    const { state } = useGameStore();
+    const state = useGameStore((state) => state.state);
     const [increaseInterval] = useState(0);
     //const spawnRate = 200
 
@@ -28,5 +29,5 @@ export default function AppleSpawner() {
         return () => clearInterval(interval);
     }, [state]);*/
 
-    return { apples, setApples };
+    return null;
 }

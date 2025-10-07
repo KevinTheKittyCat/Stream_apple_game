@@ -6,7 +6,7 @@ import { RiCopperCoinLine } from "react-icons/ri";
 
 
 export default function Score() {
-    const { currency } = useGameStore();
+    const currency = useGameStore((state) => state.currency);
 
     return (
         <Flex

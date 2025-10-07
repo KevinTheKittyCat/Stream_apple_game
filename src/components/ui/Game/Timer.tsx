@@ -4,7 +4,9 @@ import { Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import HTMLGalaxyBackground from "../TechTreeUI/HTMLGalaxyBackground";
 export default function Timer() {
-    const { timer, updateTimer, startTime } = useGameStore()
+    const timer = useGameStore((state) => state.timer);
+    const updateTimer = useGameStore((state) => state.updateTimer);
+    const startTime = useGameStore((state) => state.startTime);
     const barRef = useRef<HTMLDivElement>(null);
     //const [timer, setTimer] = useState(5);
 

@@ -44,7 +44,7 @@ type ObjectiveStoreProps = ObjectiveStore & ObjectiveActions;
 
 export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
     apples: [],
-    limit: 10, // Maximum number of apples allowed on screen
+    limit: 100, // Maximum number of apples allowed on screen
     fallingSpeed: 4,
     setApples: (newApples) => {
         if (newApples instanceof Function) {
@@ -66,7 +66,7 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
             speed: getTalentEffect(3, "fallSpeed") + Math.random() * 3, // Base speed + talent effect
             ref: null,
             type: getRandomAppleType(createPowerupTypeModifiers()),
-        };
+        }; // THIS CURRENTLY TAKES TOO MUCH CPU POWER
         return { apples: [...state.apples, apple] };
     }),
     removeApple: (id) => {

@@ -21,8 +21,10 @@ import useAutoMove, { type onReachTargetType } from './useAutoMove';
 
 export function Parrot() {
     const { scale } = useWindowStore();
-    const { state } = useGameStore();
-    const { apples, removeApple, updateApple } = useObjectivesStore();
+    const state = useGameStore((state) => state.state);
+    const apples = useObjectivesStore((state) => state.apples);
+    const removeApple = useObjectivesStore((state) => state.removeApple);
+    const updateApple = useObjectivesStore((state) => state.updateApple);
     const { companions, addCompanion, removeCompanion } = useCompanionStore();
     const spriteRef = useRef<PixiSprite>(null);
     const [moveLeft, setMoveLeft] = useState(true);
@@ -118,7 +120,6 @@ export function Parrot() {
         objects: targetArray,
         onHit: onHit
     });
-
 
     return (
         <Group

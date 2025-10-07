@@ -18,7 +18,9 @@ export default function PauseMenu() {
 }
 
 export function PauseMenuItems() {
-    const { state, unpauseGame, gameOver } = useGameStore();
+    const state = useGameStore((state) => state.state);
+    const unpauseGame = useGameStore((state) => state.unpauseGame);
+    const gameOver = useGameStore((state) => state.gameOver);
 
     if (state !== "paused") return null;
     return (
@@ -36,7 +38,9 @@ export function PauseMenuItems() {
 }
 
 export function PauseButton() {
-    const { pauseGame, unpauseGame, state } = useGameStore();
+    const pauseGame = useGameStore((state) => state.pauseGame);
+    const unpauseGame = useGameStore((state) => state.unpauseGame);
+    const state = useGameStore((state) => state.state);
 
     const togglePause = useCallback(() => {
         if (state === "paused") {

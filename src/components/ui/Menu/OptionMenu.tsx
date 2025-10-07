@@ -8,7 +8,7 @@ import TalentsButton from "./TalentsButton";
 import TotalTime from "./TotalTime";
 
 export default function OptionMenu() {
-    const { restartGame } = useGameStore();
+    const restartGame = useGameStore((state) => state.restartGame);
 
     return (
         <Flex className="option-menu" gap={2}>

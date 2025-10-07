@@ -8,7 +8,9 @@ import { RiCopperCoinLine } from "react-icons/ri";
 
 
 export default function CalculateFinalResult() {
-    const { lastScore, currency } = useGameStore();
+    const lastScore = useGameStore((state) => state.lastScore);
+    const currency = useGameStore((state) => state.currency);
+
     const [score, setScore] = useState({ total: 0 });
     const [curr, setCurr] = useState(currency - lastScore?.total);
 

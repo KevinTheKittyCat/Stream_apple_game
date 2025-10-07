@@ -1,14 +1,15 @@
 import { useGameStore } from "@/stores/GameState";
-import { Button } from "@chakra-ui/react";
-import Info from "./Info";
 import { eventEmitter } from "@/utils/Eventemitter";
+import { Button } from "@chakra-ui/react";
 import UIWrapper from "../UIWrapper";
+import Info from "./Info";
 import TalentHint from "./TalentHint";
 
 
 
 export default function TalentTreeUI() {
-    const { restartGame, unpauseGame } = useGameStore();
+    const restartGame = useGameStore((state) => state.restartGame);
+    const unpauseGame = useGameStore((state) => state.unpauseGame);
 
     const backToGame = () => {
         restartGame();
