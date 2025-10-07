@@ -13,7 +13,7 @@ export const goldenRush: Powerup = {
     id: "goldenRush",
     name: "Golden Rush",
     description: "Doubles the points from all apples for 15 seconds.",
-    icon: `${basePath}/assets/powerups/golden_rush.png`,
+    icon: `${basePath}/assets/fruits/Apple.png`,
     duration: 15000, // Duration in milliseconds
 };
 
