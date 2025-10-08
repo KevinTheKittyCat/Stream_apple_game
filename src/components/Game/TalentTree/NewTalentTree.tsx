@@ -13,7 +13,8 @@ export const checkPrerequisites = (talent: TalentType, talents: TalentType[]) =>
 
 
 export default function NewTalentTree({ visible = true }: { visible?: boolean }) {
-    const { talents, createTalent } = useTalentTreeStore();
+    const talents = useTalentTreeStore((state) => state.talents);
+    const createTalent = useTalentTreeStore((state) => state.createTalent);
 
     useEffect(() => {
         const arrayFromTalents = Object.values(allTalents);

@@ -9,8 +9,8 @@ interface PreReqRopeProps {
 }
 
 export default function RopeTree() {
-    const { talents } = useTalentTreeStore();
-
+    const talents = useTalentTreeStore((state) => state.talents);
+    
     return (
         <>
             {talents.map((talent) => {
@@ -24,7 +24,7 @@ export default function RopeTree() {
 }
 
 const PreReqRope = ({ talent }: PreReqRopeProps) => {
-    const { talents } = useTalentTreeStore();
+    const talents = useTalentTreeStore((state) => state.talents);
 
     const preReqs = useMemo(() =>
         talent.prerequisites.reduce((acc: any[], req: any) => {

@@ -9,32 +9,33 @@ import {
     useCallback,
     useEffect,
     useMemo,
-    useRef,
+    useRef
 } from 'react';
 import { Sprite } from '../Canvas/Sprite';
 import { checkHit } from '../Player/HitDetection';
 
-export const Apple = memo(function Apple({ id, x = 100, y = 100, type, speed: fallingSpeed = 2 }: Objective) {
+export const Apple = memo(function Apple({ id }: Objective["id"]) {
+    const { x = 100, y = 100, type, speed: fallingSpeed = 2 } = useObjectivesStore((state) => state.objectives.byId[id]);
     const { scale } = useWindowStore();
     const incrementScore = useGameStore((state) => state.incrementScore);
     const state = useGameStore((state) => state.state);
     //const { talents } = useTalentTreeStore();
     const { playerRef, getNewTarget, target } = usePlayerStore()
     const setAppleRef = useObjectivesStore((state) => state.setAppleRef);
-    const removeApple = useObjectivesStore((state) => state.removeApple);
+    const removeApple = useObjectivesStore((state) => state.removeObjective);
     const spriteRef = useRef<PixiSprite | null>(null);
     const speedRef = useRef(0);
-    
+
     const { scale: appleScale } = useMemo(() => ({
         scale: 1,
     }), []);
 
     const onHit = useCallback((apple: PixiSprite) => {
-        incrementScore(type)
+        //incrementScore(type)
         type?.onHit?.(apple);
         removeApple(id);
         if (target && target.ref === spriteRef) getNewTarget();
-    }, [id, removeApple, target, incrementScore, type, getNewTarget]);
+    }, [id, target, incrementScore, type, getNewTarget]);
 
     const checkHitWithPlayer = useCallback((currentApple: PixiSprite | null, playerRef: React.RefObject<PixiSprite | null> | null) => {
         if (!playerRef || !playerRef.current) return false;
@@ -42,7 +43,7 @@ export const Apple = memo(function Apple({ id, x = 100, y = 100, type, speed: fa
         return hit;
     }, []);
 
-    const tickCallback = useCallback(function(this: React.RefObject<PixiSprite | null>, { deltaTime }) {
+    const tickCallback = useCallback(function (this: React.RefObject<PixiSprite | null>, { deltaTime }) {
         const delta = deltaTime / 60;
         speedRef.current += (fallingSpeed - speedRef.current) * 0.1;
 
@@ -57,11 +58,11 @@ export const Apple = memo(function Apple({ id, x = 100, y = 100, type, speed: fa
             if (target && target.ref === this) getNewTarget();
             return removeApple(id);
         }
-        
+
         if (!playerRef && !this.current) return;
         const isHit = checkHitWithPlayer(this.current, playerRef);
         if (isHit) onHit(this.current);
-    }, [fallingSpeed, state, target, getNewTarget, removeApple, id, playerRef, checkHitWithPlayer, onHit]);
+    }, [fallingSpeed, state, target, getNewTarget, id, playerRef, checkHitWithPlayer, onHit]);
 
     useTick({
         callback: tickCallback,

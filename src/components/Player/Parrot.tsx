@@ -22,16 +22,17 @@ import useAutoMove, { type onReachTargetType } from './useAutoMove';
 export function Parrot() {
     const { scale } = useWindowStore();
     const state = useGameStore((state) => state.state);
-    const apples = useObjectivesStore((state) => state.apples);
+    const apples = useObjectivesStore((state) => state.objectives.ids);
     const removeApple = useObjectivesStore((state) => state.removeApple);
-    const updateApple = useObjectivesStore((state) => state.updateApple);
+    const getObjectivesByType = useObjectivesStore((state) => state.getObjectivesByType);
+    const updateObjective = useObjectivesStore((state) => state.updateObjective);
     const { companions, addCompanion, removeCompanion } = useCompanionStore();
     const spriteRef = useRef<PixiSprite>(null);
     const [moveLeft, setMoveLeft] = useState(true);
     const parrotRef = useRef<PixiAnimatedSprite>(null);
 
     const target = useMemo(() => {
-        const wormApples = removeOffscreen(apples.filter(a => a.type.id === "WORM_APPLE"));
+        const wormApples = removeOffscreen(getObjectivesByType("WORM_APPLE"));
         if (wormApples.length === 0) return null;
         const closestApple = findClosestReachableObjective({
             objectives: wormApples,
@@ -39,7 +40,7 @@ export function Parrot() {
         });
         return closestApple;
     }, [apples]);
-    const targetArray = useMemo(() => apples.filter(a => a.type.id === "WORM_APPLE"), [apples]);
+    const targetArray = useMemo(() => getObjectivesByType("WORM_APPLE"), [apples]);
 
     const onReachTarget = useCallback(({ reachedX }: onReachTargetType) => {
         if (reachedX) setMoveLeft(!moveLeft);
@@ -110,7 +111,7 @@ export function Parrot() {
 
     const onHit = useCallback((hitObjects: Objective[], context: PixiSprite | null) => {
         hitObjects.forEach(hitObject => {
-            updateApple(hitObject.id, { type: appleTypes.APPLE });
+            updateObjective(hitObject.id, { type: appleTypes.APPLE });
         });
     }, [removeApple]);
 

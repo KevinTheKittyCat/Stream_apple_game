@@ -14,10 +14,14 @@ export const { outer, inner, overlap } = { outer: 50, inner: 30, overlap: 100 };
 
 export function Talent(talent: TalentType) {
     const { id, position, settled, cost } = talent;
-    const { currency, incrementCurrency } = useGameStore();
     const groupRef = useRef<Container>(null);
+    const currency = useGameStore((state) => state.currency);
+    const talents = useTalentTreeStore((state) => state.talents);
+    const setTalentRef = useTalentTreeStore((state) => state.setTalentRef);
+    const updateTalent = useTalentTreeStore((state) => state.updateTalent);
+    const setHoveringTalent = useTalentTreeStore((state) => state.setHoveringTalent);
+    const incrementCurrency = useGameStore((state) => state.incrementCurrency);
 
-    const { setTalentRef, talents, updateTalent, setHoveringTalent } = useTalentTreeStore();
     const [shouldSettle, setShouldSettle] = useState<number>(settled || 0);
     const [hovering, setHovering] = useState(false);
     const isMaxLeveled = talent.currentLevel >= talent.levels;
@@ -160,7 +164,7 @@ export function Talent(talent: TalentType) {
                         size={{ width: outer, height: outer }}
                         rounded={5}
                         color={hovering && !isMaxLeveled ? "#83628fb9" : "#6c507686"} // NEED MORE TEXTURE VARIATION
-                        stroke={isMaxLeveled ? undefined :{
+                        stroke={isMaxLeveled ? undefined : {
                             color: hovering ? "#face1bff" : "#EFBF04",
                             width: hovering ? 3 : 2
                         }}

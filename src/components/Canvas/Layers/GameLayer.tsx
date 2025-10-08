@@ -15,10 +15,9 @@ import BackgroundLayer from "./BackgroundLayer";
 export default function GameLayer({visible = true}: {visible?: boolean}) {
   const { isInitialised } = useApplication();
   const { width, height } = useWindowStore();
-  const apples = useObjectivesStore((state) => state.apples);
-  const { talents } = useTalentTreeStore();
+  const objectives = useObjectivesStore((state) => state.objectives.ids);
+  const talents = useTalentTreeStore((state) => state.talents);
   const hasParrot = useMemo(() => applyEffects(0, "parrotCompanion"), [applyEffects, talents]);
-  
   if (!isInitialised) return null;
   return (
     <>
@@ -35,8 +34,8 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
       >
         {hasParrot ? <Parrot /> : null}
         <Player />
-        {apples.map(apple => (
-          <Apple key={apple.id} {...apple} />
+        {objectives.map(id => (
+          <Apple key={id} id={id} />
         ))}
       </Layer>
     </>

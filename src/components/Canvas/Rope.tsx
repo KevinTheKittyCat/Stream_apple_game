@@ -144,7 +144,7 @@ type RopeRef = {
 export function RopeMesh({ points: ropePoints }: { points: { current: Point[] } }) {
     // Extend PIXI React with required components
     useExtend({ Container, Graphics });
-
+    
     const containerRef = useRef<Container | null>(null);
     const graphicsRef = useRef<Graphics | null>(null);
 
