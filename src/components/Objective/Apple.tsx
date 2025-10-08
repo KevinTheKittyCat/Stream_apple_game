@@ -2,6 +2,7 @@ import { useGameStore } from '@/stores/GameState';
 import { useObjectivesStore, type Objective } from '@/stores/Objectives';
 import { usePlayerStore } from '@/stores/PlayerStore';
 import { useWindowStore } from '@/stores/WindowState';
+import { eventEmitter } from '@/utils/Eventemitter';
 import { useTick } from '@pixi/react';
 import { UPDATE_PRIORITY, type Sprite as PixiSprite } from 'pixi.js';
 import {
@@ -31,7 +32,8 @@ export const Apple = memo(function Apple({ id }: Objective["id"]) {
     }), []);
 
     const onHit = useCallback((apple: PixiSprite) => {
-        //incrementScore(type)
+        incrementScore(type)
+        eventEmitter.emit('collectedObjective', { x: apple.x, y: apple.y, type, id });
         type?.onHit?.(apple);
         removeApple(id);
         if (target && target.ref === spriteRef) getNewTarget();

@@ -2,6 +2,7 @@ import { Layer } from "@/components/Canvas/Layer";
 import { PowerupsListener } from "@/components/Game/Powerups/PowerupListener";
 import { Apple } from "@/components/Objective/Apple";
 import AppleSpawner from "@/components/Objective/AppleSpawner";
+import { CurrencyCollector } from "@/components/Objective/CurrencyCollector";
 import { Parrot } from "@/components/Player/Parrot";
 import { applyEffects } from "@/components/UtilFunctions/talents/getEffects";
 import { useObjectivesStore } from "@/stores/Objectives";
@@ -37,6 +38,7 @@ export default function GameLayer({visible = true}: {visible?: boolean}) {
         {objectives.map(id => (
           <Apple key={id} id={id} />
         ))}
+        <CurrencyCollector />
       </Layer>
     </>
   );
