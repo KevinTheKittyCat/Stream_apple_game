@@ -74,6 +74,10 @@ export const useTalentTreeStore = create<TalentTreeStoreProps>((set) => ({
     talents: getStorageSafeTalents().talents,
     talentsDict: getStorageSafeTalents().talentsDict,
     hoveringTalent: null,
+    resetTalents: () => set(() => ({
+        talents: [],
+        talentsDict: {}
+    })),
     setHoveringTalent: (talent) => set({ hoveringTalent: talent }),
     addTalent: (talent) => { set((state) => ({ talents: [...state.talents, talent] })) },
     createTalent: (talent) => {

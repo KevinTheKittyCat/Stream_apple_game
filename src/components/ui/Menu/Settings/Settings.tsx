@@ -1,4 +1,6 @@
 import { CloseButton, Dialog, Flex, Tabs } from "@chakra-ui/react";
+import { IoSettings } from "react-icons/io5";
+import { LuAudioLines } from "react-icons/lu";
 import GeneralSettings from "./General";
 import SoundSettings from "./Sound";
 
@@ -29,8 +31,8 @@ export function SettingsContent() {
         <Tabs.Root defaultValue="general">
             <Flex justify={"space-between"} align={"center"} mb={4}>
                 <Tabs.List w={"80%"} >
-                    <Tabs.Trigger value="general">General</Tabs.Trigger>
-                    <Tabs.Trigger value="audio">Audio</Tabs.Trigger>
+                    <Tabs.Trigger value="general">General <IoSettings /></Tabs.Trigger>
+                    <Tabs.Trigger value="audio">Audio <LuAudioLines /></Tabs.Trigger>
                     <Tabs.Indicator />
                 </Tabs.List>
                 <Dialog.CloseTrigger asChild pos={"relative"} right={0} top={1}>

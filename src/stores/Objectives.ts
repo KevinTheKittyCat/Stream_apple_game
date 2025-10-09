@@ -91,8 +91,6 @@ export const useObjectivesStore = create<ObjectiveStoreProps>((set) => ({
         return {};
     }),
 
-
-
     objectives: {
         ids: [] as string[],
         byId: {} as Record<string, Objective>,
